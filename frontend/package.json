@@ -10,11 +10,22 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@radix-ui/react-checkbox": "^1.1.4",
+    "@radix-ui/react-label": "^2.1.2",
+    "@radix-ui/react-select": "^2.1.6",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "dom": "^0.0.3",
+    "framer-motion": "^11.18.2",
     "lucide-react": "^0.487.0",
-    "react": "^19.0.0",
+    "motion": "^12.6.3",
+    "ogl": "^1.0.11",
+    "react": "^19.1.0",
     "react-dom": "^19.0.0",
+    "react-router-dom": "^7.4.1",
+    "route": "^0.2.5",
+    "router": "^2.2.0",
+    "router-dom": "^3.0.3",
     "tailwind-merge": "^3.1.0",
     "tailwindcss-animate": "^1.0.7"
   },
