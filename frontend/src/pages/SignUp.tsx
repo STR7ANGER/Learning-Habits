@@ -4,6 +4,8 @@ import { useAuth } from "../context/AuthContext";
 import { cn } from "@/lib/utils";
 import { AnimatedGridPattern } from "@/components/magicui/animated-grid-pattern";
 import { Checkbox } from "@/components/ui/checkbox";
+import BlurText from "@/blocks/TextAnimations/BlurText/BlurText";
+import SplitText from "@/blocks/TextAnimations/SplitText/SplitText";
 
 const SignUp = (): JSX.Element => {
   const [formData, setFormData] = useState({
@@ -16,7 +18,7 @@ const SignUp = (): JSX.Element => {
     password: "",
     confirmPassword: "",
   });
-  
+
   // Define all preferences in an array for easier mapping
   const preferenceOptions = [
     "Ai Chatbot",
@@ -31,26 +33,29 @@ const SignUp = (): JSX.Element => {
     "Golang",
     "Mobile Dev",
     "QA",
-    "Rust"
+    "Rust",
   ];
-  
+
   // Initialize preferences state with all options set to false
   const [preferences, setPreferences] = useState<Record<string, boolean>>(
     preferenceOptions.reduce((acc, pref) => {
       // Convert preference name to camelCase for use as object key
-      const key = pref.replace(/\s+(.)/g, (_, c) => c.toLowerCase())
-                      .replace(/\s+/g, '')
-                      .replace(/^(.)/, (_, c) => c.toLowerCase())
-                      .replace(/-(.)/g, (_, c) => c.toUpperCase());
+      const key = pref
+        .replace(/\s+(.)/g, (_, c) => c.toLowerCase())
+        .replace(/\s+/g, "")
+        .replace(/^(.)/, (_, c) => c.toLowerCase())
+        .replace(/-(.)/g, (_, c) => c.toUpperCase());
       return { ...acc, [key]: false };
     }, {})
   );
-  
+
   const [error, setError] = useState<string>("");
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -67,42 +72,43 @@ const SignUp = (): JSX.Element => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    
+
     // Basic validation
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords don't match");
       return;
     }
-    
+
     if (formData.status === "student" && !formData.schoolName) {
       setError("Please enter your school/college name");
       return;
     }
-    
+
     if (formData.status === "job" && !formData.companyName) {
       setError("Please enter your company name");
       return;
     }
-    
+
     // Check if at least one preference is selected
-    const hasPreference = Object.values(preferences).some(value => value);
+    const hasPreference = Object.values(preferences).some((value) => value);
     if (!hasPreference) {
       setError("Please select at least one preference");
       return;
     }
-    
+
     // In a real app, you would register the user with your backend
     login({ email: formData.email });
-    
+
     // Navigation is handled by conditional rendering in the parent component
   };
 
   // Function to convert preference display name to camelCase key
   const getPreferenceKey = (displayName: string): string => {
-    return displayName.replace(/\s+(.)/g, (_, c) => c.toLowerCase())
-                     .replace(/\s+/g, '')
-                     .replace(/^(.)/, (_, c) => c.toLowerCase())
-                     .replace(/-(.)/g, (_, c) => c.toUpperCase());
+    return displayName
+      .replace(/\s+(.)/g, (_, c) => c.toLowerCase())
+      .replace(/\s+/g, "")
+      .replace(/^(.)/, (_, c) => c.toLowerCase())
+      .replace(/-(.)/g, (_, c) => c.toUpperCase());
   };
 
   return (
@@ -120,32 +126,52 @@ const SignUp = (): JSX.Element => {
             "absolute inset-0 opacity-60"
           )}
         />
-        
+
         {/* Content */}
         <div className="relative z-10 flex flex-col items-center">
-          <h1 className="text-4xl font-bold mb-4 text-center">LEARNING HABITS</h1>
-          <p className="text-xl text-center text-gray-200 max-w-md">
-            Join our community of learners and start your educational journey today
-          </p>
+          <div className="mb-4 text-center ">
+            <BlurText
+              text="Learning Habits !!"
+              delay={150}
+              animateBy="words"
+              direction="top"
+              className="text-5xl mb-8"
+            />
+          </div>
+          <SplitText
+            text="Join our community of learners and start your educational journey today"
+            className="text-2xl text-center text-gray-200 max-w-md"
+            delay={10}
+            animationFrom={{ opacity: 0, transform: "translate3d(0,50px,0)" }}
+            animationTo={{ opacity: 1, transform: "translate3d(0,0,0)" }}
+            easing="easeOutCubic"
+            threshold={0.2}
+            rootMargin="-50px"
+          />
         </div>
       </div>
 
       {/* Right side - Sign Up form (expanded to 2/3 of the screen) */}
       <div className="w-2/3 bg-gray-50 flex items-center justify-center py-8 overflow-y-auto">
         <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl mx-6">
-          <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Create Account</h2>
-          
+          <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
+            Create Account
+          </h2>
+
           {error && (
             <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-md">
               {error}
             </div>
           )}
-          
+
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Personal Information */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
+                <label
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                  htmlFor="name"
+                >
                   Full Name
                 </label>
                 <input
@@ -158,9 +184,12 @@ const SignUp = (): JSX.Element => {
                   required
                 />
               </div>
-              
+
               <div>
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="phoneNumber">
+                <label
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                  htmlFor="phoneNumber"
+                >
                   Phone Number
                 </label>
                 <input
@@ -174,9 +203,12 @@ const SignUp = (): JSX.Element => {
                 />
               </div>
             </div>
-            
+
             <div>
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="email"
+              >
                 Email
               </label>
               <input
@@ -189,11 +221,14 @@ const SignUp = (): JSX.Element => {
                 required
               />
             </div>
-            
+
             {/* Status Selection */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="status">
+                <label
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                  htmlFor="status"
+                >
                   Current Status
                 </label>
                 <select
@@ -208,11 +243,14 @@ const SignUp = (): JSX.Element => {
                   <option value="job">Working Professional</option>
                 </select>
               </div>
-              
+
               <div>
                 {formData.status === "student" ? (
                   <>
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="schoolName">
+                    <label
+                      className="block text-gray-700 text-sm font-bold mb-2"
+                      htmlFor="schoolName"
+                    >
                       School/College Name
                     </label>
                     <input
@@ -226,7 +264,10 @@ const SignUp = (): JSX.Element => {
                   </>
                 ) : (
                   <>
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="companyName">
+                    <label
+                      className="block text-gray-700 text-sm font-bold mb-2"
+                      htmlFor="companyName"
+                    >
                       Company Name
                     </label>
                     <input
@@ -241,7 +282,7 @@ const SignUp = (): JSX.Element => {
                 )}
               </div>
             </div>
-            
+
             {/* Preferences Section - Using map function */}
             <div>
               <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -252,22 +293,30 @@ const SignUp = (): JSX.Element => {
                   const prefKey = getPreferenceKey(preference);
                   return (
                     <div key={prefKey} className="flex items-center space-x-2">
-                      <Checkbox 
-                        id={prefKey} 
+                      <Checkbox
+                        id={prefKey}
                         checked={preferences[prefKey]}
                         onCheckedChange={() => handleCheckboxChange(prefKey)}
                       />
-                      <label htmlFor={prefKey} className="text-sm text-gray-700">{preference}</label>
+                      <label
+                        htmlFor={prefKey}
+                        className="text-sm text-gray-700"
+                      >
+                        {preference}
+                      </label>
                     </div>
                   );
                 })}
               </div>
             </div>
-            
+
             {/* Password Fields */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
+                <label
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                  htmlFor="password"
+                >
                   Password
                 </label>
                 <input
@@ -280,9 +329,12 @@ const SignUp = (): JSX.Element => {
                   required
                 />
               </div>
-              
+
               <div>
-                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="confirmPassword">
+                <label
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                  htmlFor="confirmPassword"
+                >
                   Confirm Password
                 </label>
                 <input
@@ -296,7 +348,7 @@ const SignUp = (): JSX.Element => {
                 />
               </div>
             </div>
-            
+
             <button
               type="submit"
               className="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-colors"
@@ -304,12 +356,12 @@ const SignUp = (): JSX.Element => {
               Create Account
             </button>
           </form>
-          
+
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
               Already have an account?{" "}
-              <a 
-                href="/login" 
+              <a
+                href="/login"
                 className="text-blue-500 hover:text-blue-700 font-medium"
                 onClick={(e) => {
                   e.preventDefault();

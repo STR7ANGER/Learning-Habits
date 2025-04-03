@@ -1,7 +1,6 @@
-import React from "react";
 import { useAuth } from "../context/AuthContext";
 
-const Hero = (): JSX.Element => {
+const Home = (): JSX.Element => {
   const { user } = useAuth();
 
   return (
@@ -34,4 +33,4 @@ const Hero = (): JSX.Element => {
   );
 };
 
-export default Hero;
+export default Home;

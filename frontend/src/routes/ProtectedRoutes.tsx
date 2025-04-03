@@ -1,7 +1,7 @@
-import React from "react";
+
 import { Route } from "react-router-dom";
 import ProtectedRoute from "./ProtectRoute";
-import Hero from "../components/Hero";
+import Home from "../components/Home";
 import AboutUs from "../pages/AboutUs";
 import ContactUs from "../pages/ContactUs";
 import Courses from "../pages/Courses";
@@ -13,7 +13,7 @@ const ProtectedRoutes = (): JSX.Element[] => {
       path="/home"
       element={
         <ProtectedRoute>
-          <Hero />
+          <Home />
         </ProtectedRoute>
       }
     />,

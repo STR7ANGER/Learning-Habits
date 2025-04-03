@@ -4,6 +4,8 @@ import { useAuth } from "../context/AuthContext";
 import { assets } from "../assets/assets";
 import { cn } from "@/lib/utils";
 import { AnimatedGridPattern } from "@/components/magicui/animated-grid-pattern";
+import SplitText from "@/blocks/TextAnimations/SplitText/SplitText";
+import BlurText from "@/blocks/TextAnimations/BlurText/BlurText";
 
 const Login = (): JSX.Element => {
   const [email, setEmail] = useState<string>("");
@@ -38,12 +40,25 @@ const Login = (): JSX.Element => {
         
         {/* Content */}
         <div className="relative z-10 flex flex-col items-center">
-          
-          <h1 className="text-4xl font-bold mb-4 text-center">LEARNING HABITS</h1>
-          <p className="text-xl text-center text-gray-200 max-w-md">
-            Empower your journey with interactive courses designed to help you
-            master new skills at your own pace
-          </p>
+          <div className="mb-4 text-center ">
+            <BlurText
+              text="Learning Habits !!"
+              delay={150}
+              animateBy="words"
+              direction="top"
+              className="text-5xl mb-8"
+            />
+          </div>
+          <SplitText
+            text="Empower your journey with interactive courses designed to help you master new skills at your own pace"
+            className="text-2xl text-center text-gray-200 max-w-md"
+            delay={10}
+            animationFrom={{ opacity: 0, transform: "translate3d(0,50px,0)" }}
+            animationTo={{ opacity: 1, transform: "translate3d(0,0,0)" }}
+            easing="easeOutCubic"
+            threshold={0.2}
+            rootMargin="-50px"
+          />
         </div>
       </div>
 
