@@ -76,7 +76,7 @@ const Footer = (): JSX.Element => {
   );
 
   return (
-    <footer className="bg-blue-800 text-white py-12 w-full mt-auto">
+    <footer className="bg-gradient-to-t from-blue-900 via-blue-800 to-blue-600 text-white py-12 w-full mt-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* About Company */}
