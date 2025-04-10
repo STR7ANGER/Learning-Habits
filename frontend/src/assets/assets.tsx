@@ -8,6 +8,7 @@ import chatbot from "./chatbot.png";
 import dataanlys from "./dataanlys.png";
 import clodservs from "./clodservs.png";
 import appoint from "./appoint.png"
+import abt_img from "./about.png"
 
 export const assets = {
   logo,
@@ -20,6 +21,7 @@ export const assets = {
   clodservs,
   dataanlys,
   appoint,
+  abt_img,
 };
 
 export default assets;

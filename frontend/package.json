@@ -31,6 +31,7 @@
     "react-error-boundary": "^5.0.0",
     "react-icons": "^5.5.0",
     "react-router-dom": "^7.4.1",
+    "react-vertical-timeline-component": "^3.5.3",
     "route": "^0.2.5",
     "router": "^2.2.0",
     "router-dom": "^3.0.3",
