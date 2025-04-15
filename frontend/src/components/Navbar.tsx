@@ -2,7 +2,7 @@ import  { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
-const Navbar = (): JSX.Element => {
+const Navbar = ()=> {
   const { logout, user } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 

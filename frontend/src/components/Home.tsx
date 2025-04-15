@@ -4,7 +4,7 @@ import TrustCompany from "@/pages/trustCompany";
 import TopCourses from "@/pages/topCourses";
 import Appoint from "@/pages/Appoint";
 
-const Home = (): JSX.Element => {
+const Home = () => {
   return (
     <>
       <Hero />

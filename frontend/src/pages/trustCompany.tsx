@@ -17,7 +17,7 @@ interface Company {
   color: string;
 }
 
-const trustCompany: JSX.Element = () => {
+const trustCompany = () => {
   const companies: Company[] = [
     { name: "Apple", icon: SiApple, color: "#000000" },
     { name: "Google", icon: SiGoogle, color: "#4285F4" },

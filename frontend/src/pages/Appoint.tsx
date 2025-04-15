@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, ChangeEvent, FormEvent } from "react";
 import { assets } from "./../assets/assets";
 
 const Appoint = () => {
@@ -25,7 +25,7 @@ const Appoint = () => {
     "Rust",
   ];
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -33,7 +33,7 @@ const Appoint = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("Form submitted:", formData);
     // Handle form submission logic here
@@ -151,7 +151,6 @@ const Appoint = () => {
                   name="message"
                   value={formData.message}
                   onChange={handleChange}
-                  rows="3"
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-700"
                 ></textarea>
               </div>

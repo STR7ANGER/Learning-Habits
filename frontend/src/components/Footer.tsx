@@ -1,8 +1,7 @@
 import { Link } from "react-router-dom";
-
 import { Github, Twitter, Linkedin, Instagram } from "lucide-react";
 
-const Footer = (): JSX.Element => {
+const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   // Quick links data
@@ -25,13 +24,12 @@ const Footer = (): JSX.Element => {
     { name: "Newsletter", path: "/newsletter" },
   ];
 
-  // Social media icons data with correct icon components
+  // Social media icons data
   const socialMedia = [
     { name: "Github", icon: Github, link: "#" },
     { name: "Twitter", icon: Twitter, link: "#" },
     { name: "LinkedIn", icon: Linkedin, link: "#" },
     { name: "Instagram", icon: Instagram, link: "#" },
-    
   ];
 
   // Arrow component for links
@@ -84,7 +82,7 @@ const Footer = (): JSX.Element => {
             <h3 className="text-xl font-bold mb-4">About Company</h3>
             <div className="w-12 h-1 bg-white mb-6"></div>
             <p className="text-sm leading-relaxed">
-              Learing Habits powers growth by connecting visionary organizations with
+              Learning Habits powers growth by connecting visionary organizations with
               exceptional talent through AI-driven precision hiring—building
               agile, future-ready teams at scale.
             </p>

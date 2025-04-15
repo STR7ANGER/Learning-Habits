@@ -7,7 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import BlurText from "@/blocks/TextAnimations/BlurText/BlurText";
 import SplitText from "@/blocks/TextAnimations/SplitText/SplitText";
 
-const SignUp = (): JSX.Element => {
+const SignUp = () => {
   const [formData, setFormData] = useState({
     name: "",
     phoneNumber: "",
@@ -144,7 +144,6 @@ const SignUp = (): JSX.Element => {
             delay={10}
             animationFrom={{ opacity: 0, transform: "translate3d(0,50px,0)" }}
             animationTo={{ opacity: 1, transform: "translate3d(0,0,0)" }}
-            easing="easeOutCubic"
             threshold={0.2}
             rootMargin="-50px"
           />

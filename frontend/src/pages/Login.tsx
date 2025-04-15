@@ -1,13 +1,12 @@
 import { useState, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { assets } from "../assets/assets";
 import { cn } from "@/lib/utils";
 import { AnimatedGridPattern } from "@/components/magicui/animated-grid-pattern";
 import SplitText from "@/blocks/TextAnimations/SplitText/SplitText";
 import BlurText from "@/blocks/TextAnimations/BlurText/BlurText";
 
-const Login = (): JSX.Element => {
+const Login = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();
@@ -55,7 +54,6 @@ const Login = (): JSX.Element => {
             delay={10}
             animationFrom={{ opacity: 0, transform: "translate3d(0,50px,0)" }}
             animationTo={{ opacity: 1, transform: "translate3d(0,0,0)" }}
-            easing="easeOutCubic"
             threshold={0.2}
             rootMargin="-50px"
           />
