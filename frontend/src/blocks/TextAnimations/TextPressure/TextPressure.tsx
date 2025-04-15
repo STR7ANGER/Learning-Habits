@@ -60,17 +60,8 @@ const TextPressure: React.FC<TextPressureProps> = ({
       cursorRef.current.x = e.clientX;
       cursorRef.current.y = e.clientY;
     };
-    
-    const handleTouchMove = (e: TouchEvent) => {
-      // Fix: Check if touches array has elements before accessing
-      if (e.touches && e.touches.length > 0) {
-        cursorRef.current.x = e.touches[0].clientX;
-        cursorRef.current.y = e.touches[0].clientY;
-      }
-    };
 
     window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("touchmove", handleTouchMove, { passive: false });
 
     if (containerRef.current) {
       const { left, top, width, height } =
@@ -83,7 +74,6 @@ const TextPressure: React.FC<TextPressureProps> = ({
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("touchmove", handleTouchMove);
     };
   }, []);
 
@@ -142,7 +132,7 @@ const TextPressure: React.FC<TextPressureProps> = ({
           const getAttr = (
             distance: number,
             minVal: number,
-            maxVal: number,
+            maxVal: number
           ) => {
             const val = maxVal - Math.abs((maxVal * distance) / maxDist);
             return Math.max(minVal, val + minVal);
