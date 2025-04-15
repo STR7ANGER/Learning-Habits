@@ -668,7 +668,7 @@ const Ballpit = ({
   className = "",
   followCursor = true,
   count = 100,
-  colors = [0x0000aa, 0x3366ff, 0x99ccff], 
+  colors = [0x0000aa, 0x3366ff, 0x99ccff],
   gravity = 0.5,
   friction = 0.9975,
   wallBounce = 0.95,
@@ -729,9 +729,6 @@ const Ballpit = ({
       materialParams,
       ...otherProps,
     };
-
-    console.log("Ballpit config:", config);
-    console.log("Processed colors:", processedColors);
 
     // Initialize the ballpit
     const ballpit = createBallpit(canvas, config);

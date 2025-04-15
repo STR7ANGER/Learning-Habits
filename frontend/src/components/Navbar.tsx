@@ -38,6 +38,15 @@ const Navbar = (): JSX.Element => {
               <Link to="/contact" className="text-black hover:text-blue-800 px-3 py-2 rounded-md font-medium transition-colors">
                 Contact
               </Link>
+              <Link to="/event" className="text-black hover:text-blue-800 px-3 py-2 rounded-md font-medium transition-colors">
+                Events
+              </Link>
+              <Link to="/news" className="text-black hover:text-blue-800 px-3 py-2 rounded-md font-medium transition-colors">
+                News
+              </Link>
+              <Link to="/blog" className="text-black hover:text-blue-800 px-3 py-2 rounded-md font-medium transition-colors">
+                Blogs
+              </Link>
             </div>
           </div>
 

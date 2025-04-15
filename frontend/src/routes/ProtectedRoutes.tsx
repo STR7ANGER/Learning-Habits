@@ -1,10 +1,12 @@
-
 import { Route } from "react-router-dom";
 import ProtectedRoute from "./ProtectRoute";
 import Home from "../components/Home";
 import AboutUs from "../pages/AboutUs";
 import ContactUs from "../pages/ContactUs";
 import Courses from "../pages/Courses";
+import Events from "../pages/Events";
+import News from "../pages/News";
+import Blogs from "../pages/Blogs";
 
 const ProtectedRoutes = (): JSX.Element[] => {
   return [
@@ -43,7 +45,34 @@ const ProtectedRoutes = (): JSX.Element[] => {
           <Courses />
         </ProtectedRoute>
       }
-    />
+    />,
+    <Route
+      key="event"
+      path="/event"
+      element={
+        <ProtectedRoute>
+          <Events />
+        </ProtectedRoute>
+      }
+    />,
+    <Route
+      key="news"
+      path="/news"
+      element={
+        <ProtectedRoute>
+          <News />
+        </ProtectedRoute>
+      }
+    />,
+    <Route
+      key="blog"
+      path="/blog"
+      element={
+        <ProtectedRoute>
+          <Blogs />
+        </ProtectedRoute>
+      }
+    />,
   ];
 };
 
