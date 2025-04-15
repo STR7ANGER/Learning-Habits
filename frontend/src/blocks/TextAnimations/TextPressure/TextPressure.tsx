@@ -37,7 +37,8 @@ const TextPressure: React.FC<TextPressureProps> = ({
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const titleRef = useRef<HTMLHeadingElement | null>(null);
-  const spansRef = useRef<(HTMLSpanElement | null)[]>([]);
+  // Fix: Use proper typing for the refs array
+  const spansRef = useRef<Array<HTMLSpanElement | null>>([]);
 
   const mouseRef = useRef({ x: 0, y: 0 });
   const cursorRef = useRef({ x: 0, y: 0 });
@@ -61,11 +62,10 @@ const TextPressure: React.FC<TextPressureProps> = ({
     };
     
     const handleTouchMove = (e: TouchEvent) => {
-      // Check if touches array has elements before accessing
+      // Fix: Check if touches array has elements before accessing
       if (e.touches && e.touches.length > 0) {
-        const t = e.touches[0];
-        cursorRef.current.x = t.clientX;
-        cursorRef.current.y = t.clientY;
+        cursorRef.current.x = e.touches[0].clientX;
+        cursorRef.current.y = e.touches[0].clientY;
       }
     };
 
@@ -211,7 +211,10 @@ const TextPressure: React.FC<TextPressureProps> = ({
         {chars.map((char, i) => (
           <span
             key={i}
-            ref={(el) => (spansRef.current[i] = el)}
+            // Fix: Use the proper ref callback signature that doesn't return anything
+            ref={(el) => {
+              spansRef.current[i] = el;
+            }}
             data-char={char}
             className="inline-block"
           >

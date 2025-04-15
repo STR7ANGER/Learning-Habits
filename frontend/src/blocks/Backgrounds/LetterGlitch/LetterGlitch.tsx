@@ -95,20 +95,29 @@ const LetterGlitch = ({
   const getRandomChar = (): string => {
     return lettersAndSymbols[
       Math.floor(Math.random() * lettersAndSymbols.length)
-    ];
+    ]!;
   };
 
   const getRandomColor = (): string => {
-    return glitchColors[Math.floor(Math.random() * glitchColors.length)] || "#ffffff";
+    return (
+      glitchColors[Math.floor(Math.random() * glitchColors.length)] || "#ffffff"
+    );
   };
 
   const hexToRgb = (hex: string) => {
+    if (!hex) {
+      return null; // Early return if hex is falsy
+    }
+
     const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-    hex = hex.replace(shorthandRegex, (_match, r, g, b) => {
+    const formattedHex = hex.replace(shorthandRegex, (_match, r, g, b) => {
       return r + r + g + g + b + b;
     });
 
-    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    const result = formattedHex
+      ? /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(formattedHex)
+      : null;
+
     return result
       ? {
           r: parseInt(result[1], 16),
@@ -121,7 +130,7 @@ const LetterGlitch = ({
   const interpolateColor = (
     start: { r: number; g: number; b: number },
     end: { r: number; g: number; b: number },
-    factor: number,
+    factor: number
   ) => {
     const result = {
       r: Math.round(start.r + (end.r - start.r) * factor),
@@ -140,12 +149,12 @@ const LetterGlitch = ({
   const initializeLetters = (columns: number, rows: number) => {
     grid.current = { columns, rows };
     const totalLetters = columns * rows;
-    
+
     const newLetters = Array.from({ length: totalLetters }, () => {
       const char = getRandomChar();
       const color = getRandomColor();
       const targetColor = getRandomColor();
-      
+
       return {
         char,
         color,
@@ -153,7 +162,7 @@ const LetterGlitch = ({
         colorProgress: 1,
       };
     });
-    
+
     letters.current = newLetters;
   };
 
@@ -182,7 +191,8 @@ const LetterGlitch = ({
   };
 
   const drawLetters = () => {
-    if (!canvasRef.current || !context.current || letters.current.length === 0) return;
+    if (!canvasRef.current || !context.current || letters.current.length === 0)
+      return;
     const ctx = context.current;
     const { width, height } = canvasRef.current.getBoundingClientRect();
     ctx.clearRect(0, 0, width, height);
@@ -208,7 +218,7 @@ const LetterGlitch = ({
 
       const newChar = getRandomChar();
       const newTargetColor = getRandomColor();
-      
+
       letters.current[index].char = newChar;
       letters.current[index].targetColor = newTargetColor;
 
@@ -230,14 +240,14 @@ const LetterGlitch = ({
 
         const startRgb = hexToRgb(letter.color);
         const endRgb = hexToRgb(letter.targetColor);
-        
+
         if (startRgb && endRgb) {
           const newColor = interpolateColor(
             startRgb,
             endRgb,
             letter.colorProgress
           );
-          
+
           letter.color = newColor;
           needsRedraw = true;
         }
@@ -270,7 +280,7 @@ const LetterGlitch = ({
 
     context.current = canvas.getContext("2d");
     if (!context.current) return;
-    
+
     resizeCanvas();
     animationRef.current = requestAnimationFrame(animate);
 
