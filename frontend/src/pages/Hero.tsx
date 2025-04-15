@@ -107,7 +107,7 @@ const Hero = () => {
               {currentSlideData?.description}
             </p>
 
-            {/* CTA Button */}
+       
             <button className="bg-blue-600 text-white font-bold py-3 px-8 rounded-full hover:bg-blue-700 transition-colors shadow-lg">
               {currentSlideData?.buttonText}
             </button>
