@@ -20,6 +20,9 @@ interface SplitTextProps {
   onLetterAnimationComplete?: () => void;
 }
 
+// Fix: Define the type for animated components
+const AnimatedSpan = animated('span');
+
 const SplitText: React.FC<SplitTextProps> = ({
   text = "",
   className = "",
@@ -96,13 +99,13 @@ const SplitText: React.FC<SplitTextProps> = ({
               letterIndex;
 
             return (
-              <animated.span
+              <AnimatedSpan
                 key={index}
-                style={springs[index] as unknown as React.CSSProperties}
+                style={springs[index]}
                 className="inline-block transform transition-opacity will-change-transform"
               >
                 {letter}
-              </animated.span>
+              </AnimatedSpan>
             );
           })}
           <span style={{ display: "inline-block", width: "0.3em" }}>

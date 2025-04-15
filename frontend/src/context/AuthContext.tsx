@@ -21,7 +21,7 @@ interface AuthProviderProps {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 // Create provider component
-export const AuthProvider = ({ children }: AuthProviderProps): JSX.Element => {
+export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [user, setUser] = useState<User | null>(null);
 
