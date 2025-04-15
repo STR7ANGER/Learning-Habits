@@ -46,6 +46,9 @@ const Hero = () => {
     return () => clearInterval(interval);
   }, []);
 
+  // Ensure we always have a valid slide to reference
+  const currentSlideData = slides[currentSlide] || slides[0];
+
   return (
     <div className="relative h-[calc(70vh-64px)] w-full overflow-hidden">
       {/* Background Images */}
@@ -67,9 +70,11 @@ const Hero = () => {
             ) : (
               // Modified SVG rendering to fill the space
               <div className="w-full h-full">
-                {React.cloneElement(slide.image, {
-                  className: "w-full h-full object-cover",
-                })}
+                {/* Use proper TypeScript handling for JSX elements */}
+                {slide.image && typeof slide.image === 'object' && 'type' in slide.image ? 
+                  <div className="w-full h-full object-cover">{slide.image}</div> :
+                  <div className="w-full h-full bg-gray-800"></div>
+                }
               </div>
             )}
           </div>
@@ -89,7 +94,7 @@ const Hero = () => {
             {/* Title with TextPressure */}
             <div className="mb-6">
               <BlurText
-                text={slides[currentSlide].title}
+                text={currentSlideData.title}
                 delay={15}
                 animateBy="words"
                 direction="top"
@@ -99,12 +104,12 @@ const Hero = () => {
 
             {/* Description */}
             <p className="text-xl text-white mb-8">
-              {slides[currentSlide].description}
+              {currentSlideData.description}
             </p>
 
             {/* CTA Button */}
             <button className="bg-blue-600 text-white font-bold py-3 px-8 rounded-full hover:bg-blue-700 transition-colors shadow-lg">
-              {slides[currentSlide].buttonText}
+              {currentSlideData.buttonText}
             </button>
           </div>
         </div>
