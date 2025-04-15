@@ -94,7 +94,7 @@ const Hero = () => {
             {/* Title with TextPressure */}
             <div className="mb-6">
               <BlurText
-                text={currentSlideData.title}
+                text={currentSlideData?.title}
                 delay={15}
                 animateBy="words"
                 direction="top"
@@ -104,12 +104,12 @@ const Hero = () => {
 
             {/* Description */}
             <p className="text-xl text-white mb-8">
-              {currentSlideData.description}
+              {currentSlideData?.description}
             </p>
 
             {/* CTA Button */}
             <button className="bg-blue-600 text-white font-bold py-3 px-8 rounded-full hover:bg-blue-700 transition-colors shadow-lg">
-              {currentSlideData.buttonText}
+              {currentSlideData?.buttonText}
             </button>
           </div>
         </div>
