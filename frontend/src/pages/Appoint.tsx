@@ -1,4 +1,3 @@
-import Ballpit from "@/blocks/Backgrounds/Ballpit/Ballpit";
 import { useState } from "react";
 import { assets } from "./../assets/assets";
 
@@ -44,13 +43,7 @@ const Appoint = () => {
     <div className="relative w-full bg-transparent h-screen">
       {/* Ballpit as background layer */}
       <div className="absolute inset-0 w-full h-full z-5 overflow-hidden">
-        <Ballpit
-          count={100}
-          gravity={0.5}
-          friction={0.9975}
-          wallBounce={0.95}
-          followCursor={false}
-        />
+        
       </div>
 
       {/* Card floating above in 3D space */}
