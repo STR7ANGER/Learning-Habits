@@ -8,7 +8,7 @@ import Events from "../pages/Events";
 import News from "../pages/News";
 import Blogs from "../pages/Blogs";
 
-const ProtectedRoutes = (): JSX.Element[] => {
+const ProtectedRoutes = () => {
   return [
     <Route
       key="home"

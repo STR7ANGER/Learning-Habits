@@ -1,9 +1,11 @@
-/*
-	Installed from https://reactbits.dev/ts/tailwind/
-*/
-
 import { useSprings, animated, SpringConfig } from "@react-spring/web";
 import { useEffect, useRef, useState } from "react";
+
+interface SpringAnimationProps {
+  opacity: number;
+  transform: string;
+  [key: string]: any; 
+}
 
 interface SplitTextProps {
   text?: string;
@@ -39,7 +41,7 @@ const SplitText: React.FC<SplitTextProps> = ({
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
+        if (entry?.isIntersecting) {
           setInView(true);
           if (ref.current) {
             observer.unobserve(ref.current);
@@ -61,7 +63,7 @@ const SplitText: React.FC<SplitTextProps> = ({
     letters.map((_, i) => ({
       from: animationFrom,
       to: inView
-        ? async (next: (props: any) => Promise<void>) => {
+        ? async (next: (props: SpringAnimationProps) => Promise<void>) => {
             await next(animationTo);
             animatedCount.current += 1;
             if (

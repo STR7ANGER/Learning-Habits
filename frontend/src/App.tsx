@@ -2,7 +2,7 @@ import { AuthProvider } from "./context/AuthContext";
 import AppRoutes from "./routes/AppRoutes";
 import ClickSpark from "./blocks/Animations/ClickSpark/ClickSpark";
 
-const App = (): JSX.Element => {
+const App = () => {
   return (
     <ClickSpark
       sparkColor="#000000"

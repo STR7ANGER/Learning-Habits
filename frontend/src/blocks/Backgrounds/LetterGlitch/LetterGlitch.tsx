@@ -1,7 +1,3 @@
-/*
-	Installed from https://reactbits.dev/ts/tailwind/
-*/
-
 import { useRef, useEffect } from "react";
 
 const LetterGlitch = ({
@@ -11,11 +7,11 @@ const LetterGlitch = ({
   outerVignette = true,
   smooth = true,
 }: {
-  glitchColors: string[];
-  glitchSpeed: number;
-  centerVignette: boolean;
-  outerVignette: boolean;
-  smooth: boolean;
+  glitchColors?: string[];
+  glitchSpeed?: number;
+  centerVignette?: boolean;
+  outerVignette?: boolean;
+  smooth?: boolean;
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const animationRef = useRef<number | null>(null);
@@ -177,9 +173,9 @@ const LetterGlitch = ({
   };
 
   const drawLetters = () => {
-    if (!context.current || letters.current.length === 0) return;
+    if (!canvasRef.current || !context.current || letters.current.length === 0) return;
     const ctx = context.current;
-    const { width, height } = canvasRef.current!.getBoundingClientRect();
+    const { width, height } = canvasRef.current.getBoundingClientRect();
     ctx.clearRect(0, 0, width, height);
     ctx.font = `${fontSize}px monospace`;
     ctx.textBaseline = "top";
@@ -193,13 +189,13 @@ const LetterGlitch = ({
   };
 
   const updateLetters = () => {
-    if (!letters.current || letters.current.length === 0) return; // Prevent accessing empty array
+    if (!letters.current || letters.current.length === 0) return;
 
     const updateCount = Math.max(1, Math.floor(letters.current.length * 0.05));
 
     for (let i = 0; i < updateCount; i++) {
       const index = Math.floor(Math.random() * letters.current.length);
-      if (!letters.current[index]) continue; // Skip if index is invalid
+      if (index >= letters.current.length || !letters.current[index]) continue;
 
       letters.current[index].char = getRandomChar();
       letters.current[index].targetColor = getRandomColor();
@@ -258,27 +254,33 @@ const LetterGlitch = ({
     if (!canvas) return;
 
     context.current = canvas.getContext("2d");
+    if (!context.current) return;
+    
     resizeCanvas();
-    animate();
+    animationRef.current = requestAnimationFrame(animate);
 
-    let resizeTimeout: NodeJS.Timeout;
+    let resizeTimeout: NodeJS.Timeout | null = null;
 
     const handleResize = () => {
-      clearTimeout(resizeTimeout);
+      if (resizeTimeout) clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(() => {
-        cancelAnimationFrame(animationRef.current as number);
+        if (animationRef.current !== null) {
+          cancelAnimationFrame(animationRef.current);
+        }
         resizeCanvas();
-        animate();
+        animationRef.current = requestAnimationFrame(animate);
       }, 100);
     };
 
     window.addEventListener("resize", handleResize);
 
     return () => {
-      cancelAnimationFrame(animationRef.current!);
+      if (animationRef.current !== null) {
+        cancelAnimationFrame(animationRef.current);
+      }
       window.removeEventListener("resize", handleResize);
+      if (resizeTimeout) clearTimeout(resizeTimeout);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [glitchSpeed, smooth]);
 
   return (

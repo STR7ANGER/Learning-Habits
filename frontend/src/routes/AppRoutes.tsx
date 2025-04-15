@@ -6,7 +6,7 @@ import Footer from "../components/Footer";
 import PublicRoutes from "./PublicRoutes";
 import ProtectedRoutes from "./ProtectedRoutes";
 
-const AppRoutes = (): JSX.Element => {
+const AppRoutes = () => {
   const { isAuthenticated } = useAuth();
 
   return (

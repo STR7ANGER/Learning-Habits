@@ -1,7 +1,3 @@
-/*
-	Installed from https://reactbits.dev/ts/tailwind/
-*/
-
 import { useEffect, useRef, useState } from "react";
 
 interface TextPressureProps {
@@ -63,10 +59,14 @@ const TextPressure: React.FC<TextPressureProps> = ({
       cursorRef.current.x = e.clientX;
       cursorRef.current.y = e.clientY;
     };
+    
     const handleTouchMove = (e: TouchEvent) => {
-      const t = e.touches[0];
-      cursorRef.current.x = t.clientX;
-      cursorRef.current.y = t.clientY;
+      // Check if touches array has elements before accessing
+      if (e.touches && e.touches.length > 0) {
+        const t = e.touches[0];
+        cursorRef.current.x = t.clientX;
+        cursorRef.current.y = t.clientY;
+      }
     };
 
     window.addEventListener("mousemove", handleMouseMove);

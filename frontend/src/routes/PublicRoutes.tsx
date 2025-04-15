@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import Login from "../pages/Login";
 import SignUp from "../pages/SignUp";
 
-const PublicRoutes = (): JSX.Element[] => {
+const PublicRoutes = () => {
   const { isAuthenticated } = useAuth();
 
   return [
