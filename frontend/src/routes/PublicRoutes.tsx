@@ -23,17 +23,6 @@ const PublicRoutes = () => {
     <Route key="home" path="/home" element={<Home />} />,
     <Route key="about" path="/about" element={<AboutUs />} />,
     <Route key="contact" path="/contact" element={<ContactUs />} />,
-    <Route
-      key="root"
-      path="/"
-      element={
-        isAuthenticated ? (
-          <Navigate to="/home" replace />
-        ) : (
-          <Navigate to="/login" replace />
-        )
-      }
-    />,
   ];
 };
 
