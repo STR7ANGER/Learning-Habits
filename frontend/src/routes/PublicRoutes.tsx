@@ -13,14 +13,14 @@ const PublicRoutes = () => {
     <Route
       key="login"
       path="/login"
-      element={isAuthenticated ? <Navigate to="/home" replace /> : <Login />}
+      element={isAuthenticated ? <Navigate to="/" replace /> : <Login />}
     />,
     <Route
       key="signup"
       path="/signup"
-      element={isAuthenticated ? <Navigate to="/home" replace /> : <SignUp />}
+      element={isAuthenticated ? <Navigate to="/" replace /> : <SignUp />}
     />,
-    <Route key="home" path="/home" element={<Home />} />,
+    <Route key="home" path="/" element={<Home />} />,
     <Route key="about" path="/about" element={<AboutUs />} />,
     <Route key="contact" path="/contact" element={<ContactUs />} />,
   ];
