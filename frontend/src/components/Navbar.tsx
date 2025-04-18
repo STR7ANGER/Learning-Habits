@@ -75,7 +75,7 @@ const Navbar: React.FC = () => {
                 {/* Projects Dropdown Menu */}
                 {projectsDropdownOpen && (
                   <div
-                    className="absolute z-10 mt-2 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+                    className="absolute z-50 mt-2 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
                     role="menu"
                     aria-orientation="vertical"
                   >
@@ -128,7 +128,7 @@ const Navbar: React.FC = () => {
                 {/* Updates Dropdown Menu */}
                 {updatesDropdownOpen && (
                   <div
-                    className="absolute z-10 mt-2 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+                    className="absolute z-50 mt-2 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
                     role="menu"
                     aria-orientation="vertical"
                   >
