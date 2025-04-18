@@ -1,7 +1,5 @@
 import { Route, Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import Login from "../pages/Login";
-import SignUp from "../pages/SignUp";
 import Home from "@/components/Home";
 import AboutUs from "@/pages/AboutUs";
 import ContactUs from "@/pages/ContactUs";
@@ -10,6 +8,12 @@ import Events from "@/pages/Events";
 import News from "@/pages/News";
 import Blogs from "@/pages/Blogs";
 import Expert from "@/pages/Expert";
+import ExpertSignUp from "@/pages/expert/ExpertSignUp";
+import ExpertLogin from "@/pages/expert/ExpertLogin";
+import LearnerLogin from "@/pages/LearnerLogin";
+import LearnerSignUp from "@/pages/LeanerSignUp";
+import Dashboard from "@/pages/expert/Dashboard";
+import Sessions from "@/pages/expert/Sessions";
 
 const PublicRoutes = () => {
   const { isAuthenticated } = useAuth();
@@ -18,12 +22,14 @@ const PublicRoutes = () => {
     <Route
       key="login"
       path="/login"
-      element={isAuthenticated ? <Navigate to="/" replace /> : <Login />}
+      element={isAuthenticated ? <Navigate to="/" replace /> : <LearnerLogin />}
     />,
     <Route
       key="signup"
       path="/signup"
-      element={isAuthenticated ? <Navigate to="/" replace /> : <SignUp />}
+      element={
+        isAuthenticated ? <Navigate to="/" replace /> : <LearnerSignUp />
+      }
     />,
     <Route key="home" path="/" element={<Home />} />,
     <Route key="about" path="/about" element={<AboutUs />} />,
@@ -33,6 +39,14 @@ const PublicRoutes = () => {
     <Route key="news" path="/news" element={<News />} />,
     <Route key="blog" path="/blog" element={<Blogs />} />,
     <Route key="expert" path="/expert" element={<Expert />} />,
+    <Route
+      key="expertsingup"
+      path="/expertsignup"
+      element={<ExpertSignUp />}
+    />,
+    <Route key="expertlogin" path="/expertlogin" element={<ExpertLogin />} />,
+    <Route key="dashboard" path="/dashboard" element={<Dashboard />} />,
+    <Route key="session" path="/session" element={<Sessions />} />,
   ];
 };
 

@@ -5,6 +5,7 @@ import { useState } from "react";
 // Define the User interface based on your auth context
 interface User {
   email: string;
+  role: "learner" | "expert";
   // Add other user properties as needed
 }
 
@@ -13,10 +14,12 @@ interface AuthContextType {
   logout: () => void;
   user: User | null;
   isAuthenticated: boolean;
+  userType: "learner" | "expert" | null;
 }
 
 const Navbar: React.FC = () => {
-  const { logout, user, isAuthenticated } = useAuth() as AuthContextType;
+  const { logout, user, isAuthenticated, userType } =
+    useAuth() as AuthContextType;
   const [projectsDropdownOpen, setProjectsDropdownOpen] =
     useState<boolean>(false);
   const [updatesDropdownOpen, setUpdatesDropdownOpen] =
@@ -31,6 +34,9 @@ const Navbar: React.FC = () => {
     setUpdatesDropdownOpen(!updatesDropdownOpen);
     if (projectsDropdownOpen) setProjectsDropdownOpen(false);
   };
+
+  // Determine if the user is an expert
+  const isExpert = isAuthenticated && userType === "expert";
 
   return (
     <nav className="bg-white shadow-md">
@@ -48,120 +54,141 @@ const Navbar: React.FC = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center">
             <div className="ml-10 flex items-baseline space-x-4">
-              {/* Dropdown Menu for Projects/Expert */}
-              <div className="relative">
-                <button
-                  onClick={toggleProjectsDropdown}
-                  className="text-black hover:text-blue-800 px-3 py-2 rounded-md font-medium transition-colors flex items-center"
-                  aria-expanded={projectsDropdownOpen}
-                >
-                  Projects
-                  <svg
-                    className={`ml-1 h-4 w-4 transform ${
-                      projectsDropdownOpen ? "rotate-180" : ""
-                    }`}
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    aria-hidden="true"
+              {/* Expert Navigation */}
+              {isExpert ? (
+                <>
+                  <Link
+                    to="/dashboard"
+                    className="text-black hover:text-blue-800 px-3 py-2 rounded-md font-medium transition-colors"
                   >
-                    <path
-                      fillRule="evenodd"
-                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </button>
-                {/* Projects Dropdown Menu */}
-                {projectsDropdownOpen && (
-                  <div
-                    className="absolute z-50 mt-2 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
-                    role="menu"
-                    aria-orientation="vertical"
+                    Dashboard
+                  </Link>
+                  <Link
+                    to="/session"
+                    className="text-black hover:text-blue-800 px-3 py-2 rounded-md font-medium transition-colors"
                   >
-                    <div className="py-1" role="none">
-                      <Link
-                        to="/project"
-                        className="text-black block px-4 py-2 text-sm hover:bg-blue-50 hover:text-blue-800"
-                        role="menuitem"
-                        onClick={() => setProjectsDropdownOpen(false)}
+                    Session
+                  </Link>
+                </>
+              ) : (
+                <>
+                  {/* Dropdown Menu for Projects/Expert - For learners or non-authenticated users */}
+                  <div className="relative">
+                    <button
+                      onClick={toggleProjectsDropdown}
+                      className="text-black hover:text-blue-800 px-3 py-2 rounded-md font-medium transition-colors flex items-center"
+                      aria-expanded={projectsDropdownOpen}
+                    >
+                      Projects
+                      <svg
+                        className={`ml-1 h-4 w-4 transform ${
+                          projectsDropdownOpen ? "rotate-180" : ""
+                        }`}
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        aria-hidden="true"
                       >
-                        Projects
-                      </Link>
-                      <Link
-                        to="/expert"
-                        className="text-black block px-4 py-2 text-sm hover:bg-blue-50 hover:text-blue-800"
-                        role="menuitem"
-                        onClick={() => setProjectsDropdownOpen(false)}
+                        <path
+                          fillRule="evenodd"
+                          d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </button>
+                    {/* Projects Dropdown Menu */}
+                    {projectsDropdownOpen && (
+                      <div
+                        className="absolute z-50 mt-2 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+                        role="menu"
+                        aria-orientation="vertical"
                       >
-                        Expert
-                      </Link>
-                    </div>
+                        <div className="py-1" role="none">
+                          <Link
+                            to="/project"
+                            className="text-black block px-4 py-2 text-sm hover:bg-blue-50 hover:text-blue-800"
+                            role="menuitem"
+                            onClick={() => setProjectsDropdownOpen(false)}
+                          >
+                            Projects
+                          </Link>
+                          <Link
+                            to="/expert"
+                            className="text-black block px-4 py-2 text-sm hover:bg-blue-50 hover:text-blue-800"
+                            role="menuitem"
+                            onClick={() => setProjectsDropdownOpen(false)}
+                          >
+                            Expert
+                          </Link>
+                        </div>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
 
-              {/* Dropdown Menu for Updates (Events, News, Blogs) */}
-              <div className="relative">
-                <button
-                  onClick={toggleUpdatesDropdown}
-                  className="text-black hover:text-blue-800 px-3 py-2 rounded-md font-medium transition-colors flex items-center"
-                  aria-expanded={updatesDropdownOpen}
-                >
-                  Updates
-                  <svg
-                    className={`ml-1 h-4 w-4 transform ${
-                      updatesDropdownOpen ? "rotate-180" : ""
-                    }`}
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </button>
-                {/* Updates Dropdown Menu */}
-                {updatesDropdownOpen && (
-                  <div
-                    className="absolute z-50 mt-2 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
-                    role="menu"
-                    aria-orientation="vertical"
-                  >
-                    <div className="py-1" role="none">
-                      <Link
-                        to="/event"
-                        className="text-black block px-4 py-2 text-sm hover:bg-blue-50 hover:text-blue-800"
-                        role="menuitem"
-                        onClick={() => setUpdatesDropdownOpen(false)}
+                  {/* Dropdown Menu for Updates (Events, News, Blogs) - For learners or non-authenticated users */}
+                  <div className="relative">
+                    <button
+                      onClick={toggleUpdatesDropdown}
+                      className="text-black hover:text-blue-800 px-3 py-2 rounded-md font-medium transition-colors flex items-center"
+                      aria-expanded={updatesDropdownOpen}
+                    >
+                      Updates
+                      <svg
+                        className={`ml-1 h-4 w-4 transform ${
+                          updatesDropdownOpen ? "rotate-180" : ""
+                        }`}
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        aria-hidden="true"
                       >
-                        Events
-                      </Link>
-                      <Link
-                        to="/news"
-                        className="text-black block px-4 py-2 text-sm hover:bg-blue-50 hover:text-blue-800"
-                        role="menuitem"
-                        onClick={() => setUpdatesDropdownOpen(false)}
+                        <path
+                          fillRule="evenodd"
+                          d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </button>
+                    {/* Updates Dropdown Menu */}
+                    {updatesDropdownOpen && (
+                      <div
+                        className="absolute z-50 mt-2 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+                        role="menu"
+                        aria-orientation="vertical"
                       >
-                        News
-                      </Link>
-                      <Link
-                        to="/blog"
-                        className="text-black block px-4 py-2 text-sm hover:bg-blue-50 hover:text-blue-800"
-                        role="menuitem"
-                        onClick={() => setUpdatesDropdownOpen(false)}
-                      >
-                        Blogs
-                      </Link>
-                    </div>
+                        <div className="py-1" role="none">
+                          <Link
+                            to="/event"
+                            className="text-black block px-4 py-2 text-sm hover:bg-blue-50 hover:text-blue-800"
+                            role="menuitem"
+                            onClick={() => setUpdatesDropdownOpen(false)}
+                          >
+                            Events
+                          </Link>
+                          <Link
+                            to="/news"
+                            className="text-black block px-4 py-2 text-sm hover:bg-blue-50 hover:text-blue-800"
+                            role="menuitem"
+                            onClick={() => setUpdatesDropdownOpen(false)}
+                          >
+                            News
+                          </Link>
+                          <Link
+                            to="/blog"
+                            className="text-black block px-4 py-2 text-sm hover:bg-blue-50 hover:text-blue-800"
+                            role="menuitem"
+                            onClick={() => setUpdatesDropdownOpen(false)}
+                          >
+                            Blogs
+                          </Link>
+                        </div>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
+                </>
+              )}
 
+              {/* Common links for all user types */}
               <Link
                 to="/about"
                 className="text-black hover:text-blue-800 px-3 py-2 rounded-md font-medium transition-colors"

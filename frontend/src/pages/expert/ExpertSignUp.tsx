@@ -1,26 +1,26 @@
 import React, { useState, FormEvent } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 import { cn } from "@/lib/utils";
 import { AnimatedGridPattern } from "@/components/magicui/animated-grid-pattern";
-import { Checkbox } from "@/components/ui/checkbox";
 import BlurText from "@/blocks/TextAnimations/BlurText/BlurText";
 import SplitText from "@/blocks/TextAnimations/SplitText/SplitText";
 
-const SignUp = () => {
+const ExpertSignUp = () => {
   const [formData, setFormData] = useState({
     name: "",
     phoneNumber: "",
     email: "",
-    status: "student", // Default value
-    schoolName: "",
-    companyName: "",
+    expertise: "",
+    experience: "",
+    portfolioLink: "",
+    bio: "",
     password: "",
     confirmPassword: "",
   });
 
-  // Define all preferences in an array for easier mapping
-  const preferenceOptions = [
+  // Define all expertise options
+  const expertiseOptions = [
     "Ai Chatbot",
     "Ai Data Scientist",
     "AR-VR",
@@ -36,37 +36,17 @@ const SignUp = () => {
     "Rust",
   ];
 
-  // Initialize preferences state with all options set to false
-  const [preferences, setPreferences] = useState<Record<string, boolean>>(
-    preferenceOptions.reduce((acc, pref) => {
-      // Convert preference name to camelCase for use as object key
-      const key = pref
-        .replace(/\s+(.)/g, (_, c) => c.toLowerCase())
-        .replace(/\s+/g, "")
-        .replace(/^(.)/, (_, c) => c.toLowerCase())
-        .replace(/-(.)/g, (_, c) => c.toUpperCase());
-      return { ...acc, [key]: false };
-    }, {})
-  );
-
   const [error, setError] = useState<string>("");
   const navigate = useNavigate();
   const { login } = useAuth();
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: value,
-    }));
-  };
-
-  const handleCheckboxChange = (preference: string) => {
-    setPreferences((prev) => ({
-      ...prev,
-      [preference]: !prev[preference],
     }));
   };
 
@@ -79,36 +59,29 @@ const SignUp = () => {
       return;
     }
 
-    if (formData.status === "student" && !formData.schoolName) {
-      setError("Please enter your school/college name");
+    if (!formData.expertise) {
+      setError("Please specify your area of expertise");
       return;
     }
-
-    if (formData.status === "job" && !formData.companyName) {
-      setError("Please enter your company name");
-      return;
-    }
-
-    // Check if at least one preference is selected
-    const hasPreference = Object.values(preferences).some((value) => value);
-    if (!hasPreference) {
-      setError("Please select at least one preference");
+    
+    if (!formData.experience) {
+      setError("Please enter your years of experience");
       return;
     }
 
     // In a real app, you would register the user with your backend
-    login({ email: formData.email });
+    login({ 
+      email: formData.email,
+      role: 'expert',
+      name: formData.name,
+      expertise: formData.expertise,
+      experience: formData.experience,
+      portfolioLink: formData.portfolioLink,
+      bio: formData.bio
+    });
 
-    // Navigation is handled by conditional rendering in the parent component
-  };
-
-  // Function to convert preference display name to camelCase key
-  const getPreferenceKey = (displayName: string): string => {
-    return displayName
-      .replace(/\s+(.)/g, (_, c) => c.toLowerCase())
-      .replace(/\s+/g, "")
-      .replace(/^(.)/, (_, c) => c.toLowerCase())
-      .replace(/-(.)/g, (_, c) => c.toUpperCase());
+    // Redirect to dashboard
+    navigate("/dashboard");
   };
 
   return (
@@ -139,7 +112,7 @@ const SignUp = () => {
             />
           </div>
           <SplitText
-            text="Join our community of learners and start your educational journey today"
+            text="Become an expert mentor and shape the future of learning with your knowledge"
             className="text-2xl text-center text-gray-200 max-w-md"
             delay={10}
             animationFrom={{ opacity: 0, transform: "translate3d(0,50px,0)" }}
@@ -150,12 +123,27 @@ const SignUp = () => {
         </div>
       </div>
 
-      {/* Right side - Sign Up form (expanded to 2/3 of the screen) */}
+      {/* Right side - Sign Up form */}
       <div className="w-2/3 bg-gray-50 flex items-center justify-center py-8 overflow-y-auto">
         <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl mx-6">
-          <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
+          <h2 className="text-2xl font-bold mb-4 text-center text-gray-800">
             Create Account
           </h2>
+
+          {/* Tab Selector */}
+          <div className="flex mb-6 border-b">
+            <Link
+              to="/signup"
+              className="flex-1 py-2 text-center font-medium text-gray-500 hover:text-blue-600"
+            >
+              Register as Learner
+            </Link>
+            <div
+              className="flex-1 py-2 text-center font-medium text-blue-600 border-b-2 border-blue-600"
+            >
+              Register as Expert
+            </div>
+          </div>
 
           {error && (
             <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-md">
@@ -221,92 +209,83 @@ const SignUp = () => {
               />
             </div>
 
-            {/* Status Selection */}
+            {/* Expert specific fields */}
+            <div>
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="expertise"
+              >
+                Area of Expertise
+              </label>
+              <select
+                id="expertise"
+                name="expertise"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                value={formData.expertise}
+                onChange={handleInputChange}
+                required
+              >
+                <option value="">Select your expertise</option>
+                {expertiseOptions.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+            </div>
+
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label
                   className="block text-gray-700 text-sm font-bold mb-2"
-                  htmlFor="status"
+                  htmlFor="experience"
                 >
-                  Current Status
+                  Years of Experience
                 </label>
-                <select
-                  id="status"
-                  name="status"
+                <input
+                  id="experience"
+                  name="experience"
+                  type="number"
+                  min="1"
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  value={formData.status}
+                  value={formData.experience}
                   onChange={handleInputChange}
                   required
-                >
-                  <option value="student">Student</option>
-                  <option value="job">Working Professional</option>
-                </select>
+                />
               </div>
-
               <div>
-                {formData.status === "student" ? (
-                  <>
-                    <label
-                      className="block text-gray-700 text-sm font-bold mb-2"
-                      htmlFor="schoolName"
-                    >
-                      School/College Name
-                    </label>
-                    <input
-                      id="schoolName"
-                      name="schoolName"
-                      type="text"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      value={formData.schoolName}
-                      onChange={handleInputChange}
-                    />
-                  </>
-                ) : (
-                  <>
-                    <label
-                      className="block text-gray-700 text-sm font-bold mb-2"
-                      htmlFor="companyName"
-                    >
-                      Company Name
-                    </label>
-                    <input
-                      id="companyName"
-                      name="companyName"
-                      type="text"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      value={formData.companyName}
-                      onChange={handleInputChange}
-                    />
-                  </>
-                )}
+                <label
+                  className="block text-gray-700 text-sm font-bold mb-2"
+                  htmlFor="portfolioLink"
+                >
+                  Portfolio Link (optional)
+                </label>
+                <input
+                  id="portfolioLink"
+                  name="portfolioLink"
+                  type="url"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  value={formData.portfolioLink}
+                  onChange={handleInputChange}
+                />
               </div>
             </div>
 
-            {/* Preferences Section - Using map function */}
             <div>
-              <label className="block text-gray-700 text-sm font-bold mb-2">
-                Preferences (Select multiple)
+              <label
+                className="block text-gray-700 text-sm font-bold mb-2"
+                htmlFor="bio"
+              >
+                Professional Bio
               </label>
-              <div className="grid grid-cols-3 gap-3">
-                {preferenceOptions.map((preference) => {
-                  const prefKey = getPreferenceKey(preference);
-                  return (
-                    <div key={prefKey} className="flex items-center space-x-2">
-                      <Checkbox
-                        id={prefKey}
-                        checked={preferences[prefKey]}
-                        onCheckedChange={() => handleCheckboxChange(prefKey)}
-                      />
-                      <label
-                        htmlFor={prefKey}
-                        className="text-sm text-gray-700"
-                      >
-                        {preference}
-                      </label>
-                    </div>
-                  );
-                })}
-              </div>
+              <textarea
+                id="bio"
+                name="bio"
+                rows={4}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                onChange={handleInputChange}
+                required
+              ></textarea>
             </div>
 
             {/* Password Fields */}
@@ -359,16 +338,12 @@ const SignUp = () => {
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
               Already have an account?{" "}
-              <a
-                href="/login"
+              <Link
+                to="/expert-login"
                 className="text-blue-500 hover:text-blue-700 font-medium"
-                onClick={(e) => {
-                  e.preventDefault();
-                  navigate("/login");
-                }}
               >
                 Log In
-              </a>
+              </Link>
             </p>
           </div>
         </div>
@@ -377,4 +352,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default ExpertSignUp;

@@ -1,24 +1,25 @@
 import { useState, FormEvent } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 import { cn } from "@/lib/utils";
 import { AnimatedGridPattern } from "@/components/magicui/animated-grid-pattern";
 import SplitText from "@/blocks/TextAnimations/SplitText/SplitText";
 import BlurText from "@/blocks/TextAnimations/BlurText/BlurText";
 
-const Login = () => {
+const ExpertLogin = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, setUserType } = useAuth();
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
 
-    // Use the login function from context
-    login({ email });
+    // Use the login function from context with role
+    login({ email, role: 'expert' });
 
-    // Navigation is handled by conditional rendering in the parent component
+    // Redirect to dashboard
+    navigate("/dashboard");
   };
 
   return (
@@ -49,7 +50,7 @@ const Login = () => {
             />
           </div>
           <SplitText
-            text="Empower your journey with interactive courses designed to help you master new skills at your own pace"
+            text="Share your expertise and guide the next generation of professionals through interactive courses and mentorship"
             className="text-2xl text-center text-gray-200 max-w-md"
             delay={10}
             animationFrom={{ opacity: 0, transform: "translate3d(0,50px,0)" }}
@@ -64,6 +65,19 @@ const Login = () => {
       <div className="w-2/3 bg-gray-50 flex items-center justify-center">
         <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md mx-6">
           <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Welcome Back</h2>
+          
+          {/* Tab Selector */}
+          <div className="flex mb-6 border-b">
+            <Link
+              to="/login"
+              className="flex-1 py-2 text-center font-medium text-gray-500 hover:text-blue-600"
+            >
+              Login as Learner
+            </Link>
+            <div className="flex-1 py-2 text-center font-medium text-blue-600 border-b-2 border-blue-600">
+              Login as Expert
+            </div>
+          </div>
 
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
@@ -130,16 +144,12 @@ const Login = () => {
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
               Don't have an account?{" "}
-              <a
-                href="/signup"
+              <Link
+                to="/signup"
                 className="text-blue-500 hover:text-blue-700 font-medium"
-                onClick={(e) => {
-                  e.preventDefault();
-                  navigate("/signup");
-                }}
               >
                 Sign Up
-              </a>
+              </Link>
             </p>
           </div>
         </div>
@@ -148,4 +158,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default ExpertLogin;
