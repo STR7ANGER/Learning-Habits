@@ -11,7 +11,7 @@ const AppRoutes = () => {
 
   return (
     <>
-      {isAuthenticated && <Navbar />}
+      {<Navbar />}
       <Routes>
         {/* Include Public Routes */}
         {PublicRoutes()}
@@ -19,7 +19,7 @@ const AppRoutes = () => {
         {/* Include Protected Routes */}
         {ProtectedRoutes()}
       </Routes>
-      {isAuthenticated && <Footer />}
+      {<Footer />}
     </>
   );
 };
