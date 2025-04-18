@@ -10,7 +10,7 @@ const LearnerLogin = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();
-  const { login, setUserType } = useAuth();
+  const { login } = useAuth();
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();

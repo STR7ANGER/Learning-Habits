@@ -6,7 +6,7 @@ interface User {
   role: 'learner' | 'expert';
   name?: string;
   // Learner specific properties
-  status?: 'student' | 'job';
+  status?: 'student' | 'job';  // This is defined correctly
   schoolName?: string;
   companyName?: string;
   preferences?: string[];
@@ -23,11 +23,11 @@ interface AuthContextType {
   isAuthenticated: boolean;
   user: User | null;
   userType: 'learner' | 'expert' | null;
-  login: (userData: User) => void;
+  login: (userData: Partial<User>) => void;
   logout: () => void;
   setUserType: (type: 'learner' | 'expert') => void;
   // Add additional methods as needed
-  updateUserProfile?: (updates: Partial<User>) => void;
+  updateUserProfile: (updates: Partial<User>) => void;
 }
 
 interface AuthProviderProps {
@@ -57,14 +57,33 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, []);
 
   // Login function
-  const login = (userData: User): void => {
+  const login = (userData: Partial<User>): void => {
+    // Make sure we have a role property
+    if (!userData.role) {
+      throw new Error("Role must be specified when logging in");
+    }
+    
+    // Ensure status is properly handled when provided
+    let parsedStatus: 'student' | 'job' | undefined = undefined;
+    if (userData.status === 'student' || userData.status === 'job') {
+      parsedStatus = userData.status;
+    }
+    
+    // Create a complete user object with required fields
+    const completeUser: User = {
+      email: userData.email || '',
+      role: userData.role,
+      ...userData,
+      status: parsedStatus
+    };
+    
     // In a real app, you would validate credentials with your backend
     localStorage.setItem("token", "dummy-token");
-    localStorage.setItem("user", JSON.stringify(userData));
-    localStorage.setItem("userType", userData.role);
+    localStorage.setItem("user", JSON.stringify(completeUser));
+    localStorage.setItem("userType", completeUser.role);
     setIsAuthenticated(true);
-    setUser(userData);
-    setUserType(userData.role);
+    setUser(completeUser);
+    setUserType(completeUser.role);
   };
 
   // Logout function
@@ -93,7 +112,18 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   // Function to update user profile
   const updateUserProfile = (updates: Partial<User>): void => {
     if (user) {
-      const updatedUser = { ...user, ...updates };
+      // Ensure status is properly handled when updated
+      let parsedStatus: 'student' | 'job' | undefined = user.status;
+      if (updates.status === 'student' || updates.status === 'job') {
+        parsedStatus = updates.status;
+      }
+      
+      const updatedUser = { 
+        ...user, 
+        ...updates,
+        status: parsedStatus
+      };
+      
       setUser(updatedUser);
       localStorage.setItem("user", JSON.stringify(updatedUser));
     }

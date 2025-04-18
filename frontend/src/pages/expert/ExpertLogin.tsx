@@ -10,13 +10,18 @@ const ExpertLogin = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();
-  const { login, setUserType } = useAuth();
+  const { login } = useAuth();
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
 
     // Use the login function from context with role
-    login({ email, role: 'expert' });
+    login({ 
+      email, 
+      role: 'expert',
+      // Password would normally be handled by backend authentication
+      // and not stored in the user object
+    });
 
     // Redirect to dashboard
     navigate("/dashboard");

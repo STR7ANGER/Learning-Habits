@@ -12,7 +12,7 @@ const LearnerSignUp = () => {
     name: "",
     phoneNumber: "",
     email: "",
-    status: "student", // Default value
+    status: "student" as "student" | "job",  // Explicitly typed
     schoolName: "",
     companyName: "",
     password: "",
@@ -57,10 +57,19 @@ const LearnerSignUp = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    
+    // Special handling for status field to maintain correct type
+    if (name === "status") {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value as "student" | "job",
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
 
   const handleCheckboxChange = (preference: string) => {
@@ -102,7 +111,7 @@ const LearnerSignUp = () => {
       role: 'learner',
       name: formData.name,
       preferences: Object.keys(preferences).filter(key => preferences[key]),
-      status: formData.status,
+      status: formData.status, // This is now properly typed as "student" | "job"
       schoolName: formData.schoolName,
       companyName: formData.companyName
     });
