@@ -527,8 +527,19 @@ const Projects: React.FC = () => {
                         <div
                           key={index}
                           className="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center border border-white"
+                          title={`${author.name} - ${author.role}`}
                         >
-                          <User size={12} className="text-gray-600" />
+                          {author.avatar ? (
+                            <img
+                              src={author.avatar}
+                              alt={author.name}
+                              className="w-full h-full rounded-full object-cover"
+                            />
+                          ) : (
+                            <div className="w-full h-full rounded-full flex items-center justify-center bg-blue-100 text-blue-600 text-xs font-medium">
+                              {author.name.charAt(0)}
+                            </div>
+                          )}
                         </div>
                       ))}
                       {project.authors.length > 3 && (
