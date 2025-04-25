@@ -1,4 +1,4 @@
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { cn } from "@/lib/utils";
@@ -9,17 +9,34 @@ import BlurText from "@/blocks/TextAnimations/BlurText/BlurText";
 const LearnerLogin = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [formError, setFormError] = useState<string>("");
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, error, loading } = useAuth();
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
+  // Update form error when auth context error changes
+  useEffect(() => {
+    if (error) {
+      setFormError(error);
+    }
+  }, [error]);
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
+    setFormError("");
 
-    // Use the login function from context with role
-    login({ email, role: 'learner' });
+    try {
+      await login({
+        email,
+        password,
+        role: "learner",
+      });
 
-    // Redirect to home page
-    navigate("/");
+      // If login is successful, redirect to home page
+      navigate("/");
+    } catch (err) {
+      console.error("Login error:", err);
+      // Error handling is done in the context
+    }
   };
 
   return (
@@ -37,7 +54,7 @@ const LearnerLogin = () => {
             "absolute inset-0 opacity-60"
           )}
         />
-        
+
         {/* Content */}
         <div className="relative z-10 flex flex-col items-center">
           <div className="mb-4 text-center ">
@@ -64,19 +81,15 @@ const LearnerLogin = () => {
       {/* Right side - Login form */}
       <div className="w-2/3 bg-gray-50 flex items-center justify-center">
         <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md mx-6">
-          <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Welcome Back</h2>
+          <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
+            Learner Login
+          </h2>
 
-          <div className="flex mb-6 border-b">
-            <div className="flex-1 py-2 text-center font-medium text-blue-600 border-b-2 border-blue-600">
-              Login as Learner
+          {formError && (
+            <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-md">
+              {formError}
             </div>
-            <Link
-              to="/expertlogin"
-              className="flex-1 py-2 text-center font-medium text-gray-500 hover:text-blue-600"
-            >
-              Login as Expert
-            </Link>
-          </div>
+          )}
 
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
@@ -148,6 +161,15 @@ const LearnerLogin = () => {
                 className="text-blue-500 hover:text-blue-700 font-medium"
               >
                 Sign Up
+              </Link>
+            </p>
+            <p className="text-sm text-gray-600 mt-2">
+              Are you an expert?{" "}
+              <Link
+                to="/expertlogin"
+                className="text-blue-500 hover:text-blue-700 font-medium"
+              >
+                Login as Expert
               </Link>
             </p>
           </div>

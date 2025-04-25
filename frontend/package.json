@@ -18,9 +18,11 @@
     "@react-three/drei": "^10.0.5",
     "@react-three/fiber": "^9.1.1",
     "@react-three/rapier": "^2.0.0",
+    "axios": "^1.9.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dom": "^0.0.3",
+    "dotenv": "^16.5.0",
     "framer-motion": "^11.18.2",
     "gl-matrix": "^3.4.3",
     "lucide-react": "^0.487.0",
@@ -58,15 +60,15 @@
     "vite": "^6.2.0"
   },
   "overrides": {
-  "@react-spring/web": {
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0"
-  },
-  "@react-spring/animated": {
-    "react": "^19.1.0"
-  },
-  "@react-spring/core": {
-    "react": "^19.1.0"
+    "@react-spring/web": {
+      "react": "^19.1.0",
+      "react-dom": "^19.1.0"
+    },
+    "@react-spring/animated": {
+      "react": "^19.1.0"
+    },
+    "@react-spring/core": {
+      "react": "^19.1.0"
+    }
   }
-}
 }

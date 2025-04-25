@@ -69,20 +69,7 @@ const ExpertLogin = () => {
       {/* Right side - Login form */}
       <div className="w-2/3 bg-gray-50 flex items-center justify-center">
         <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md mx-6">
-          <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Welcome Back</h2>
-          
-          {/* Tab Selector */}
-          <div className="flex mb-6 border-b">
-            <Link
-              to="/login"
-              className="flex-1 py-2 text-center font-medium text-gray-500 hover:text-blue-600"
-            >
-              Login as Learner
-            </Link>
-            <div className="flex-1 py-2 text-center font-medium text-blue-600 border-b-2 border-blue-600">
-              Login as Expert
-            </div>
-          </div>
+          <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Expert Login</h2>
 
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
@@ -150,10 +137,19 @@ const ExpertLogin = () => {
             <p className="text-sm text-gray-600">
               Don't have an account?{" "}
               <Link
-                to="/signup"
+                to="/expertsignup"
                 className="text-blue-500 hover:text-blue-700 font-medium"
               >
                 Sign Up
+              </Link>
+            </p>
+            <p className="text-sm text-gray-600 mt-2">
+              Are you a learner?{" "}
+              <Link
+                to="/login"
+                className="text-blue-500 hover:text-blue-700 font-medium"
+              >
+                Login as Learner
               </Link>
             </p>
           </div>

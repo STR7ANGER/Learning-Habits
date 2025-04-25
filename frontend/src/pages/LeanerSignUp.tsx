@@ -1,9 +1,9 @@
-import React, { useState, FormEvent } from "react";
+import React, { useState, FormEvent, useRef, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { cn } from "@/lib/utils";
 import { AnimatedGridPattern } from "@/components/magicui/animated-grid-pattern";
-import { Checkbox } from "@/components/ui/checkbox";
+import { X } from "lucide-react";
 import BlurText from "@/blocks/TextAnimations/BlurText/BlurText";
 import SplitText from "@/blocks/TextAnimations/SplitText/SplitText";
 
@@ -12,7 +12,7 @@ const LearnerSignUp = () => {
     name: "",
     phoneNumber: "",
     email: "",
-    status: "student" as "student" | "job",  // Explicitly typed
+    status: "student" as "student" | "job", // Explicitly typed
     schoolName: "",
     companyName: "",
     password: "",
@@ -36,28 +36,46 @@ const LearnerSignUp = () => {
     "Rust",
   ];
 
-  // Initialize preferences state with all options set to false
-  const [preferences, setPreferences] = useState<Record<string, boolean>>(
-    preferenceOptions.reduce((acc, pref) => {
-      // Convert preference name to camelCase for use as object key
-      const key = pref
-        .replace(/\s+(.)/g, (_, c) => c.toLowerCase())
-        .replace(/\s+/g, "")
-        .replace(/^(.)/, (_, c) => c.toLowerCase())
-        .replace(/-(.)/g, (_, c) => c.toUpperCase());
-      return { ...acc, [key]: false };
-    }, {})
-  );
+  const [selectedPreferences, setSelectedPreferences] = useState<string[]>([]);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const [error, setError] = useState<string>("");
+  const [formError, setFormError] = useState<string>("");
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { register, error, loading } = useAuth();
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  // Update form error when auth context error changes
+  useEffect(() => {
+    if (error) {
+      setFormError(error);
+    }
+  }, [error]);
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
   ) => {
     const { name, value } = e.target;
-    
+
     // Special handling for status field to maintain correct type
     if (name === "status") {
       setFormData((prev) => ({
@@ -72,61 +90,71 @@ const LearnerSignUp = () => {
     }
   };
 
-  const handleCheckboxChange = (preference: string) => {
-    setPreferences((prev) => ({
-      ...prev,
-      [preference]: !prev[preference],
-    }));
+  const togglePreference = (preference: string) => {
+    if (selectedPreferences.includes(preference)) {
+      setSelectedPreferences(
+        selectedPreferences.filter((p) => p !== preference)
+      );
+    } else {
+      setSelectedPreferences([...selectedPreferences, preference]);
+    }
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
+  const removePreference = (preference: string) => {
+    setSelectedPreferences(selectedPreferences.filter((p) => p !== preference));
+  };
+
+  const filteredOptions = preferenceOptions.filter(
+    (option) =>
+      option.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      !selectedPreferences.includes(option)
+  );
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
+    setFormError("");
 
     // Basic validation
     if (formData.password !== formData.confirmPassword) {
-      setError("Passwords don't match");
+      setFormError("Passwords don't match");
       return;
     }
 
     if (formData.status === "student" && !formData.schoolName) {
-      setError("Please enter your school/college name");
+      setFormError("Please enter your school/college name");
       return;
     }
 
     if (formData.status === "job" && !formData.companyName) {
-      setError("Please enter your company name");
+      setFormError("Please enter your company name");
       return;
     }
 
     // Check if at least one preference is selected
-    const hasPreference = Object.values(preferences).some((value) => value);
-    if (!hasPreference) {
-      setError("Please select at least one preference");
+    if (selectedPreferences.length === 0) {
+      setFormError("Please select at least one preference");
       return;
     }
 
-    // In a real app, you would register the user with your backend
-    login({ 
-      email: formData.email,
-      role: 'learner',
-      name: formData.name,
-      preferences: Object.keys(preferences).filter(key => preferences[key]),
-      status: formData.status, // This is now properly typed as "student" | "job"
-      schoolName: formData.schoolName,
-      companyName: formData.companyName
-    });
+    try {
+      await register({
+        name: formData.name,
+        email: formData.email,
+        phoneNumber: formData.phoneNumber,
+        password: formData.password,
+        role: "learner",
+        status: formData.status,
+        schoolName: formData.schoolName,
+        companyName: formData.companyName,
+        preferences: selectedPreferences,
+      });
 
-    // Redirect to home page
-    navigate("/");
-  };
-
-  // Function to convert preference display name to camelCase key
-  const getPreferenceKey = (displayName: string): string => {
-    return displayName
-      .replace(/\s+(.)/g, (_, c) => c.toLowerCase())
-      .replace(/\s+/g, "")
-      .replace(/^(.)/, (_, c) => c.toLowerCase())
-      .replace(/-(.)/g, (_, c) => c.toUpperCase());
+      // If registration is successful, redirect to home page
+      navigate("/");
+    } catch (err) {
+      console.error("Registration error:", err);
+      // Error handling is done in the context
+    }
   };
 
   return (
@@ -172,27 +200,12 @@ const LearnerSignUp = () => {
       <div className="w-2/3 bg-gray-50 flex items-center justify-center py-8 overflow-y-auto">
         <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl mx-6">
           <h2 className="text-2xl font-bold mb-4 text-center text-gray-800">
-            Create Account
+            Create Learner Account
           </h2>
 
-          {/* Tab Selector */}
-          <div className="flex mb-6 border-b">
-            <div
-              className="flex-1 py-2 text-center font-medium text-blue-600 border-b-2 border-blue-600"
-            >
-              Register as Learner
-            </div>
-            <Link
-              to="/expertsignup"
-              className="flex-1 py-2 text-center font-medium text-gray-500 hover:text-blue-600"
-            >
-              Register as Expert
-            </Link>
-          </div>
-
-          {error && (
+          {formError && (
             <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-md">
-              {error}
+              {formError}
             </div>
           )}
 
@@ -315,31 +328,82 @@ const LearnerSignUp = () => {
               </div>
             </div>
 
-            {/* Preferences Section - Using map function */}
-            <div>
+            {/* Preferences Section - Dropdown with tags */}
+            <div className="relative" ref={dropdownRef}>
               <label className="block text-gray-700 text-sm font-bold mb-2">
                 Preferences (Select multiple)
               </label>
-              <div className="grid grid-cols-3 gap-3">
-                {preferenceOptions.map((preference) => {
-                  const prefKey = getPreferenceKey(preference);
-                  return (
-                    <div key={prefKey} className="flex items-center space-x-2">
-                      <Checkbox
-                        id={prefKey}
-                        checked={preferences[prefKey]}
-                        onCheckedChange={() => handleCheckboxChange(prefKey)}
-                      />
-                      <label
-                        htmlFor={prefKey}
-                        className="text-sm text-gray-700"
-                      >
-                        {preference}
-                      </label>
-                    </div>
-                  );
-                })}
+              <div
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent cursor-pointer flex justify-between items-center"
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              >
+                <div className="text-gray-500">
+                  {selectedPreferences.length > 0
+                    ? `${selectedPreferences.length} selected`
+                    : "Select preferences"}
+                </div>
+                <div className="text-gray-500">▼</div>
               </div>
+
+              {/* Selected preferences tags */}
+              {selectedPreferences.length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {selectedPreferences.map((pref) => (
+                    <div
+                      key={pref}
+                      className="flex items-center bg-blue-100 text-blue-800 px-2 py-1 rounded-md text-sm"
+                    >
+                      <span>{pref}</span>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          removePreference(pref);
+                        }}
+                        className="ml-1 text-blue-600 hover:text-blue-800"
+                      >
+                        <X size={14} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Dropdown menu */}
+              {isDropdownOpen && (
+                <div className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg">
+                  <div className="p-2">
+                    <input
+                      type="text"
+                      placeholder="Search preferences..."
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      onClick={(e) => e.stopPropagation()}
+                    />
+                  </div>
+                  <div className="max-h-60 overflow-y-auto">
+                    {filteredOptions.length > 0 ? (
+                      filteredOptions.map((option) => (
+                        <div
+                          key={option}
+                          className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            togglePreference(option);
+                          }}
+                        >
+                          {option}
+                        </div>
+                      ))
+                    ) : (
+                      <div className="px-4 py-2 text-gray-500">
+                        No options available
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Password Fields */}
@@ -383,9 +447,12 @@ const LearnerSignUp = () => {
 
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-colors"
+              className={`w-full ${
+                loading ? "bg-blue-400" : "bg-blue-600 hover:bg-blue-700"
+              } text-white font-bold py-3 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-colors`}
+              disabled={loading}
             >
-              Create Account
+              {loading ? "Creating Account..." : "Create Account"}
             </button>
           </form>
 
@@ -397,6 +464,15 @@ const LearnerSignUp = () => {
                 className="text-blue-500 hover:text-blue-700 font-medium"
               >
                 Log In
+              </Link>
+            </p>
+            <p className="text-sm text-gray-600 mt-2">
+              Want to register as an expert?{" "}
+              <Link
+                to="/expertsignup"
+                className="text-blue-500 hover:text-blue-700 font-medium"
+              >
+                Expert Registration
               </Link>
             </p>
           </div>

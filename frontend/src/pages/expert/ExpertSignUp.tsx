@@ -127,23 +127,8 @@ const ExpertSignUp = () => {
       <div className="w-2/3 bg-gray-50 flex items-center justify-center py-8 overflow-y-auto">
         <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-2xl mx-6">
           <h2 className="text-2xl font-bold mb-4 text-center text-gray-800">
-            Create Account
+            Create Expert Account
           </h2>
-
-          {/* Tab Selector */}
-          <div className="flex mb-6 border-b">
-            <Link
-              to="/signup"
-              className="flex-1 py-2 text-center font-medium text-gray-500 hover:text-blue-600"
-            >
-              Register as Learner
-            </Link>
-            <div
-              className="flex-1 py-2 text-center font-medium text-blue-600 border-b-2 border-blue-600"
-            >
-              Register as Expert
-            </div>
-          </div>
 
           {error && (
             <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-md">
@@ -339,10 +324,19 @@ const ExpertSignUp = () => {
             <p className="text-sm text-gray-600">
               Already have an account?{" "}
               <Link
-                to="/expert-login"
+                to="/expertlogin"
                 className="text-blue-500 hover:text-blue-700 font-medium"
               >
                 Log In
+              </Link>
+            </p>
+            <p className="text-sm text-gray-600 mt-2">
+              Want to register as a learner?{" "}
+              <Link
+                to="/signup"
+                className="text-blue-500 hover:text-blue-700 font-medium"
+              >
+                Learner Registration
               </Link>
             </p>
           </div>

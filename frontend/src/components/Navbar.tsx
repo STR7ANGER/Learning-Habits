@@ -1,15 +1,12 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { useState } from "react";
+import { useState, FC, MouseEventHandler } from "react";
 
-// Define the User interface based on your auth context
 interface User {
   email: string;
   role: "learner" | "expert";
-  // Add other user properties as needed
 }
 
-// Define the AuthContextType interface based on your auth context
 interface AuthContextType {
   logout: () => void;
   user: User | null;
@@ -17,7 +14,7 @@ interface AuthContextType {
   userType: "learner" | "expert" | null;
 }
 
-const Navbar: React.FC = () => {
+const Navbar: FC = () => {
   const { logout, user, isAuthenticated, userType } =
     useAuth() as AuthContextType;
   const [projectsDropdownOpen, setProjectsDropdownOpen] =
@@ -25,36 +22,30 @@ const Navbar: React.FC = () => {
   const [updatesDropdownOpen, setUpdatesDropdownOpen] =
     useState<boolean>(false);
 
-  const toggleProjectsDropdown = (): void => {
-    setProjectsDropdownOpen(!projectsDropdownOpen);
+  const toggleProjectsDropdown: MouseEventHandler<HTMLButtonElement> = () => {
+    setProjectsDropdownOpen((prev) => !prev);
     if (updatesDropdownOpen) setUpdatesDropdownOpen(false);
   };
 
-  const toggleUpdatesDropdown = (): void => {
-    setUpdatesDropdownOpen(!updatesDropdownOpen);
+  const toggleUpdatesDropdown: MouseEventHandler<HTMLButtonElement> = () => {
+    setUpdatesDropdownOpen((prev) => !prev);
     if (projectsDropdownOpen) setProjectsDropdownOpen(false);
   };
 
-  // Determine if the user is an expert
   const isExpert = isAuthenticated && userType === "expert";
 
   return (
     <nav className="bg-white shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
-          {/* Logo and Brand */}
           <div className="flex items-center">
-            <div className="flex-shrink-0 flex items-center">
-              <Link to="/" className="text-blue-800 font-bold text-xl">
-                Learning Habits
-              </Link>
-            </div>
+            <Link to="/" className="text-blue-800 font-bold text-xl">
+              Learning Habits
+            </Link>
           </div>
 
-          {/* Desktop Navigation */}
           <div className="hidden md:flex items-center">
             <div className="ml-10 flex items-baseline space-x-4">
-              {/* Expert Navigation */}
               {isExpert ? (
                 <>
                   <Link
@@ -72,14 +63,12 @@ const Navbar: React.FC = () => {
                 </>
               ) : (
                 <>
-                  {/* Dropdown Menu for Projects/Expert - For learners or non-authenticated users */}
                   <div className="relative">
                     <button
                       onClick={toggleProjectsDropdown}
                       className="text-black hover:text-blue-800 px-3 py-2 rounded-md font-medium transition-colors flex items-center"
-                      aria-expanded={projectsDropdownOpen}
                     >
-                      Projects
+                      Learning
                       <svg
                         className={`ml-1 h-4 w-4 transform ${
                           projectsDropdownOpen ? "rotate-180" : ""
@@ -87,7 +76,6 @@ const Navbar: React.FC = () => {
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 20 20"
                         fill="currentColor"
-                        aria-hidden="true"
                       >
                         <path
                           fillRule="evenodd"
@@ -96,18 +84,12 @@ const Navbar: React.FC = () => {
                         />
                       </svg>
                     </button>
-                    {/* Projects Dropdown Menu */}
                     {projectsDropdownOpen && (
-                      <div
-                        className="absolute z-50 mt-2 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
-                        role="menu"
-                        aria-orientation="vertical"
-                      >
-                        <div className="py-1" role="none">
+                      <div className="absolute z-50 mt-2 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+                        <div className="py-1">
                           <Link
                             to="/project"
                             className="text-black block px-4 py-2 text-sm hover:bg-blue-50 hover:text-blue-800"
-                            role="menuitem"
                             onClick={() => setProjectsDropdownOpen(false)}
                           >
                             Projects
@@ -115,22 +97,19 @@ const Navbar: React.FC = () => {
                           <Link
                             to="/expert"
                             className="text-black block px-4 py-2 text-sm hover:bg-blue-50 hover:text-blue-800"
-                            role="menuitem"
                             onClick={() => setProjectsDropdownOpen(false)}
                           >
-                            Expert
+                            Expert Learning
                           </Link>
                         </div>
                       </div>
                     )}
                   </div>
 
-                  {/* Dropdown Menu for Updates (Events, News, Blogs) - For learners or non-authenticated users */}
                   <div className="relative">
                     <button
                       onClick={toggleUpdatesDropdown}
                       className="text-black hover:text-blue-800 px-3 py-2 rounded-md font-medium transition-colors flex items-center"
-                      aria-expanded={updatesDropdownOpen}
                     >
                       Updates
                       <svg
@@ -140,7 +119,6 @@ const Navbar: React.FC = () => {
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 20 20"
                         fill="currentColor"
-                        aria-hidden="true"
                       >
                         <path
                           fillRule="evenodd"
@@ -149,18 +127,12 @@ const Navbar: React.FC = () => {
                         />
                       </svg>
                     </button>
-                    {/* Updates Dropdown Menu */}
                     {updatesDropdownOpen && (
-                      <div
-                        className="absolute z-50 mt-2 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
-                        role="menu"
-                        aria-orientation="vertical"
-                      >
-                        <div className="py-1" role="none">
+                      <div className="absolute z-50 mt-2 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+                        <div className="py-1">
                           <Link
                             to="/event"
                             className="text-black block px-4 py-2 text-sm hover:bg-blue-50 hover:text-blue-800"
-                            role="menuitem"
                             onClick={() => setUpdatesDropdownOpen(false)}
                           >
                             Events
@@ -168,7 +140,6 @@ const Navbar: React.FC = () => {
                           <Link
                             to="/news"
                             className="text-black block px-4 py-2 text-sm hover:bg-blue-50 hover:text-blue-800"
-                            role="menuitem"
                             onClick={() => setUpdatesDropdownOpen(false)}
                           >
                             News
@@ -176,7 +147,6 @@ const Navbar: React.FC = () => {
                           <Link
                             to="/blog"
                             className="text-black block px-4 py-2 text-sm hover:bg-blue-50 hover:text-blue-800"
-                            role="menuitem"
                             onClick={() => setUpdatesDropdownOpen(false)}
                           >
                             Blogs
@@ -188,7 +158,6 @@ const Navbar: React.FC = () => {
                 </>
               )}
 
-              {/* Common links for all user types */}
               <Link
                 to="/about"
                 className="text-black hover:text-blue-800 px-3 py-2 rounded-md font-medium transition-colors"
@@ -204,11 +173,10 @@ const Navbar: React.FC = () => {
             </div>
           </div>
 
-          {/* User and Authentication Buttons */}
           <div className="hidden md:flex items-center">
             {isAuthenticated ? (
               <div className="flex items-center space-x-4">
-                <span className="text-black font-medium">{user?.email}</span>
+                <span className="text-black font-medium">Hello! {user?.name}</span>
                 <button
                   onClick={logout}
                   className="bg-blue-800 text-white px-4 py-2 rounded-md font-medium hover:bg-blue-700 transition-colors"
@@ -220,15 +188,15 @@ const Navbar: React.FC = () => {
               <div className="flex items-center space-x-4">
                 <Link
                   to="/login"
-                  className="bg-blue-800 text-white px-4 py-2 rounded-md font-medium hover:bg-blue-700 transition-colors"
+                  className="bg-blue-600 text-white px-4 py-2 rounded-md font-medium hover:bg-blue-700 transition-colors"
                 >
-                  Login
+                  Learner Login
                 </Link>
                 <Link
-                  to="/signup"
-                  className="text-blue-800 border border-blue-800 px-4 py-2 rounded-md font-medium hover:bg-blue-50 transition-colors"
+                  to="/expertlogin"
+                  className="bg-blue-800 text-white px-4 py-2 rounded-md font-medium hover:bg-blue-700 transition-colors"
                 >
-                  Sign Up
+                  Expert Login
                 </Link>
               </div>
             )}
