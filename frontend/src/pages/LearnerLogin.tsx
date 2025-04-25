@@ -11,7 +11,7 @@ const LearnerLogin = () => {
   const [password, setPassword] = useState<string>("");
   const [formError, setFormError] = useState<string>("");
   const navigate = useNavigate();
-  const { login, error, loading } = useAuth();
+  const { login, error } = useAuth();
 
   // Update form error when auth context error changes
   useEffect(() => {

@@ -3,6 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import { useState, FC, MouseEventHandler } from "react";
 
 interface User {
+  name: string;
   email: string;
   role: "learner" | "expert";
 }
@@ -176,7 +177,9 @@ const Navbar: FC = () => {
           <div className="hidden md:flex items-center">
             {isAuthenticated ? (
               <div className="flex items-center space-x-4">
-                <span className="text-black font-medium">Hello! {user?.name}</span>
+                <span className="text-black font-medium">
+                  Hello! {user?.name}
+                </span>
                 <button
                   onClick={logout}
                   className="bg-blue-800 text-white px-4 py-2 rounded-md font-medium hover:bg-blue-700 transition-colors"
