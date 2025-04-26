@@ -3,160 +3,281 @@ import { cn } from "@/lib/utils";
 import { AnimatedGridPattern } from "@/components/magicui/animated-grid-pattern";
 import SplitText from "@/blocks/TextAnimations/SplitText/SplitText";
 import BlurText from "@/blocks/TextAnimations/BlurText/BlurText";
-import { Clock, Calendar, Bookmark, ChevronRight, Search, Filter, MessageSquare, Heart} from "lucide-react";
+import {
+  Send,
+  User,
+  Clock,
+  Filter,
+  Heart,
+  Bookmark,
+  MessageSquare,
+  ChevronDown,
+  ChevronUp,
+} from "lucide-react";
 
-const Blogs = () => {
+// Define types for our data structures
+interface Comment {
+  id: number;
+  user: string;
+  userRole: string;
+  content: string;
+  timestamp: string;
+}
+
+interface Message {
+  id: number;
+  user: string;
+  userRole: string;
+  avatar: string;
+  content: string;
+  timestamp: string;
+  category: string;
+  likes: number;
+  comments: Comment[];
+}
+
+type CommentTextMap = {
+  [key: number]: string;
+};
+
+type ExpandedCommentsMap = {
+  [key: number]: boolean;
+};
+
+const Blogs: React.FC = () => {
   // State for filtering and search
-  const [selectedCategory, setSelectedCategory] = useState("All");
-  const [searchQuery, setSearchQuery] = useState("");
-  
-  // Blog categories
-  const categories = ["All", "Technology", "Education", "AI & ML", "Programming", "Career Growth"];
-  
-  // Sample blog data
-  const blogs = [
+  const [selectedCategory, setSelectedCategory] = useState<string>("All");
+
+  // Chat categories
+  const categories: string[] = [
+    "All",
+    "Questions",
+    "Resources",
+    "Study Groups",
+    "Career Tips",
+    "Technical Help",
+  ];
+
+  // State for the new message, comments, and message category
+  const [newMessage, setNewMessage] = useState<string>("");
+  const [newCommentText, setNewCommentText] = useState<CommentTextMap>({});
+  const [messageCategory, setMessageCategory] = useState<string>("Questions");
+  const [expandedComments, setExpandedComments] = useState<ExpandedCommentsMap>(
+    {}
+  );
+
+  const [messages, setMessages] = useState<Message[]>([
     {
       id: 1,
-      title: "The Future of Learning: AI-Powered Educational Platforms",
-      excerpt: "Explore how artificial intelligence is revolutionizing educational methodologies with personalized learning experiences for students of all ages and backgrounds.",
-      content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...",
-      author: "Dr. Sarah Johnson",
-      authorRole: "Education Technology Expert",
-      date: "April 14, 2025",
-      readTime: "8 min read",
-      category: "Education",
-      tags: ["AI", "EdTech", "Future of Learning"],
-      image: "/images/ai-education.jpg",
-      featured: true,
-      comments: 24,
-      likes: 156
+      user: "Sarah Johnson",
+      userRole: "Education Technology Expert",
+      avatar: "/avatars/sarah.jpg",
+      content:
+        "Has anyone tried the new learning platform that was mentioned in last week's webinar?",
+      timestamp: "Today at 10:23 AM",
+      category: "Questions",
+      likes: 12,
+      comments: [
+        {
+          id: 101,
+          user: "Alex Brown",
+          userRole: "Learning Designer",
+          content:
+            "Yes! I've been using it for a week now. The UI is very intuitive.",
+          timestamp: "Today at 10:45 AM",
+        },
+      ],
     },
     {
       id: 2,
-      title: "Mastering React Hooks: Advanced Patterns for Modern Web Development",
-      excerpt: "Dive deep into React Hooks with practical examples and advanced patterns that will elevate your frontend development skills to the next level.",
-      content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...",
-      author: "Michael Chen",
-      authorRole: "Senior Frontend Developer",
-      date: "April 10, 2025",
-      readTime: "12 min read",
-      category: "Programming",
-      tags: ["React", "JavaScript", "Web Development"],
-      image: "/images/react-hooks.jpg",
-      featured: true,
-      comments: 37,
-      likes: 214
+      user: "Michael Chen",
+      userRole: "Senior Frontend Developer",
+      avatar: "/avatars/michael.jpg",
+      content:
+        "I'm working on a React project and struggling with context API. Any resources you'd recommend?",
+      timestamp: "Today at 10:15 AM",
+      category: "Technical Help",
+      likes: 8,
+      comments: [],
     },
     {
       id: 3,
-      title: "Building a Learning Habit: The Science of Effective Studying",
-      excerpt: "Discover scientifically-proven techniques to build consistent learning habits that will help you retain information better and study more efficiently.",
-      content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...",
-      author: "Emma Rodriguez",
-      authorRole: "Learning Psychologist",
-      date: "April 8, 2025",
-      readTime: "6 min read",
-      category: "Education",
-      tags: ["Study Tips", "Learning Habits", "Productivity"],
-      image: "/images/learning-habits.jpg",
-      featured: false,
-      comments: 19,
-      likes: 98
+      user: "Emma Rodriguez",
+      userRole: "Learning Psychologist",
+      avatar: "/avatars/emma.jpg",
+      content:
+        "Just finished an amazing course on machine learning fundamentals. Happy to share notes if anyone's interested!",
+      timestamp: "Today at 9:58 AM",
+      category: "Resources",
+      likes: 15,
+      comments: [
+        {
+          id: 102,
+          user: "James Wilson",
+          userRole: "Data Science Student",
+          content:
+            "I'd love to see your notes! Been looking for good ML resources.",
+          timestamp: "Today at 10:30 AM",
+        },
+      ],
     },
     {
       id: 4,
-      title: "Introduction to Machine Learning: Concepts Every Developer Should Know",
-      excerpt: "A beginner-friendly guide to core machine learning concepts, algorithms, and implementation strategies for software developers looking to expand their skillset.",
-      content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...",
-      author: "Dr. Amit Patel",
-      authorRole: "Machine Learning Engineer",
-      date: "April 5, 2025",
-      readTime: "10 min read",
-      category: "AI & ML",
-      tags: ["Machine Learning", "Programming", "AI Basics"],
-      image: "/images/machine-learning.jpg",
-      featured: false,
-      comments: 15,
-      likes: 122
+      user: "Amit Patel",
+      userRole: "Machine Learning Engineer",
+      avatar: "/avatars/amit.jpg",
+      content:
+        "Looking for study partners for the upcoming AWS certification exam. Anyone interested?",
+      timestamp: "Today at 9:45 AM",
+      category: "Study Groups",
+      likes: 9,
+      comments: [],
     },
     {
       id: 5,
-      title: "From Junior to Senior: Navigating Your Tech Career Path",
-      excerpt: "Practical advice for early and mid-career developers on how to advance professionally, develop critical skills, and position yourself for senior roles.",
-      content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...",
-      author: "Jessica Taylor",
-      authorRole: "Tech Career Coach",
-      date: "April 3, 2025",
-      readTime: "9 min read",
-      category: "Career Growth",
-      tags: ["Career Development", "Tech Industry", "Professional Growth"],
-      image: "/images/career-path.jpg",
-      featured: false,
-      comments: 31,
-      likes: 187
+      user: "Jessica Taylor",
+      userRole: "Tech Career Coach",
+      avatar: "/avatars/jessica.jpg",
+      content:
+        "I published a new blog post about productivity techniques for remote learning. Check it out and let me know what you think!",
+      timestamp: "Today at 9:30 AM",
+      category: "Resources",
+      likes: 20,
+      comments: [],
     },
     {
       id: 6,
-      title: "Understanding Blockchain: Beyond Cryptocurrency",
-      excerpt: "A comprehensive exploration of blockchain technology, its applications beyond cryptocurrency, and how it's reshaping various industries.",
-      content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...",
-      author: "Robert Williams",
-      authorRole: "Blockchain Specialist",
-      date: "March 30, 2025",
-      readTime: "11 min read",
-      category: "Technology",
-      tags: ["Blockchain", "Technology Trends", "Innovation"],
-      image: "/images/blockchain.jpg",
-      featured: false,
-      comments: 22,
-      likes: 139
+      user: "Robert Williams",
+      userRole: "Learning Specialist",
+      avatar: "/avatars/robert.jpg",
+      content:
+        "Has anyone experimented with spaced repetition for learning programming concepts? I'd love to hear about your experience.",
+      timestamp: "Yesterday at 5:15 PM",
+      category: "Questions",
+      likes: 7,
+      comments: [],
     },
     {
       id: 7,
-      title: "5 Essential Data Structures Every Programmer Should Master",
-      excerpt: "An in-depth look at the most important data structures in computer science, with practical examples of when and how to use them effectively.",
-      content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...",
-      author: "Thomas Lee",
-      authorRole: "Computer Science Instructor",
-      date: "March 27, 2025",
-      readTime: "14 min read",
-      category: "Programming",
-      tags: ["Data Structures", "Algorithms", "Computer Science"],
-      image: "/images/data-structures.jpg",
-      featured: false,
-      comments: 29,
-      likes: 204
+      user: "Thomas Lee",
+      userRole: "Computer Science Instructor",
+      avatar: "/avatars/thomas.jpg",
+      content:
+        "I'm organizing a virtual study group for data structures and algorithms. DM me if you want to join!",
+      timestamp: "Yesterday at 4:30 PM",
+      category: "Study Groups",
+      likes: 18,
+      comments: [],
     },
     {
       id: 8,
-      title: "The Role of Emotional Intelligence in Technical Leadership",
-      excerpt: "Why technical expertise alone isn't enough for leadership roles, and how developing emotional intelligence can make you a more effective tech leader.",
-      content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...",
-      author: "Dr. Olivia Martinez",
-      authorRole: "Leadership Coach & Former CTO",
-      date: "March 25, 2025",
-      readTime: "7 min read",
-      category: "Career Growth",
-      tags: ["Leadership", "Emotional Intelligence", "Tech Management"],
-      image: "/images/tech-leadership.jpg",
-      featured: false,
-      comments: 18,
-      likes: 111
+      user: "Olivia Martinez",
+      userRole: "Leadership Coach",
+      avatar: "/avatars/olivia.jpg",
+      content:
+        "Which note-taking app do you all prefer for technical subjects? I've been using Notion but looking for alternatives.",
+      timestamp: "Yesterday at 3:45 PM",
+      category: "Questions",
+      likes: 14,
+      comments: [],
     },
-  ];
+    {
+      id: 9,
+      user: "David Wilson",
+      userRole: "Python Developer",
+      avatar: "/avatars/david.jpg",
+      content:
+        "Just discovered a great YouTube channel for Python tutorials. The instructor explains concepts really well. Link in my profile!",
+      timestamp: "Yesterday at 2:20 PM",
+      category: "Resources",
+      likes: 22,
+      comments: [],
+    },
+    {
+      id: 10,
+      user: "Sophia Garcia",
+      userRole: "Junior Developer",
+      avatar: "/avatars/sophia.jpg",
+      content:
+        "Working on my portfolio website. Any feedback on which projects I should highlight as a junior developer?",
+      timestamp: "Yesterday at 1:10 PM",
+      category: "Career Tips",
+      likes: 11,
+      comments: [],
+    },
+  ]);
 
-  // Filter blogs based on search and category
-  const filteredBlogs = blogs.filter(blog => {
-    const matchesSearch = 
-      blog.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-      blog.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = selectedCategory === "All" || blog.category === selectedCategory;
-    return matchesSearch && matchesCategory;
+  // Filter messages based on category
+  const filteredMessages = messages.filter((message) => {
+    return selectedCategory === "All" || message.category === selectedCategory;
   });
 
-  // Split into featured and regular blogs
-  const featuredBlogs = filteredBlogs.filter(blog => blog.featured);
-  const regularBlogs = filteredBlogs.filter(blog => !blog.featured);
+  // Handle form submission for new message
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (newMessage.trim() === "") return;
+
+    // Create a new message
+    const newChatMessage: Message = {
+      id: messages.length + 1,
+      user: "You",
+      userRole: "Learning Community Member",
+      avatar: "/avatars/default.jpg",
+      content: newMessage,
+      timestamp: "Just now",
+      category: messageCategory, // Use the selected category
+      likes: 0,
+      comments: [], // Initialize with empty comments array
+    };
+
+    // Add the new message to the list
+    setMessages([newChatMessage, ...messages]);
+
+    // Clear the input field
+    setNewMessage("");
+  };
+
+  // Handle like button
+  const handleLike = (id: number) => {
+    setMessages(
+      messages.map((message) =>
+        message.id === id ? { ...message, likes: message.likes + 1 } : message
+      )
+    );
+  };
+
+  // Handle comment submission
+  const handleCommentSubmit = (messageId: number) => {
+    if (!newCommentText[messageId] || newCommentText[messageId].trim() === "")
+      return;
+
+    const newComment: Comment = {
+      id: Date.now(), // Use timestamp as id
+      user: "You",
+      userRole: "Learning Community Member",
+      content: newCommentText[messageId],
+      timestamp: "Just now",
+    };
+
+    setMessages(
+      messages.map((message) =>
+        message.id === messageId
+          ? { ...message, comments: [...message.comments, newComment] }
+          : message
+      )
+    );
+
+    // Clear comment input for this message
+    setNewCommentText((prev) => ({ ...prev, [messageId]: "" }));
+  };
+
+  // Toggle comment section visibility
+  const toggleComments = (messageId: number) => {
+    setExpandedComments((prev) => ({
+      ...prev,
+      [messageId]: !prev[messageId],
+    }));
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -177,7 +298,7 @@ const Blogs = () => {
           <div className="text-center max-w-3xl mx-auto">
             <div className="mb-6">
               <BlurText
-                text="Learning Habits Blog"
+                text="Learning Community Chat"
                 delay={150}
                 animateBy="words"
                 direction="top"
@@ -185,7 +306,7 @@ const Blogs = () => {
               />
             </div>
             <SplitText
-              text="Insights, tutorials, and educational resources to help you develop effective learning habits and master new technologies."
+              text="Connect with fellow learners, share resources, and ask questions in our open chat pool."
               className="text-xl text-gray-200 max-w-2xl mx-auto"
               delay={10}
               animationFrom={{ opacity: 0, transform: "translate3d(0,50px,0)" }}
@@ -197,274 +318,249 @@ const Blogs = () => {
         </div>
       </div>
 
-      {/* Search and filters section */}
+      {/* Category filters section */}
       <div className="container mx-auto px-6 py-8">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-          {/* Search bar */}
-          <div className="relative w-full md:w-1/3">
-            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-              <Search size={18} className="text-gray-400" />
-            </div>
-            <input
-              type="text"
-              className="w-full pl-10 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="Search blogs..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
+        <div className="flex flex-wrap gap-2 mb-8 justify-center">
+          <div className="flex items-center mr-2">
+            <Filter size={18} className="text-blue-600 mr-2" />
+            <span className="text-gray-700 font-medium">Filter by:</span>
           </div>
-
-          {/* Category filters */}
-          <div className="flex flex-wrap gap-2">
-            <div className="flex items-center mr-2">
-              <Filter size={18} className="text-blue-600 mr-2" />
-              <span className="text-gray-700 font-medium">Topics:</span>
-            </div>
-            {categories.map((category) => (
-              <button
-                key={category}
-                onClick={() => setSelectedCategory(category)}
-                className={cn(
-                  "px-4 py-1 rounded-full text-sm font-medium transition-colors",
-                  selectedCategory === category
-                    ? "bg-blue-600 text-white"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                )}
-              >
-                {category}
-              </button>
-            ))}
-          </div>
+          {categories.map((category) => (
+            <button
+              key={category}
+              onClick={() => setSelectedCategory(category)}
+              className={cn(
+                "px-4 py-1 rounded-full text-sm font-medium transition-colors",
+                selectedCategory === category
+                  ? "bg-blue-600 text-white"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              )}
+            >
+              {category}
+            </button>
+          ))}
         </div>
       </div>
 
-      {/* Blog content section */}
+      {/* Main content with chat pool */}
       <div className="container mx-auto px-6 pb-12">
-        {/* Featured blogs section */}
-        {featuredBlogs.length > 0 && (
-          <div className="mb-16">
-            <h2 className="text-2xl font-bold text-gray-800 mb-8">Featured Articles</h2>
-            <div className="grid lg:grid-cols-2 gap-8">
-              {featuredBlogs.map((blog) => (
-                <div key={blog.id} className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
-                  <div className="h-60 bg-gray-300 relative">
-                    <div className="absolute inset-0 bg-blue-900 opacity-10"></div>
-                    <div className="absolute top-4 left-4">
-                      <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-medium">
-                        {blog.category}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="p-6">
-                    <h3 className="text-2xl font-bold text-gray-800 mb-3 hover:text-blue-600 transition-colors">
-                      <a href={`/blogs/${blog.id}`}>{blog.title}</a>
-                    </h3>
-                    <p className="text-gray-600 mb-5">{blog.excerpt}</p>
-                    <div className="flex items-center mb-5">
-                      <div className="w-10 h-10 rounded-full bg-gray-300 mr-3"></div>
+        <div className="flex flex-col md:flex-row gap-8">
+          {/* Left side - Message list */}
+          <div className="w-full md:w-2/3">
+            <h2 className="text-2xl font-bold text-gray-800 mb-6">
+              Community Messages
+            </h2>
+
+            {/* No results message */}
+            {filteredMessages.length === 0 && (
+              <div className="text-center py-12 bg-white rounded-lg shadow-md">
+                <Bookmark size={48} className="text-gray-300 mx-auto mb-4" />
+                <h3 className="text-xl font-medium text-gray-700 mb-2">
+                  No messages found
+                </h3>
+                <p className="text-gray-500">
+                  Try selecting a different category
+                </p>
+              </div>
+            )}
+
+            <div className="space-y-6">
+              {filteredMessages.map((message) => (
+                <div
+                  key={message.id}
+                  className={cn(
+                    "bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow",
+                    message.user === "You" ? "border-l-4 border-blue-500" : ""
+                  )}
+                >
+                  <div className="p-5">
+                    <div className="flex items-center mb-4">
+                      <div className="w-10 h-10 rounded-full bg-gray-300 mr-3 flex items-center justify-center">
+                        <User size={20} className="text-gray-600" />
+                      </div>
                       <div>
-                        <p className="font-medium text-gray-800">{blog.author}</p>
-                        <p className="text-sm text-gray-500">{blog.authorRole}</p>
+                        <p className="font-medium text-gray-800">
+                          {message.user}
+                        </p>
+                        <p className="text-sm text-gray-500">
+                          {message.userRole}
+                        </p>
+                      </div>
+                      <div className="ml-auto">
+                        <span className="bg-blue-50 text-blue-600 text-xs px-2 py-1 rounded-full">
+                          {message.category}
+                        </span>
                       </div>
                     </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center text-sm text-gray-500">
-                        <Calendar size={16} className="mr-1" />
-                        <span className="mr-4">{blog.date}</span>
-                        <Clock size={16} className="mr-1" />
-                        <span>{blog.readTime}</span>
+
+                    <p className="text-gray-700 mb-4">{message.content}</p>
+
+                    <div className="flex items-center justify-between border-t border-gray-100 pt-3">
+                      <div className="flex items-center text-xs text-gray-500">
+                        <Clock size={14} className="mr-1" />
+                        <span>{message.timestamp}</span>
                       </div>
-                      <div className="flex space-x-3">
-                        <div className="flex items-center text-gray-500">
+
+                      <div className="flex items-center gap-4">
+                        <button
+                          onClick={() => toggleComments(message.id)}
+                          className="flex items-center text-gray-500 hover:text-blue-500 transition-colors"
+                        >
                           <MessageSquare size={16} className="mr-1" />
-                          <span>{blog.comments}</span>
-                        </div>
-                        <div className="flex items-center text-gray-500">
-                          <Heart size={16} className="mr-1" />
-                          <span>{blog.likes}</span>
-                        </div>
+                          <span>{message.comments.length}</span>
+                          {expandedComments[message.id] ? (
+                            <ChevronUp size={16} className="ml-1" />
+                          ) : (
+                            <ChevronDown size={16} className="ml-1" />
+                          )}
+                        </button>
+
+                        <button
+                          onClick={() => handleLike(message.id)}
+                          className="flex items-center text-gray-500 hover:text-red-500 transition-colors"
+                        >
+                          <Heart
+                            size={16}
+                            className="mr-1"
+                            fill={message.likes > 0 ? "#ef4444" : "none"}
+                          />
+                          <span>{message.likes}</span>
+                        </button>
                       </div>
                     </div>
+
+                    {/* Comments section */}
+                    {expandedComments[message.id] && (
+                      <div className="mt-4 pl-4 border-l-2 border-gray-100">
+                        <h4 className="text-sm font-medium text-gray-700 mb-2">
+                          Comments
+                        </h4>
+
+                        {message.comments.length === 0 ? (
+                          <p className="text-sm text-gray-500 italic">
+                            No comments yet
+                          </p>
+                        ) : (
+                          <div className="space-y-3">
+                            {message.comments.map((comment) => (
+                              <div
+                                key={comment.id}
+                                className="bg-gray-50 p-3 rounded-md"
+                              >
+                                <div className="flex items-center mb-1">
+                                  <p className="text-sm font-medium text-gray-700">
+                                    {comment.user}
+                                  </p>
+                                  <span className="mx-2 text-gray-400">•</span>
+                                  <p className="text-xs text-gray-500">
+                                    {comment.timestamp}
+                                  </p>
+                                </div>
+                                <p className="text-sm text-gray-600">
+                                  {comment.content}
+                                </p>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+
+                        {/* Comment input */}
+                        <div className="mt-3 flex">
+                          <input
+                            type="text"
+                            value={newCommentText[message.id] || ""}
+                            onChange={(e) =>
+                              setNewCommentText({
+                                ...newCommentText,
+                                [message.id]: e.target.value,
+                              })
+                            }
+                            placeholder="Add a comment..."
+                            className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-l-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                          />
+                          <button
+                            onClick={() => handleCommentSubmit(message.id)}
+                            className="bg-blue-500 text-white px-3 py-2 rounded-r-md hover:bg-blue-600 transition-colors"
+                            disabled={!newCommentText[message.id]}
+                          >
+                            <Send size={16} />
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
             </div>
           </div>
-        )}
 
-        {/* All blogs section */}
-        <div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-8">All Articles</h2>
-          
-          {/* No results message */}
-          {filteredBlogs.length === 0 && (
-            <div className="text-center py-12 bg-white rounded-lg shadow-md">
-              <Bookmark size={48} className="text-gray-300 mx-auto mb-4" />
-              <h3 className="text-xl font-medium text-gray-700 mb-2">No blogs found</h3>
-              <p className="text-gray-500">Try adjusting your search or filter criteria</p>
-            </div>
-          )}
-          
-          {/* Grid layout for blogs */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {regularBlogs.map((blog) => (
-              <div key={blog.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-                <div className="h-48 bg-gray-300 relative">
-                  <div className="absolute inset-0 bg-blue-900 opacity-10"></div>
-                </div>
-                <div className="p-5">
-                  <div className="mb-3">
-                    <span className="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-full">
-                      {blog.category}
-                    </span>
+          {/* Right side - Message input */}
+          <div className="w-full md:w-1/3">
+            <div className="bg-white rounded-lg shadow-lg overflow-hidden sticky top-8">
+              <div className="h-12 bg-blue-600 flex items-center px-4">
+                <h2 className="text-white font-medium">Add Your Message</h2>
+              </div>
+
+              <div className="p-6">
+                <form onSubmit={handleSubmit}>
+                  <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-medium mb-2">
+                      Share your thoughts, questions, or resources:
+                    </label>
+                    <textarea
+                      className="w-full h-32 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                      placeholder="Type your message here..."
+                      value={newMessage}
+                      onChange={(e) => setNewMessage(e.target.value)}
+                    ></textarea>
                   </div>
-                  <h3 className="text-lg font-bold text-gray-800 mb-2 hover:text-blue-600 transition-colors line-clamp-2">
-                    <a href={`/blogs/${blog.id}`}>{blog.title}</a>
-                  </h3>
-                  <p className="text-gray-600 text-sm mb-4 line-clamp-2">{blog.excerpt}</p>
-                  
-                  <div className="flex items-center mb-4">
-                    <div className="w-8 h-8 rounded-full bg-gray-300 mr-2"></div>
-                    <div>
-                      <p className="text-sm font-medium text-gray-800">{blog.author}</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center text-xs text-gray-500">
-                      <Calendar size={14} className="mr-1" />
-                      <span>{blog.date}</span>
-                    </div>
-                    <div className="flex items-center text-xs text-gray-500">
-                      <Clock size={14} className="mr-1" />
-                      <span>{blog.readTime}</span>
-                    </div>
-                  </div>
-                  
-                  <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
-                    <div className="flex space-x-3">
-                      <div className="flex items-center text-gray-500 text-xs">
-                        <MessageSquare size={14} className="mr-1" />
-                        <span>{blog.comments}</span>
-                      </div>
-                      <div className="flex items-center text-gray-500 text-xs">
-                        <Heart size={14} className="mr-1" />
-                        <span>{blog.likes}</span>
-                      </div>
-                    </div>
-                    <a 
-                      href={`/blogs/${blog.id}`} 
-                      className="flex items-center text-blue-600 text-xs font-medium hover:text-blue-800 transition-colors"
+
+                  {/* Category selection */}
+                  <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-medium mb-2">
+                      Message Category:
+                    </label>
+                    <select
+                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+                      value={messageCategory}
+                      onChange={(e) => setMessageCategory(e.target.value)}
                     >
-                      Read more <ChevronRight size={14} className="ml-1" />
-                    </a>
+                      {categories
+                        .filter((cat) => cat !== "All")
+                        .map((category) => (
+                          <option key={category} value={category}>
+                            {category}
+                          </option>
+                        ))}
+                    </select>
                   </div>
+
+                  <div className="flex justify-end">
+                    <button
+                      type="submit"
+                      className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition-colors flex items-center font-medium"
+                      disabled={newMessage.trim() === ""}
+                    >
+                      <Send size={18} className="mr-2" />
+                      Post to Community
+                    </button>
+                  </div>
+                </form>
+
+                <div className="mt-6 p-4 bg-blue-50 rounded-md">
+                  <h3 className="text-blue-800 font-medium mb-2">
+                    Community Guidelines
+                  </h3>
+                  <ul className="text-sm text-gray-600 space-y-1">
+                    <li>• Be respectful and supportive of others</li>
+                    <li>• Stay on topic with learning-related discussions</li>
+                    <li>• Share valuable resources and insights</li>
+                    <li>• No spam or self-promotion</li>
+                  </ul>
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
-        
-        {/* Pagination for blogs */}
-        <div className="flex justify-center mt-12">
-          <nav className="flex items-center space-x-2">
-            <button className="px-3 py-1 rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200">
-              Previous
-            </button>
-            <button className="px-3 py-1 rounded-md bg-blue-600 text-white">1</button>
-            <button className="px-3 py-1 rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200">
-              2
-            </button>
-            <button className="px-3 py-1 rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200">
-              3
-            </button>
-            <span className="px-3 py-1">...</span>
-            <button className="px-3 py-1 rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200">
-              10
-            </button>
-            <button className="px-3 py-1 rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200">
-              Next
-            </button>
-          </nav>
-        </div>
-      </div>
-
-      {/* Newsletter Section */}
-      <div className="bg-blue-50 py-12">
-        <div className="container mx-auto px-6">
-          <div className="bg-white rounded-lg shadow-lg p-8">
-            <div className="text-center max-w-2xl mx-auto">
-              <h2 className="text-2xl font-bold text-gray-800 mb-4">Subscribe to Our Blog</h2>
-              <p className="text-gray-600 mb-8">
-                Get the latest articles, tutorials, and educational resources delivered straight to your inbox.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3">
-                <input
-                  type="email"
-                  placeholder="Enter your email address"
-                  className="flex-grow px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-                <button className="bg-blue-600 text-white font-medium py-3 px-6 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-colors">
-                  Subscribe
-                </button>
-              </div>
-              <p className="text-xs text-gray-500 mt-4">
-                We'll send you quality content only. No spam, we promise.
-              </p>
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* Author CTA section */}
-      <div className="bg-white py-12">
-        <div className="container mx-auto px-6">
-          <div className="bg-blue-800 text-white rounded-lg shadow-lg p-8 relative overflow-hidden">
-            <AnimatedGridPattern
-              numSquares={20}
-              maxOpacity={0.3}
-              duration={3}
-              repeatDelay={1}
-              className={cn(
-                "[mask-image:radial-gradient(600px_circle_at_center,white,transparent)]",
-                "absolute inset-0 opacity-40"
-              )}
-            />
-            <div className="relative z-10 md:flex items-center justify-between">
-              <div className="md:w-2/3 mb-6 md:mb-0">
-                <h2 className="text-2xl font-bold mb-3">Become a Contributor</h2>
-                <p className="text-blue-100">
-                  Share your knowledge and expertise with our community. Write for the Learning Habits blog and help others master new skills.
-                </p>
-              </div>
-              <div>
-                <button className="bg-white text-blue-800 font-bold py-3 px-6 rounded-md hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 transition-colors">
-                  Apply as Author
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Popular tags section */}
-      <div className="container mx-auto px-6 py-12">
-        <h2 className="text-2xl font-bold text-gray-800 mb-6">Popular Topics</h2>
-        <div className="flex flex-wrap gap-3">
-          {[
-            "Programming", "AI", "Machine Learning", "React", "JavaScript", 
-            "Python", "Career Development", "Education Technology", "Learning Habits",
-            "Data Science", "Blockchain", "Web Development", "Algorithms", 
-            "Professional Growth", "Coding Tips", "Study Techniques"
-          ].map((tag, index) => (
-            <a 
-              key={index} 
-              href={`/blogs/tag/${tag.toLowerCase().replace(/\s+/g, '-')}`}
-              className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full text-sm font-medium transition-colors"
-            >
-              {tag}
-            </a>
-          ))}
         </div>
       </div>
     </div>
