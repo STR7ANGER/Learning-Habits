@@ -69,7 +69,7 @@ const LearnerSchema = new Schema<ILearner>(
     },
     projects: {
       type: [Schema.Types.ObjectId],
-      ref: 'Course',
+      ref: 'projects',
       default: []
     }
   },

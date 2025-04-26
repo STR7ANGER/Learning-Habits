@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import LearnerModel, { ILearner } from "../models/learner.model";
+import LearnerModel from "../models/learner.model";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
@@ -10,8 +10,10 @@ const generateToken = (id: string): string => {
   });
 };
 
-// Fix for Express route handler compatibility - using Promise<void> instead of returning Response
-export const registerLearner = async (req: Request, res: Response): Promise<void> => {
+export const registerLearner = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const {
       name,
@@ -108,7 +110,10 @@ export const registerLearner = async (req: Request, res: Response): Promise<void
   }
 };
 
-export const loginLearner = async (req: Request, res: Response): Promise<void> => {
+export const loginLearner = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const { email, password } = req.body;
 
@@ -150,6 +155,48 @@ export const loginLearner = async (req: Request, res: Response): Promise<void> =
     res.status(500).json({
       success: false,
       message: "Login failed",
+      error: error.message,
+    });
+  }
+};
+
+export const myproject = async (req: Request, res: Response): Promise<void> => {
+  try {
+    // Get learner ID from params
+    const learnerId = req.params.id;
+
+    if (!learnerId) {
+      res.status(400).json({
+        success: false,
+        message: "Learner ID is required",
+      });
+      return;
+    }
+
+    // Find learner by ID and select only the projects field
+    const learner = await LearnerModel.findById(learnerId)
+      .select("projects")
+      .exec();
+
+    if (!learner) {
+      res.status(404).json({
+        success: false,
+        message: "Learner not found",
+      });
+      return;
+    }
+
+    res.status(200).json({
+      success: true,
+      data: {
+        projects: learner.projects || [],
+      },
+    });
+  } catch (error: any) {
+    console.error("Get projects error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to retrieve projects",
       error: error.message,
     });
   }

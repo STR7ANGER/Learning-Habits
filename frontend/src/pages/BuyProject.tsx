@@ -169,7 +169,7 @@ const BuyProject = () => {
 
         // Set timeout to redirect after showing popup
         setTimeout(() => {
-          navigate("/myprojects");
+          navigate("/myproject");
         }, 3000);
       } else {
         throw new Error(result.message || "Payment failed");

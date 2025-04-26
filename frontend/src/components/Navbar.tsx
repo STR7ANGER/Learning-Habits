@@ -22,15 +22,24 @@ const Navbar: FC = () => {
     useState<boolean>(false);
   const [updatesDropdownOpen, setUpdatesDropdownOpen] =
     useState<boolean>(false);
+  const [userDropdownOpen, setUserDropdownOpen] = useState<boolean>(false);
 
   const toggleProjectsDropdown: MouseEventHandler<HTMLButtonElement> = () => {
     setProjectsDropdownOpen((prev) => !prev);
     if (updatesDropdownOpen) setUpdatesDropdownOpen(false);
+    if (userDropdownOpen) setUserDropdownOpen(false);
   };
 
   const toggleUpdatesDropdown: MouseEventHandler<HTMLButtonElement> = () => {
     setUpdatesDropdownOpen((prev) => !prev);
     if (projectsDropdownOpen) setProjectsDropdownOpen(false);
+    if (userDropdownOpen) setUserDropdownOpen(false);
+  };
+
+  const toggleUserDropdown: MouseEventHandler<HTMLButtonElement> = () => {
+    setUserDropdownOpen((prev) => !prev);
+    if (projectsDropdownOpen) setProjectsDropdownOpen(false);
+    if (updatesDropdownOpen) setUpdatesDropdownOpen(false);
   };
 
   const isExpert = isAuthenticated && userType === "expert";
@@ -176,16 +185,78 @@ const Navbar: FC = () => {
 
           <div className="hidden md:flex items-center">
             {isAuthenticated ? (
-              <div className="flex items-center space-x-4">
-                <span className="text-black font-medium">
-                  Hello! {user?.name}
-                </span>
+              <div className="flex items-center space-x-4 relative">
                 <button
-                  onClick={logout}
-                  className="bg-blue-800 text-white px-4 py-2 rounded-md font-medium hover:bg-blue-700 transition-colors"
+                  onClick={toggleUserDropdown}
+                  className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-800 text-white hover:bg-blue-700 transition-colors"
                 >
-                  Logout
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                    />
+                  </svg>
                 </button>
+
+                {userDropdownOpen && (
+                  <div className="absolute right-0 top-12 z-50 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
+                    <div className="py-1">
+                      <div className="block px-4 py-2 text-sm text-gray-700 border-b border-gray-200">
+                        Hello! {user?.name}
+                      </div>
+
+                      <Link
+                        to="/myproject"
+                        className="text-black block px-4 py-2 text-sm hover:bg-blue-50 hover:text-blue-800"
+                        onClick={() => setUserDropdownOpen(false)}
+                      >
+                        My Projects
+                      </Link>
+
+                      <Link
+                        to="/mysession"
+                        className="text-black block px-4 py-2 text-sm hover:bg-blue-50 hover:text-blue-800"
+                        onClick={() => setUserDropdownOpen(false)}
+                      >
+                        My Sessions
+                      </Link>
+
+                      <div className="border-t border-gray-200">
+                        <button
+                          onClick={() => {
+                            logout();
+                            setUserDropdownOpen(false);
+                          }}
+                          className="text-red-600 flex items-center w-full text-left px-4 py-2 text-sm hover:bg-red-50"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-4 w-4 mr-2"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                            />
+                          </svg>
+                          Logout
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             ) : (
               <div className="flex items-center space-x-4">
