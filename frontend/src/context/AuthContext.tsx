@@ -179,11 +179,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       // Determine which API endpoint to use based on role
       const endpoint =
         userData.role === "learner"
-          ? "/api/learner/login"
-          : "/api/expert/login";
+          ? "api/learner/login"
+          : "api/expert/login";
 
       console.log("Sending login request to:", `${API_URL}${endpoint}`);
-      const response = await axios.post(`https://learning-habits-hcrm.vercel.app${endpoint}`, {
+      const response = await axios.post(`${API_URL}${endpoint}`, {
         email: userData.email,
         password: userData.password,
       });
