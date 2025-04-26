@@ -1,13 +1,12 @@
 import mongoose, { Document, Schema } from "mongoose";
 
 export interface IProject extends Document {
-  _id: mongoose.Types.ObjectId;
   name: string;
   description: string;
   duration: string;
   location: string;
   image: string;
-  pdfFile: string; // This will now store a URL directly
+  pdfFile: string;
   price: string;
   createdAt: Date;
   updatedAt: Date;
@@ -15,6 +14,7 @@ export interface IProject extends Document {
 
 const ProjectSchema = new Schema<IProject>(
   {
+    // Using MongoDB's default _id field - no custom id field needed
     name: {
       type: String,
       required: [true, "Name is required"],
@@ -49,8 +49,9 @@ const ProjectSchema = new Schema<IProject>(
   }
 );
 
+// Fix the model name inconsistency
 const ProjectModel =
-  (mongoose.models.Course as mongoose.Model<IProject>) ||
-  mongoose.model<IProject>("Course", ProjectSchema);
+  mongoose.models.Project ||
+  mongoose.model<IProject>("Project", ProjectSchema);
 
 export default ProjectModel;

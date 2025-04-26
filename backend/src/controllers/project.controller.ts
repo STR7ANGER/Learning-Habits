@@ -32,6 +32,15 @@ export const addProject = async (
     const { name, description, duration, location, price, pdfUrl } = req.body;
     const files = req.files as { [fieldname: string]: Express.Multer.File[] };
 
+    // Validate required fields
+    if (!location) {
+      res.status(400).json({
+        success: false,
+        message: "Location is required",
+      });
+      return;
+    }
+
     // Check if image file is uploaded
     if (!files?.image || files.image.length === 0) {
       res.status(400).json({
@@ -127,9 +136,12 @@ export const updateProject = async (
 
     // Handle image upload if provided
     if (files?.image && files.image.length > 0) {
-      const imageResult = await cloudinary.uploader.upload(files.image[0].path, {
-        resource_type: "image",
-      });
+      const imageResult = await cloudinary.uploader.upload(
+        files.image[0].path,
+        {
+          resource_type: "image",
+        }
+      );
       updateData.image = imageResult.secure_url;
     }
 
