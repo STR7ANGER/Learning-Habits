@@ -61,6 +61,207 @@ const cardVariants = {
   },
 };
 
+// Dummy data for news articles
+const dummyNewsArticles: NewsArticle[] = [
+  {
+    id: 1,
+    title: "AI Breakthrough: New Model Achieves Human-Level Understanding",
+    excerpt:
+      "Researchers have developed a new AI model that demonstrates unprecedented capabilities in language comprehension and reasoning tasks.",
+    category: "AI",
+    date: "April 15, 2025",
+    readTime: "5 min read",
+    featured: true,
+    url: "#",
+    imageUrl: "/api/placeholder/600/400",
+    ranking: 1,
+  },
+  {
+    id: 2,
+    title: "Blockchain Technology Revolutionizes Supply Chain Management",
+    excerpt:
+      "Leading companies are implementing blockchain solutions to improve transparency and efficiency in global supply chains.",
+    category: "Blockchain",
+    date: "April 14, 2025",
+    readTime: "4 min read",
+    featured: true,
+    url: "#",
+    imageUrl: "/api/placeholder/600/400",
+    ranking: 2,
+  },
+  {
+    id: 3,
+    title: "Cloud Computing Giants Announce Major Sustainability Initiatives",
+    excerpt:
+      "Top cloud providers commit to carbon-neutral data centers by 2030, investing billions in renewable energy sources.",
+    category: "Cloud",
+    date: "April 12, 2025",
+    readTime: "6 min read",
+    featured: true,
+    url: "#",
+    imageUrl: "/api/placeholder/600/400",
+    ranking: 3,
+  },
+  {
+    id: 4,
+    title: "Critical Security Vulnerability Discovered in Popular Software",
+    excerpt:
+      "Security researchers identify a zero-day exploit affecting millions of devices worldwide. Patch released for immediate implementation.",
+    category: "Cybersecurity",
+    date: "April 10, 2025",
+    readTime: "3 min read",
+    featured: false,
+    url: "#",
+    imageUrl: "/api/placeholder/600/400",
+    ranking: 4,
+  },
+  {
+    id: 5,
+    title: "AR Glasses Set to Replace Smartphones Within Five Years",
+    excerpt:
+      "Industry analysts predict augmented reality wearables will become the primary computing device for consumers by 2030.",
+    category: "AR/VR",
+    date: "April 9, 2025",
+    readTime: "7 min read",
+    featured: false,
+    url: "#",
+    imageUrl: "/api/placeholder/600/400",
+    ranking: 5,
+  },
+  {
+    id: 6,
+    title: "New JavaScript Framework Promises 10x Performance Improvements",
+    excerpt:
+      "Developers are flocking to a new frontend framework that dramatically reduces bundle sizes and rendering times.",
+    category: "Fullstack",
+    date: "April 8, 2025",
+    readTime: "4 min read",
+    featured: false,
+    url: "#",
+    imageUrl: "/api/placeholder/600/400",
+    ranking: 6,
+  },
+  {
+    id: 7,
+    title: "Quantum Computing Reaches Commercial Viability Milestone",
+    excerpt:
+      "First commercial quantum computer with 1000+ qubits becomes available for enterprise applications, opening new possibilities in cryptography and simulation.",
+    category: "AI",
+    date: "April 7, 2025",
+    readTime: "8 min read",
+    featured: false,
+    url: "#",
+    imageUrl: "/api/placeholder/600/400",
+    ranking: 7,
+  },
+  {
+    id: 8,
+    title: "NFT Market Shows Signs of Resurgence After Two-Year Slump",
+    excerpt:
+      "Digital collectibles are gaining traction again with new use cases in gaming, identity verification, and entertainment.",
+    category: "Blockchain",
+    date: "April 6, 2025",
+    readTime: "5 min read",
+    featured: false,
+    url: "#",
+    imageUrl: "/api/placeholder/600/400",
+    ranking: 8,
+  },
+  {
+    id: 9,
+    title: "Serverless Architecture Adoption Accelerates Among Fortune 500",
+    excerpt:
+      "Major corporations are migrating critical infrastructure to serverless platforms, citing cost savings and scalability benefits.",
+    category: "Cloud",
+    date: "April 5, 2025",
+    readTime: "6 min read",
+    featured: false,
+    url: "#",
+    imageUrl: "/api/placeholder/600/400",
+    ranking: 9,
+  },
+  {
+    id: 10,
+    title: "New Ransomware Strain Targets Industrial Control Systems",
+    excerpt:
+      "Cybersecurity agencies issue warnings about sophisticated attacks on critical infrastructure. Prevention guidelines released.",
+    category: "Cybersecurity",
+    date: "April 4, 2025",
+    readTime: "4 min read",
+    featured: false,
+    url: "#",
+    imageUrl: "/api/placeholder/600/400",
+    ranking: 10,
+  },
+  {
+    id: 11,
+    title:
+      "Virtual Reality Treatment Shows Promise for Mental Health Conditions",
+    excerpt:
+      "Clinical trials demonstrate effectiveness of VR therapy for anxiety disorders, PTSD, and phobias with minimal side effects.",
+    category: "AR/VR",
+    date: "April 3, 2025",
+    readTime: "7 min read",
+    featured: false,
+    url: "#",
+    imageUrl: "/api/placeholder/600/400",
+    ranking: 11,
+  },
+  {
+    id: 12,
+    title: "Web Assembly Transforms Browser-Based Applications",
+    excerpt:
+      "Developers leverage WASM to bring desktop-class performance to web applications, blurring the line between web and native apps.",
+    category: "Fullstack",
+    date: "April 2, 2025",
+    readTime: "5 min read",
+    featured: false,
+    url: "#",
+    imageUrl: "/api/placeholder/600/400",
+    ranking: 12,
+  },
+  {
+    id: 13,
+    title: "Machine Learning Models Achieve 99% Accuracy in Medical Diagnoses",
+    excerpt:
+      "AI systems outperform human doctors in detecting several common diseases, prompting discussions about the future of healthcare.",
+    category: "AI",
+    date: "April 1, 2025",
+    readTime: "6 min read",
+    featured: false,
+    url: "#",
+    imageUrl: "/api/placeholder/600/400",
+    ranking: 13,
+  },
+  {
+    id: 14,
+    title:
+      "Decentralized Finance Platforms Reach $1 Trillion in Total Value Locked",
+    excerpt:
+      "DeFi ecosystem continues explosive growth as traditional financial institutions begin integrating blockchain-based services.",
+    category: "Blockchain",
+    date: "March 31, 2025",
+    readTime: "5 min read",
+    featured: false,
+    url: "#",
+    imageUrl: "/api/placeholder/600/400",
+    ranking: 14,
+  },
+  {
+    id: 15,
+    title: "Edge Computing Deployment Surges for IoT Applications",
+    excerpt:
+      "Companies move processing closer to data sources to reduce latency and bandwidth usage for internet-connected devices.",
+    category: "Cloud",
+    date: "March 30, 2025",
+    readTime: "4 min read",
+    featured: false,
+    url: "#",
+    imageUrl: "/api/placeholder/600/400",
+    ranking: 15,
+  },
+];
+
 const News: React.FC = () => {
   // State for search, filter, and news data
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -80,150 +281,27 @@ const News: React.FC = () => {
     "Fullstack",
   ];
 
-  // News fetching logic
+  // Load dummy data on component mount
   useEffect(() => {
-    fetchNews();
+    // Simulate API loading delay
+    const timer = setTimeout(() => {
+      setNewsArticles(dummyNewsArticles);
+      setLoading(false);
+    }, 1000);
+
+    return () => clearTimeout(timer);
   }, []);
 
+  // Simulate refresh functionality
   const fetchNews = async (): Promise<void> => {
     setLoading(true);
     setError(null);
 
-    try {
-      const apiKey = import.meta.env.VITE_NEWS_API_KEY;
-      const baseUrl = "https://newsapi.org/v2/everything";
-
-      // Strictly tech topics query string
-      const techQueryString =
-        "artificial intelligence OR AI OR blockchain OR cryptocurrency OR crypto OR cloud computing OR AR OR VR OR augmented reality OR virtual reality OR cybersecurity OR cyber security OR fullstack OR full-stack OR tech OR technology";
-
-      const params = new URLSearchParams({
-        q: techQueryString,
-        apiKey: apiKey || "",
-        language: "en",
-        sortBy: "publishedAt",
-        pageSize: "15", // Fetch 15 articles
-      });
-
-      const response = await fetch(`${baseUrl}?${params}`);
-      const data = await response.json();
-
-      if (data.status !== "ok") {
-        throw new Error(data.message || "Failed to fetch news");
-      }
-
-      if (!data.articles || data.articles.length === 0) {
-        throw new Error("No tech news articles found");
-      }
-
-      // Process and transform the API data
-      const processedArticles = data.articles.map(
-        (article: any, index: number) => {
-          // Determine specific tech category based on content
-          let category = "Technology";
-          const title = article.title.toLowerCase();
-          const desc = article.description?.toLowerCase() || "";
-          const content = article.content?.toLowerCase() || "";
-          const combinedText = `${title} ${desc} ${content}`;
-
-          if (
-            combinedText.includes("ai") ||
-            combinedText.includes("artificial intelligence") ||
-            combinedText.includes("machine learning") ||
-            combinedText.includes("deep learning")
-          ) {
-            category = "AI";
-          } else if (
-            combinedText.includes("blockchain") ||
-            combinedText.includes("web3") ||
-            combinedText.includes("ethereum") ||
-            combinedText.includes("smart contract")
-          ) {
-            category = "Blockchain";
-          } else if (
-            combinedText.includes("crypto") ||
-            combinedText.includes("bitcoin") ||
-            combinedText.includes("cryptocurrency") ||
-            combinedText.includes("token")
-          ) {
-            category = "Blockchain";
-          } else if (
-            combinedText.includes("cloud") ||
-            combinedText.includes("aws") ||
-            combinedText.includes("azure") ||
-            combinedText.includes("serverless")
-          ) {
-            category = "Cloud";
-          } else if (
-            combinedText.includes("cyber") ||
-            combinedText.includes("security") ||
-            combinedText.includes("hack") ||
-            combinedText.includes("breach")
-          ) {
-            category = "Cybersecurity";
-          } else if (
-            combinedText.includes("ar") ||
-            combinedText.includes("vr") ||
-            combinedText.includes("augmented reality") ||
-            combinedText.includes("virtual reality") ||
-            combinedText.includes("metaverse")
-          ) {
-            category = "AR/VR";
-          } else if (
-            combinedText.includes("fullstack") ||
-            combinedText.includes("full-stack") ||
-            combinedText.includes("frontend") ||
-            combinedText.includes("backend") ||
-            combinedText.includes("web development")
-          ) {
-            category = "Fullstack";
-          }
-
-          // Calculate read time (approx 200 words per minute)
-          const contentLength =
-            (article.content?.split(" ").length || 0) +
-            (article.description?.split(" ").length || 0);
-          const readTime = Math.max(1, Math.ceil(contentLength / 200));
-
-          // Format date
-          const date = new Date(article.publishedAt);
-          const formattedDate = date.toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          });
-
-          // Make first three articles featured
-          const featured = index < 3;
-
-          // Use placeholder images for articles without images
-          const imageUrl = article.urlToImage || "/api/placeholder/600/400";
-
-          // Assign ranking based on relevance
-          const ranking = index + 1;
-
-          return {
-            id: index + 1,
-            title: article.title,
-            excerpt: article.description || "No description available",
-            category: category,
-            date: formattedDate,
-            readTime: `${readTime} min read`,
-            featured: featured,
-            url: article.url,
-            imageUrl: imageUrl,
-            ranking: ranking,
-          };
-        }
-      );
-
-      setNewsArticles(processedArticles);
-    } catch (err: any) {
-      setError(err.message || "Failed to fetch tech news");
-      setNewsArticles([]);
-    } finally {
+    // Simulate API loading delay
+    setTimeout(() => {
+      setNewsArticles(dummyNewsArticles);
       setLoading(false);
-    }
+    }, 1000);
   };
 
   // Filter articles based on search query and selected category
@@ -245,7 +323,7 @@ const News: React.FC = () => {
   const featuredArticles = sortedArticles.filter((article) => article.featured);
   const regularArticles = sortedArticles.filter((article) => !article.featured);
 
-  // Color mapping for categories - updated for tech categories
+  // Color mapping for categories
   const categoryColors: Record<string, string> = {
     AI: "from-violet-600 to-purple-600",
     Blockchain: "from-blue-600 to-indigo-600",
