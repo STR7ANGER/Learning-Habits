@@ -183,7 +183,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           : "/api/expert/login";
 
       console.log("Sending login request to:", `${API_URL}${endpoint}`);
-      const response = await axios.post(`${API_URL}${endpoint}`, {
+      const response = await axios.post(`https://learning-habits-hcrm.vercel.app${endpoint}`, {
         email: userData.email,
         password: userData.password,
       });
