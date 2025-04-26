@@ -15,15 +15,25 @@ connectCloudinary();
 
 //middlewares
 app.use(express.json());
-app.use(cors());
+app.use(express.json());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://learninghabits.world",
+      "https://test.cheentapakdumdum.com",
+    ],
+    credentials: true,
+  })
+);
 
 //API ENDPOINT
-app.use("/api/learner",learnerrouter);
-app.use("/api/project",projectrouter);
+app.use("/api/learner", learnerrouter);
+app.use("/api/project", projectrouter);
 app.use("/api/purchase", purchaserouter);
 
-app.get('/', (req, res) => {
-  res.send('Hello from TypeScript backend!');
+app.get("/", (req, res) => {
+  res.send("Hello from TypeScript backend!");
 });
 
 app.listen(PORT, () => {
