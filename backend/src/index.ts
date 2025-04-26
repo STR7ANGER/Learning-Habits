@@ -5,6 +5,7 @@ import connectCloudinary from "./config/cloudinary.config";
 import connectDB from "./config/mongodb.config";
 import learnerrouter from "./routes/learner.route";
 import projectrouter from "./routes/project.route";
+import purchaserouter from "./routes/purchase.route";
 
 //App config
 const app = express();
@@ -18,7 +19,8 @@ app.use(cors());
 
 //API ENDPOINT
 app.use("/api/learner",learnerrouter);
-app.use("/api/project",projectrouter)
+app.use("/api/project",projectrouter);
+app.use("/api/purchase", purchaserouter);
 
 app.get('/', (req, res) => {
   res.send('Hello from TypeScript backend!');

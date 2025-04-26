@@ -62,18 +62,18 @@ const Projects = () => {
     }
   };
 
-  // Function to handle buy button click
   const handleBuy = (projectId: string) => {
     // Check if token exists in localStorage
     const token = localStorage.getItem("token");
-
+  
     if (token) {
       // User is authenticated, redirect to checkout/purchase page
       navigate(`/checkout/${projectId}`);
     } else {
-      // User is not authenticated, redirect to login page
-      // You can also add state to redirect back after login
-      navigate("/login", { state: { redirectTo: `/checkout/${projectId}` } });
+      // User is not authenticated, redirect to login page with redirect info
+      navigate("/login", { 
+        state: { redirectTo: `/checkout/${projectId}` } 
+      });
     }
   };
 

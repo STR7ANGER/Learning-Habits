@@ -11,7 +11,7 @@ export interface ILearner extends Document {
   schoolName?: string;
   companyName?: string;
   preferences: string[];
-  courses: mongoose.Types.ObjectId[];
+  projects: mongoose.Types.ObjectId[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -67,7 +67,7 @@ const LearnerSchema = new Schema<ILearner>(
         message: "At least one preference must be selected"
       }
     },
-    courses: {
+    projects: {
       type: [Schema.Types.ObjectId],
       ref: 'Course',
       default: []

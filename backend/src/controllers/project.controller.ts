@@ -23,6 +23,47 @@ export const getAllProject = async (
   }
 };
 
+// Get a project by ID
+export const getProjectById = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const projectId = req.params.id;
+
+    // Validate if ID is a valid MongoDB ObjectId
+    if (!mongoose.Types.ObjectId.isValid(projectId)) {
+      res.status(400).json({
+        success: false,
+        message: "Invalid project ID format"
+      });
+      return;
+    }
+
+    const project = await ProjectModel.findById(projectId);
+    
+    if (!project) {
+      res.status(404).json({
+        success: false,
+        message: "Project not found"
+      });
+      return;
+    }
+
+    res.status(200).json({
+      success: true,
+      data: project
+    });
+  } catch (error) {
+    console.error("Error retrieving project:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to retrieve project",
+      error: error instanceof Error ? error.message : String(error)
+    });
+  }
+};
+
 // Add a new project with image upload and PDF URL
 export const addProject = async (
   req: Request,
