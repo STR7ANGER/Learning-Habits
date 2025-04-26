@@ -34,9 +34,6 @@ const LearnerSignUp = () => {
     "Mobile Dev",
     "QA",
     "Rust",
-    "Java",
-    "C++",
-    "Python",
   ];
 
   const [selectedPreferences, setSelectedPreferences] = useState<string[]>([]);
