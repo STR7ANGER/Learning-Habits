@@ -34,6 +34,8 @@ const LearnerSignUp = () => {
     "Mobile Dev",
     "QA",
     "Rust",
+    "Cyber Security",
+    "Others",
   ];
 
   const [selectedPreferences, setSelectedPreferences] = useState<string[]>([]);
