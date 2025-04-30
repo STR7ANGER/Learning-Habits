@@ -32,7 +32,6 @@ const Navbar: FC = () => {
   const updatesDropdownRef = useRef<HTMLDivElement>(null);
   const sessionsDropdownRef = useRef<HTMLDivElement>(null);
   const userDropdownRef = useRef<HTMLDivElement>(null);
-  const mobileMenuRef = useRef<HTMLDivElement>(null);
 
   const toggleProjectsDropdown: MouseEventHandler<HTMLButtonElement> = (e) => {
     e.stopPropagation();
