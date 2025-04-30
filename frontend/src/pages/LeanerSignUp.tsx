@@ -45,7 +45,14 @@ const LearnerSignUp = () => {
 
   const [formError, setFormError] = useState<string>("");
   const navigate = useNavigate();
-  const { register, error, loading } = useAuth();
+  const { register, error, loading, isAuthenticated } = useAuth();
+
+  // Redirect to projects page if successfully authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/project");
+    }
+  }, [isAuthenticated, navigate]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -151,8 +158,7 @@ const LearnerSignUp = () => {
         preferences: selectedPreferences,
       });
 
-      // If registration is successful, redirect to home page
-      navigate("/");
+      // No direct navigation here - we'll handle it in the useEffect that watches isAuthenticated
     } catch (err) {
       console.error("Registration error:", err);
       // Error handling is done in the context
@@ -466,15 +472,6 @@ const LearnerSignUp = () => {
                 className="text-blue-500 hover:text-blue-700 font-medium"
               >
                 Log In
-              </Link>
-            </p>
-            <p className="text-sm text-gray-600 mt-2">
-              Want to register as an expert?{" "}
-              <Link
-                to="/expertsignup"
-                className="text-blue-500 hover:text-blue-700 font-medium"
-              >
-                Expert Registration
               </Link>
             </p>
           </div>

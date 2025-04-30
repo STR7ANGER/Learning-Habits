@@ -1,4 +1,4 @@
-import logo from "./IMG_4954.png";
+import logo from "./logo.png";
 import ai from "./ai.png";
 import blockchain from "./blockchain.png";
 import detavis from "./datavis.png";

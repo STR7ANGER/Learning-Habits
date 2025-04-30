@@ -11,7 +11,7 @@ const LearnerLogin = () => {
   const [password, setPassword] = useState<string>("");
   const [formError, setFormError] = useState<string>("");
   const navigate = useNavigate();
-  const { login, error } = useAuth();
+  const { login, error, isAuthenticated } = useAuth();
 
   // Update form error when auth context error changes
   useEffect(() => {
@@ -19,6 +19,13 @@ const LearnerLogin = () => {
       setFormError(error);
     }
   }, [error]);
+
+  // Navigate to projects only when successfully authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/project");
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
@@ -30,9 +37,7 @@ const LearnerLogin = () => {
         password,
         role: "learner",
       });
-
-      // If login is successful, redirect to home page
-      navigate("/");
+      // No direct navigation here - we'll handle it in the useEffect that watches isAuthenticated
     } catch (err) {
       console.error("Login error:", err);
       // Error handling is done in the context
@@ -161,15 +166,6 @@ const LearnerLogin = () => {
                 className="text-blue-500 hover:text-blue-700 font-medium"
               >
                 Sign Up
-              </Link>
-            </p>
-            <p className="text-sm text-gray-600 mt-2">
-              Are you an expert?{" "}
-              <Link
-                to="/expertlogin"
-                className="text-blue-500 hover:text-blue-700 font-medium"
-              >
-                Login as Expert
               </Link>
             </p>
           </div>

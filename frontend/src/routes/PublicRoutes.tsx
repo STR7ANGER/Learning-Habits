@@ -14,6 +14,7 @@ import LearnerLogin from "@/pages/LearnerLogin";
 import LearnerSignUp from "@/pages/LeanerSignUp";
 import Dashboard from "@/pages/expert/Dashboard";
 import Sessions from "@/pages/expert/Sessions";
+import MyProjects from "@/pages/MyProjects";
 
 const PublicRoutes = () => {
   const { isAuthenticated } = useAuth();
@@ -22,13 +23,13 @@ const PublicRoutes = () => {
     <Route
       key="login"
       path="/login"
-      element={isAuthenticated ? <Navigate to="/" replace /> : <LearnerLogin />}
+      element={isAuthenticated ? <Navigate to="/project" replace /> : <LearnerLogin />}
     />,
     <Route
       key="signup"
       path="/signup"
       element={
-        isAuthenticated ? <Navigate to="/" replace /> : <LearnerSignUp />
+        isAuthenticated ? <Navigate to="/project" replace /> : <LearnerSignUp />
       }
     />,
     <Route key="home" path="/" element={<Home />} />,
@@ -47,6 +48,7 @@ const PublicRoutes = () => {
     <Route key="expertlogin" path="/expertlogin" element={<ExpertLogin />} />,
     <Route key="dashboard" path="/dashboard" element={<Dashboard />} />,
     <Route key="session" path="/session" element={<Sessions />} />,
+    <Route key="myproject" path="/myproject" element={<MyProjects />} />,
   ];
 };
 

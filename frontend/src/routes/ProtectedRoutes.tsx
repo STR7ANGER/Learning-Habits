@@ -1,7 +1,7 @@
 import BuyProject from "@/pages/BuyProject";
 import { Route } from "react-router-dom";
 import ProtectedRoute from "./ProtectRoute";
-import MyProjects from "@/pages/MyProjects";
+
 
 const ProtectedRoutes = () => {
   return [
@@ -14,15 +14,7 @@ const ProtectedRoutes = () => {
         </ProtectedRoute>
       }
     />,
-    <Route
-      key="myproject"
-      path="/myproject"
-      element={
-        <ProtectedRoute>
-          <MyProjects />
-        </ProtectedRoute>
-      }
-    />,
+    
   ];
 };
 
