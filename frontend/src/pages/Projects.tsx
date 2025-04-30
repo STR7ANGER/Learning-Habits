@@ -96,7 +96,7 @@ const Projects = () => {
           <div className="text-center max-w-3xl mx-auto">
             <div className="mb-6">
               <BlurText
-                text="Project Showcase"
+                text="Project Catalogue"
                 delay={150}
                 animateBy="words"
                 direction="top"

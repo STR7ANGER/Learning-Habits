@@ -15,6 +15,8 @@ import LearnerSignUp from "@/pages/LeanerSignUp";
 import Dashboard from "@/pages/expert/Dashboard";
 import Sessions from "@/pages/expert/Sessions";
 import MyProjects from "@/pages/MyProjects";
+import JobTalks from "@/pages/JobTalks";
+import TechnologyLearning from "@/pages/TechnologyLearning";
 
 const PublicRoutes = () => {
   const { isAuthenticated } = useAuth();
@@ -23,7 +25,9 @@ const PublicRoutes = () => {
     <Route
       key="login"
       path="/login"
-      element={isAuthenticated ? <Navigate to="/project" replace /> : <LearnerLogin />}
+      element={
+        isAuthenticated ? <Navigate to="/project" replace /> : <LearnerLogin />
+      }
     />,
     <Route
       key="signup"
@@ -49,6 +53,12 @@ const PublicRoutes = () => {
     <Route key="dashboard" path="/dashboard" element={<Dashboard />} />,
     <Route key="session" path="/session" element={<Sessions />} />,
     <Route key="myproject" path="/myproject" element={<MyProjects />} />,
+    <Route key="jobtalk" path="/jobtalk" element={<JobTalks />} />,
+    <Route
+      key="techlearning"
+      path="/techlearning"
+      element={<TechnologyLearning />}
+    />,
   ];
 };
 

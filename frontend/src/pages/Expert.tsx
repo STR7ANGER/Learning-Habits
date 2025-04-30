@@ -1,113 +1,74 @@
-import React, { useState } from "react";
+import React, { useState, ChangeEvent, FormEvent } from "react";
 import { cn } from "@/lib/utils";
 import { AnimatedGridPattern } from "@/components/magicui/animated-grid-pattern";
 import SplitText from "@/blocks/TextAnimations/SplitText/SplitText";
 import BlurText from "@/blocks/TextAnimations/BlurText/BlurText";
-import { Calendar, Book, Users, ArrowRight } from "lucide-react";
+import { Calendar, Clock, CheckCircle } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
-// Define types for our data
-interface ExpertTopic {
-  id: number;
+interface FormData {
   name: string;
-  description: string;
-  icon: React.ReactNode;
-  available: number;
-}
-
-interface FeaturedExpert {
-  id: number;
-  name: string;
-  specialty: string;
-  image: string;
-  rating: number;
-  sessions: number;
+  email: string;
+  techArea: string;
+  specificTech: string;
+  date: string;
+  time: string;
+  message: string;
 }
 
 const Expert: React.FC = () => {
-  // Expert categories/topics
-  const expertTopics: ExpertTopic[] = [
-    {
-      id: 1,
-      name: "Mathematics",
-      description: "Algebra, Calculus, Statistics and more",
-      icon: <Book size={24} className="text-blue-600" />,
-      available: 12,
-    },
-    {
-      id: 2,
-      name: "Computer Science",
-      description: "Programming, Algorithms, Web Development",
-      icon: <Book size={24} className="text-blue-600" />,
-      available: 8,
-    },
-    {
-      id: 3,
-      name: "Languages",
-      description: "English, Spanish, French, German",
-      icon: <Book size={24} className="text-blue-600" />,
-      available: 15,
-    },
-    {
-      id: 4,
-      name: "Science",
-      description: "Physics, Chemistry, Biology",
-      icon: <Book size={24} className="text-blue-600" />,
-      available: 10,
-    },
-    {
-      id: 5,
-      name: "Business",
-      description: "Finance, Marketing, Management",
-      icon: <Book size={24} className="text-blue-600" />,
-      available: 7,
-    },
-    {
-      id: 6,
-      name: "Arts",
-      description: "Music, Drawing, Photography",
-      icon: <Book size={24} className="text-blue-600" />,
-      available: 5,
-    },
+  // Available tech areas
+  const techAreas = [
+    "Ai Chatbot",
+    "Ai Data Scientist",
+    "AR-VR",
+    "Blockchain",
+    "Cloud",
+    "Data Engineer",
+    "Data Visualization",
+    "DevOps",
+    "Fullstack",
+    "Golang",
+    "Mobile Dev",
+    "QA",
+    "Rust",
+    "Cyber Security",
+    "Others"
   ];
 
-  // Featured experts
-  const featuredExperts: FeaturedExpert[] = [
-    {
-      id: 1,
-      name: "Dr. Sarah Johnson",
-      specialty: "Mathematics",
-      image: "/api/placeholder/400/400",
-      rating: 4.9,
-      sessions: 250,
-    },
-    {
-      id: 2,
-      name: "Prof. Michael Chen",
-      specialty: "Computer Science",
-      image: "/api/placeholder/400/400",
-      rating: 4.8,
-      sessions: 180,
-    },
-    {
-      id: 3,
-      name: "Emma Williams",
-      specialty: "Languages",
-      image: "/api/placeholder/400/400",
-      rating: 4.7,
-      sessions: 320,
-    },
-  ];
+  // State
+  const [formData, setFormData] = useState<FormData>({
+    name: "",
+    email: "",
+    techArea: "",
+    specificTech: "",
+    date: "",
+    time: "",
+    message: ""
+  });
+  
+  const [bookingSuccess, setBookingSuccess] = useState(false);
 
-  // State for selected topic
-  const [selectedTopic, setSelectedTopic] = useState<number | null>(null);
+  // Handle form input changes
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
 
-  // Handle topic selection
-  const handleTopicSelect = (topicId: number): void => {
-    setSelectedTopic(topicId === selectedTopic ? null : topicId);
+  // Handle form submission
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log("Booking submitted:", formData);
+    // Here you would typically send this data to your backend
+    // For now, we'll just show a success message
+    setBookingSuccess(true);
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Hero section with blue background and animated pattern */}
       <div className="bg-blue-800 text-white py-16 relative overflow-hidden">
         <AnimatedGridPattern
@@ -125,7 +86,7 @@ const Expert: React.FC = () => {
           <div className="text-center max-w-3xl mx-auto">
             <div className="mb-6">
               <BlurText
-                text="Expert Sessions"
+                text="Tech Expert Sessions"
                 delay={150}
                 animateBy="words"
                 direction="top"
@@ -133,7 +94,7 @@ const Expert: React.FC = () => {
               />
             </div>
             <SplitText
-              text="Connect with our expert instructors for personalized online learning sessions that fit your schedule and learning needs."
+              text="Connect with industry tech experts for personalized mentoring, code reviews, and skill development sessions to accelerate your technical career."
               className="text-xl text-gray-200 max-w-2xl mx-auto"
               delay={10}
               animationFrom={{ opacity: 0, transform: "translate3d(0,50px,0)" }}
@@ -145,119 +106,323 @@ const Expert: React.FC = () => {
         </div>
       </div>
 
-      {/* Topic Selection Section */}
+      {/* Main content area with booking form */}
       <div className="container mx-auto px-6 py-16">
-        <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">Choose Your Topic</h2>
-        <p className="text-gray-600 text-center max-w-2xl mx-auto mb-12">
-          Select a subject area to see available experts and schedule a personalized learning session.
-        </p>
+        <div className="flex flex-col lg:flex-row gap-10">
+          {/* Left content - Booking form */}
+          <div className="lg:w-2/3 bg-white rounded-lg shadow-lg p-8">
+            <h2 className="text-3xl font-bold text-gray-800 mb-6">Book Your Tech Session</h2>
+            <p className="text-gray-600 max-w-2xl mb-8">
+              Schedule a personalized mentoring session with professionals actively working in the tech industry. Our experts will help you enhance your skills and advance your technical career.
+            </p>
 
-        <div className="grid md:grid-cols-3 gap-6">
-          {expertTopics.map((topic) => (
-            <div
-              key={topic.id}
-              onClick={() => handleTopicSelect(topic.id)}
-              className={`bg-white rounded-lg shadow-md p-6 cursor-pointer transition-all hover:shadow-lg ${
-                selectedTopic === topic.id ? "ring-2 ring-blue-500" : ""
-              }`}
-            >
-              <div className="flex items-start">
-                <div className="bg-blue-100 p-3 rounded-full mr-4">
-                  {topic.icon}
-                </div>
+            {!bookingSuccess ? (
+              <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <h3 className="text-xl font-semibold text-gray-800 mb-1">
-                    {topic.name}
-                  </h3>
-                  <p className="text-gray-600 mb-3">{topic.description}</p>
-                  <div className="flex items-center text-blue-600">
-                    <Users size={16} className="mr-1" />
-                    <span className="text-sm">{topic.available} Experts Available</span>
+                  <label className="block text-gray-700 text-sm font-medium mb-2">
+                    Full Name
+                  </label>
+                  <Input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-gray-700 text-sm font-medium mb-2">
+                    Email Address
+                  </label>
+                  <Input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-gray-700 text-sm font-medium mb-2">
+                    Technology Area
+                  </label>
+                  <div className="relative">
+                    <select
+                      name="techArea"
+                      value={formData.techArea}
+                      onChange={handleInputChange}
+                      className="appearance-none w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      required
+                    >
+                      <option value="" disabled>Select a technology area</option>
+                      {techAreas.map((tech) => (
+                        <option key={tech} value={tech}>
+                          {tech}
+                        </option>
+                      ))}
+                    </select>
+                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500">
+                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                          fillRule="evenodd"
+                          d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+                
+                <div>
+                  <label className="block text-gray-700 text-sm font-medium mb-2">
+                    Specific Technology (Optional)
+                  </label>
+                  <Input
+                    type="text"
+                    name="specificTech"
+                    value={formData.specificTech}
+                    onChange={handleInputChange}
+                    placeholder="e.g., React, TensorFlow, Kubernetes, etc."
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-gray-700 text-sm font-medium mb-2">
+                    Preferred Date
+                  </label>
+                  <Input
+                    type="date"
+                    name="date"
+                    value={formData.date}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-gray-700 text-sm font-medium mb-2">
+                    Preferred Time
+                  </label>
+                  <Input
+                    type="time"
+                    name="time"
+                    value={formData.time}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required
+                  />
+                </div>
+                
+                <div className="md:col-span-2">
+                  <label className="block text-gray-700 text-sm font-medium mb-2">
+                    What do you need help with?
+                  </label>
+                  <textarea
+                    name="message"
+                    value={formData.message}
+                    onChange={handleInputChange}
+                    rows={4}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required
+                  ></textarea>
+                </div>
+                
+                <div className="md:col-span-2">
+                  <button
+                    type="submit"
+                    className="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-md hover:bg-blue-700 transition-colors flex items-center justify-center"
+                  >
+                    <Calendar size={18} className="mr-2" />
+                    Schedule Session
+                  </button>
+                </div>
+              </form>
+            ) : (
+              <div className="text-center py-10">
+                <div className="bg-green-100 p-4 rounded-full inline-flex mb-6">
+                  <CheckCircle size={48} className="text-green-600" />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-800 mb-4">
+                  Booking Submitted!
+                </h3>
+                <p className="text-gray-600 mb-8">
+                  Thank you for scheduling a tech mentoring session. We'll send you a confirmation email shortly with meeting details.
+                </p>
+                <button
+                  onClick={() => setBookingSuccess(false)}
+                  className="bg-blue-600 text-white font-bold py-3 px-8 rounded-md hover:bg-blue-700 transition-colors"
+                >
+                  Book Another Session
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Right sidebar - Session types and benefits */}
+          <div className="lg:w-1/3 mt-10 lg:mt-0">
+            <div className="bg-white rounded-lg shadow-lg p-6 sticky top-8 mb-8">
+              <h3 className="font-bold text-xl text-gray-800 mb-4 flex items-center">
+                <Clock size={20} className="mr-2 text-blue-600" /> 
+                Available Session Types
+              </h3>
+              
+              <ul className="space-y-4">
+                <li className="flex items-start">
+                  <CheckCircle size={18} className="text-blue-600 mr-2 mt-0.5" />
+                  <div>
+                    <span className="font-medium text-gray-800">1-on-1 Code Review (60min)</span>
+                    <p className="text-sm text-gray-600">Get personalized feedback on your code and learn best practices.</p>
+                  </div>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle size={18} className="text-blue-600 mr-2 mt-0.5" />
+                  <div>
+                    <span className="font-medium text-gray-800">Technical Interview Prep (90min)</span>
+                    <p className="text-sm text-gray-600">Practice technical interview questions with expert guidance.</p>
+                  </div>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle size={18} className="text-blue-600 mr-2 mt-0.5" />
+                  <div>
+                    <span className="font-medium text-gray-800">Project Architecture Consultation (60min)</span>
+                    <p className="text-sm text-gray-600">Get advice on system design and architecture decisions.</p>
+                  </div>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircle size={18} className="text-blue-600 mr-2 mt-0.5" />
+                  <div>
+                    <span className="font-medium text-gray-800">Career Path Planning (45min)</span>
+                    <p className="text-sm text-gray-600">Discuss your tech career goals and create a roadmap for success.</p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            <div className="bg-blue-50 rounded-lg shadow-md p-6">
+              <h3 className="font-bold text-xl text-gray-800 mb-4">
+                Why Book With Us?
+              </h3>
+              
+              <div className="space-y-4">
+                <div className="flex items-start">
+                  <div className="bg-blue-100 p-2 rounded-full mr-3">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5 text-blue-600"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                      />
+                    </svg>
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-gray-800">
+                      Industry Expertise
+                    </h4>
+                    <p className="text-sm text-gray-600">
+                      Learn from professionals actively working at top tech companies.
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start">
+                  <div className="bg-blue-100 p-2 rounded-full mr-3">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5 text-blue-600"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
+                      />
+                    </svg>
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-gray-800">
+                      Personalized Support
+                    </h4>
+                    <p className="text-sm text-gray-600">
+                      Get solutions tailored to your specific needs and skill level.
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start">
+                  <div className="bg-blue-100 p-2 rounded-full mr-3">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5 text-blue-600"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M13 10V3L4 14h7v7l9-11h-7z"
+                      />
+                    </svg>
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-gray-800">
+                      Fast-Track Your Growth
+                    </h4>
+                    <p className="text-sm text-gray-600">
+                      Avoid common pitfalls and learn industry best practices directly.
+                    </p>
                   </div>
                 </div>
               </div>
             </div>
-          ))}
-        </div>
-
-        {/* Selected topic action button */}
-        {selectedTopic && (
-          <div className="mt-8 text-center">
-            <button className="bg-blue-600 text-white font-bold py-3 px-8 rounded-md hover:bg-blue-700 transition-colors flex items-center mx-auto">
-              Browse Experts <ArrowRight size={18} className="ml-2" />
-            </button>
-          </div>
-        )}
-      </div>
-
-      {/* Featured Experts Section */}
-      <div className="bg-blue-50 py-16">
-        <div className="container mx-auto px-6">
-          <h2 className="text-3xl font-bold text-gray-800 mb-4 text-center">Featured Experts</h2>
-          <p className="text-gray-600 text-center max-w-2xl mx-auto mb-12">
-            Meet some of our top-rated instructors who are ready to help you succeed.
-          </p>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {featuredExperts.map((expert) => (
-              <div key={expert.id} className="bg-white rounded-lg shadow-lg overflow-hidden">
-                <img
-                  src={expert.image}
-                  alt={expert.name}
-                  className="w-full h-64 object-cover"
-                />
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-gray-800 mb-1">
-                    {expert.name}
-                  </h3>
-                  <p className="text-blue-600 font-medium mb-3">{expert.specialty} Expert</p>
-                  <div className="flex justify-between items-center">
-                    <div className="flex items-center">
-                      <div className="text-yellow-500 mr-1">★</div>
-                      <span className="font-medium">{expert.rating}</span>
-                    </div>
-                    <div className="text-gray-600 text-sm">
-                      {expert.sessions}+ sessions
-                    </div>
-                  </div>
-                  <button className="w-full mt-4 bg-blue-600 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-700 transition-colors flex items-center justify-center">
-                    <Calendar size={18} className="mr-2" />
-                    Book Session
-                  </button>
-                </div>
-              </div>
-            ))}
           </div>
         </div>
       </div>
 
       {/* How It Works Section */}
-      <div className="bg-white py-16">
+      <div className="bg-blue-50 py-16">
         <div className="container mx-auto px-6">
-          <h2 className="text-3xl font-bold text-center text-gray-800 mb-12">How It Works</h2>
+          <h2 className="text-3xl font-bold text-center text-gray-800 mb-12">The Tech Mentoring Process</h2>
           
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center p-6">
+            <div className="text-center p-6 bg-white rounded-xl shadow-sm">
               <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">1</div>
-              <h3 className="text-xl font-bold text-gray-800 mb-3">Choose a Topic</h3>
+              <h3 className="text-xl font-bold text-gray-800 mb-3">Select Technology</h3>
               <p className="text-gray-600">
-                Browse our extensive range of subjects and select the area you need help with.
+                Choose your specific technology focus area or add any custom tech stack you need help with.
               </p>
             </div>
             
-            <div className="text-center p-6">
+            <div className="text-center p-6 bg-white rounded-xl shadow-sm">
               <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">2</div>
-              <h3 className="text-xl font-bold text-gray-800 mb-3">Select an Expert</h3>
+              <h3 className="text-xl font-bold text-gray-800 mb-3">Book Time Slot</h3>
               <p className="text-gray-600">
-                Review profiles, ratings, and availability to find the perfect instructor for you.
+                Schedule a session at your convenience through our simple booking system.
               </p>
             </div>
             
-            <div className="text-center p-6">
+            <div className="text-center p-6 bg-white rounded-xl shadow-sm">
               <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">3</div>
-              <h3 className="text-xl font-bold text-gray-800 mb-3">Schedule & Learn</h3>
+              <h3 className="text-xl font-bold text-gray-800 mb-3">Collaborate & Learn</h3>
               <p className="text-gray-600">
-                Book a session at a time that suits you and connect for personalized learning.
+                Meet virtually for pair programming, code reviews, technical guidance, and hands-on learning.
               </p>
             </div>
           </div>
@@ -278,12 +443,15 @@ const Expert: React.FC = () => {
         />
         <div className="container mx-auto px-6 relative z-10 text-center">
           <h2 className="text-3xl font-bold mb-4">
-            Ready to Learn from the Best?
+            Level Up Your Tech Skills
           </h2>
           <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-            Join thousands of students who have accelerated their learning with our expert instructors.
+            Join thousands of developers who have accelerated their careers with personalized tech mentoring sessions.
           </p>
-          <button className="bg-white text-blue-800 font-bold py-3 px-8 rounded-md hover:bg-blue-100 transition-colors">
+          <button 
+            className="bg-white text-blue-800 font-bold py-3 px-8 rounded-md hover:bg-blue-100 transition-colors"
+            onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}
+          >
             Get Started Today
           </button>
         </div>
