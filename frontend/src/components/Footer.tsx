@@ -79,12 +79,17 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* About Company */}
           <div>
-            <h3 className="text-xl font-bold mb-4">About Company</h3>
-            <div className="w-12 h-1 bg-white mb-6"></div>
-            <p className="text-sm leading-relaxed">
-              Learning Habits powers growth by connecting visionary organizations with
-              exceptional talent through AI-driven precision hiring—building
-              agile, future-ready teams at scale.
+            <h3 className="text-2xl font-extrabold mb-2 tracking-tight">
+              Learning Habits
+            </h3>
+            <p className="text-sm text-white italic mb-4">
+              Empowering by computing mind technology
+            </p>
+            <div className="w-16 h-1 bg-white rounded-full mb-4"></div>
+            <p className="text-sm leading-relaxed text-gray-200">
+              Learning Habits powers growth by connecting visionary
+              organizations with exceptional talent through AI-driven precision
+              hiring—building agile, future-ready teams at scale.
             </p>
 
             <div className="flex space-x-4 mt-6">
@@ -113,7 +118,9 @@ const Footer = () => {
 
         {/* Copyright */}
         <div className="mt-12 pt-8 border-t border-blue-700 text-center">
-          <p>© {currentYear} Copyrights by Learning Habits. All Rights Reserved.</p>
+          <p>
+            © {currentYear} Copyrights by Learning Habits. All Rights Reserved.
+          </p>
         </div>
       </div>
     </footer>
