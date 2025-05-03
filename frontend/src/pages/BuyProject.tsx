@@ -7,7 +7,10 @@ import {
   Shield,
   Info,
   CheckCircle,
+  DollarSign,
+  IndianRupee,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface Project {
   _id: string;
@@ -18,6 +21,7 @@ interface Project {
   image: string;
   pdfFile: string;
   price: string;
+  internationalPrice?: string;
 }
 interface FormData {
   firstName: string;
@@ -40,6 +44,7 @@ const BuyProject = () => {
   const [error, setError] = useState<string | null>(null);
   const [processingPayment, setProcessingPayment] = useState(false);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [currency, setCurrency] = useState<"INR" | "USD">("INR");
 
   const [formData, setFormData] = useState<FormData>({
     firstName: "",
@@ -56,10 +61,13 @@ const BuyProject = () => {
   // Payment method
   const [paymentMethod, setPaymentMethod] = useState("razorpay");
 
-  // Calculate order details
-  const total = project ? parseFloat(project.price.replace(/[^0-9.]/g, "")) : 0;
-
   useEffect(() => {
+    // Check if user has previously selected a currency preference
+    const savedCurrency = localStorage.getItem("preferredCurrency");
+    if (savedCurrency === "INR" || savedCurrency === "USD") {
+      setCurrency(savedCurrency);
+    }
+
     const fetchProjectDetails = async () => {
       try {
         const apiUrl = import.meta.env.VITE_API_URL;
@@ -90,6 +98,29 @@ const BuyProject = () => {
       fetchProjectDetails();
     }
   }, [projectId]);
+
+  // Calculate order details based on the selected currency
+  const getPrice = () => {
+    if (!project) return 0;
+    
+    if (currency === "USD" && project.internationalPrice) {
+      return parseFloat(project.internationalPrice);
+    }
+    
+    // For INR, remove the currency symbol and parse
+    return parseFloat(project.price.replace(/[^0-9.]/g, ""));
+  };
+
+  const total = getPrice();
+
+ 
+
+  // Function to toggle currency
+  const toggleCurrency = () => {
+    const newCurrency = currency === "INR" ? "USD" : "INR";
+    setCurrency(newCurrency);
+    localStorage.setItem("preferredCurrency", newCurrency);
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -148,6 +179,7 @@ const BuyProject = () => {
         ...formData,
         amount: total,
         paymentMethod,
+        currency, // Include selected currency in purchase data
       };
 
       // Send purchase data to backend
@@ -223,7 +255,9 @@ const BuyProject = () => {
               Thank you for your purchase. You will be redirected to My Projects
               in a moment.
             </p>
-            <div className="text-blue-400 font-bold">${total.toFixed(2)}</div>
+            <div className="text-blue-400 font-bold">
+              {currency === "USD" ? "$" : "₹"}{total.toFixed(2)}
+            </div>
           </div>
         </div>
       )}
@@ -232,6 +266,28 @@ const BuyProject = () => {
         <h1 className="text-3xl font-bold mb-8 text-center">
           Complete Your <span className="text-blue-600">Purchase</span>
         </h1>
+
+        {/* Simple Click-to-Switch Currency Toggle Button */}
+        <div className="flex justify-end mb-6">
+          <h3 className="flex items-center mr-2 font-semibold">Click to switch: </h3>
+          <Button
+            onClick={toggleCurrency}
+            variant="outline"
+            className="flex items-center gap-2 bg-white border border-gray-200 shadow-sm hover:bg-blue-50 text-gray-700 font-medium px-4 py-2 rounded-lg transition-all duration-200"
+          >
+            {currency === "INR" ? (
+              <>
+                <IndianRupee size={18} className="text-blue-600" />
+                <span>INR</span>
+              </>
+            ) : (
+              <>
+                <DollarSign size={18} className="text-blue-600" />
+                <span>USD</span>
+              </>
+            )}
+          </Button>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
           {/* Left column - Project Card + Terms */}
@@ -415,7 +471,9 @@ const BuyProject = () => {
 
               <div className="flex justify-between items-center mb-4">
                 <div className="text-lg">Subtotal</div>
-                <div className="text-xl text-blue-400">${total.toFixed(2)}</div>
+                <div className="text-xl text-blue-400">
+                  {currency === "USD" ? "$" : "₹"}{total.toFixed(2)}
+                </div>
               </div>
 
               <div className="w-full h-0.5 bg-gray-700 mb-4"></div>
@@ -423,7 +481,7 @@ const BuyProject = () => {
               <div className="flex justify-between items-center">
                 <div className="text-lg font-bold">Total</div>
                 <div className="text-2xl text-blue-400 font-bold">
-                  ${total.toFixed(2)}
+                  {currency === "USD" ? "$" : "₹"}{total.toFixed(2)}
                 </div>
               </div>
             </div>

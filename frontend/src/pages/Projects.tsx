@@ -1,10 +1,18 @@
 import { useState, useEffect } from "react";
-import { Clock, MapPin, Download, ShoppingCart } from "lucide-react";
+import {
+  Clock,
+  MapPin,
+  Download,
+  ShoppingCart,
+  DollarSign,
+  IndianRupee,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { AnimatedGridPattern } from "@/components/magicui/animated-grid-pattern";
 import SplitText from "@/blocks/TextAnimations/SplitText/SplitText";
 import BlurText from "@/blocks/TextAnimations/BlurText/BlurText";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 // Define interfaces for our data structures
 interface Project {
@@ -16,15 +24,23 @@ interface Project {
   image: string;
   pdfFile: string;
   price: string;
+  internationalPrice?: string;
 }
 
 const Projects = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [currency, setCurrency] = useState<"INR" | "USD">("INR");
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Check if user has previously selected a currency preference
+    const savedCurrency = localStorage.getItem("preferredCurrency");
+    if (savedCurrency === "INR" || savedCurrency === "USD") {
+      setCurrency(savedCurrency);
+    }
+
     const fetchProjects = async () => {
       try {
         const apiUrl = import.meta.env.VITE_API_URL;
@@ -63,18 +79,36 @@ const Projects = () => {
   };
 
   const handleBuy = (projectId: string) => {
+    // Save current currency preference before navigating
+    localStorage.setItem("preferredCurrency", currency);
+
     // Check if token exists in localStorage
     const token = localStorage.getItem("token");
-  
+
     if (token) {
       // User is authenticated, redirect to checkout/purchase page
       navigate(`/checkout/${projectId}`);
     } else {
       // User is not authenticated, redirect to login page with redirect info
-      navigate("/login", { 
-        state: { redirectTo: `/checkout/${projectId}` } 
+      navigate("/login", {
+        state: { redirectTo: `/checkout/${projectId}` },
       });
     }
+  };
+
+  // Function to toggle currency
+  const toggleCurrency = () => {
+    const newCurrency = currency === "INR" ? "USD" : "INR";
+    setCurrency(newCurrency);
+    localStorage.setItem("preferredCurrency", newCurrency);
+  };
+
+  // Function to format price according to selected currency
+  const getDisplayPrice = (project: Project) => {
+    if (currency === "USD" && project.internationalPrice) {
+      return `$${project.internationalPrice}`;
+    }
+    return project.price; // Default INR price
   };
 
   return (
@@ -117,6 +151,28 @@ const Projects = () => {
       </div>
 
       <div className="container mx-auto py-12">
+        {/* Simple Click-to-Switch Currency Toggle Button */}
+        <div className="flex justify-end mb-6">
+          <h3 className="flex items-center mr-2 font-semibold">Click to switch: </h3>
+          <Button
+            onClick={toggleCurrency}
+            variant="outline"
+            className="flex items-center gap-2 bg-white border border-gray-200 shadow-sm hover:bg-blue-50 text-gray-700 font-medium px-4 py-2 rounded-lg transition-all duration-200"
+          >
+            {currency === "INR" ? (
+              <>
+                <IndianRupee size={18} className="text-blue-600" />
+                <span>INR</span>
+              </>
+            ) : (
+              <>
+                <DollarSign size={18} className="text-blue-600" />
+                <span>USD</span>
+              </>
+            )}
+          </Button>
+        </div>
+
         {loading ? (
           <div className="flex justify-center items-center h-64">
             <div className="text-xl text-gray-600">Loading projects...</div>
@@ -183,7 +239,7 @@ const Projects = () => {
                         onClick={() => handleBuy(project._id)}
                       >
                         <ShoppingCart size={18} className="mr-2" />
-                        Buy {project.price}
+                        Buy {getDisplayPrice(project)}
                       </button>
                     </div>
                   </div>

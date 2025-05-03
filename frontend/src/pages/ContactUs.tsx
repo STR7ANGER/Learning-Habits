@@ -64,8 +64,8 @@ const ContactUs = () => {
     {
       icon: <Mail size={24} className="text-blue-600" />,
       title: "Email Us",
-      details: "info@learninghabits.com",
-      action: "mailto:info@learninghabits.com",
+      details: "info@learninghabits.world",
+      action: "mailto:info@learninghabits.world",
     },
     {
       icon: <MapPin size={24} className="text-blue-600" />,
