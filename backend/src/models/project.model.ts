@@ -10,6 +10,7 @@ export interface IProject extends Document {
   price: string;
   createdAt: Date;
   updatedAt: Date;
+  internationalPrice: string;
 }
 
 const ProjectSchema = new Schema<IProject>(
@@ -42,6 +43,10 @@ const ProjectSchema = new Schema<IProject>(
     price: {
       type: String,
       required: [true, "Price is required"],
+    },
+    internationalPrice: {
+      type: String,
+      required: [true, "International Price is required"],
     },
   },
   {

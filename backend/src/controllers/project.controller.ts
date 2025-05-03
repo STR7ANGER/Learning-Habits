@@ -70,7 +70,7 @@ export const addProject = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { name, description, duration, location, price, pdfUrl } = req.body;
+    const { name, description, duration, location, price, pdfUrl,internationalPrice } = req.body;
     const files = req.files as { [fieldname: string]: Express.Multer.File[] };
 
     // Validate required fields
@@ -113,6 +113,7 @@ export const addProject = async (
       image: imageResult.secure_url,
       pdfFile: pdfUrl,
       price,
+      internationalPrice
     };
 
     const newProject = new ProjectModel(projectData);
@@ -147,7 +148,7 @@ export const updateProject = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { name, description, duration, location, price, pdfUrl } = req.body;
+    const { name, description, duration, location, price, pdfUrl,internationalPrice } = req.body;
     const files = req.files as { [fieldname: string]: Express.Multer.File[] };
     const projectId = req.params.id;
 
@@ -168,6 +169,7 @@ export const updateProject = async (
       duration: duration || project.duration,
       location: location || project.location,
       price: price || project.price,
+      internationalPrice:internationalPrice||project.internationalPrice,
     };
 
     // Update PDF URL if provided
