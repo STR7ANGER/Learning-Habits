@@ -8,12 +8,8 @@ import Events from "@/pages/Events";
 import News from "@/pages/News";
 import Blogs from "@/pages/Blogs";
 import Expert from "@/pages/Expert";
-import ExpertSignUp from "@/pages/expert/ExpertSignUp";
-import ExpertLogin from "@/pages/expert/ExpertLogin";
 import LearnerLogin from "@/pages/LearnerLogin";
 import LearnerSignUp from "@/pages/LeanerSignUp";
-import Dashboard from "@/pages/expert/Dashboard";
-import Sessions from "@/pages/expert/Sessions";
 import MyProjects from "@/pages/MyProjects";
 import JobTalks from "@/pages/JobTalks";
 import TechnologyLearning from "@/pages/TechnologyLearning";
@@ -44,14 +40,6 @@ const PublicRoutes = () => {
     <Route key="news" path="/news" element={<News />} />,
     <Route key="blog" path="/blog" element={<Blogs />} />,
     <Route key="expert" path="/expert" element={<Expert />} />,
-    <Route
-      key="expertsingup"
-      path="/expertsignup"
-      element={<ExpertSignUp />}
-    />,
-    <Route key="expertlogin" path="/expertlogin" element={<ExpertLogin />} />,
-    <Route key="dashboard" path="/dashboard" element={<Dashboard />} />,
-    <Route key="session" path="/session" element={<Sessions />} />,
     <Route key="myproject" path="/myproject" element={<MyProjects />} />,
     <Route key="jobtalk" path="/jobtalk" element={<JobTalks />} />,
     <Route

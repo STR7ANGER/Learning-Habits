@@ -109,7 +109,7 @@ const trustCompany = () => {
   ];
 
   return (
-    <div className=" p-9 rounded-lg mt-8 mb-8 ">
+    <div className=" p-9 rounded-lg mt-44 mb-8 ">
       <div className="mb-5 text-center">
         <h2 className="text-3xl font-bold text-blue-700 mb-8">
           Top <span className="text-black">Companies</span>

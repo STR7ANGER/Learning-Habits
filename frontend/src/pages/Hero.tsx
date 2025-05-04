@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
 import { assets } from "./../assets/assets";
 import BlurText from "@/blocks/TextAnimations/BlurText/BlurText";
+import { useNavigate } from "react-router-dom";
 
 const Hero = () => {
+  const navigate = useNavigate();
+
   // Define content for each slide
   const slides = [
     {
@@ -46,6 +49,11 @@ const Hero = () => {
     return () => clearInterval(interval);
   }, []);
 
+  // Handle button click to redirect to /project
+  const handleButtonClick = () => {
+    navigate("/project");
+  };
+
   // Ensure we always have a valid slide to reference
   const currentSlideData = slides[currentSlide] || slides[0];
 
@@ -71,10 +79,15 @@ const Hero = () => {
               // Modified SVG rendering to fill the space
               <div className="w-full h-full">
                 {/* Use proper TypeScript handling for JSX elements */}
-                {slide.image && typeof slide.image === 'object' && 'type' in slide.image ? 
-                  <div className="w-full h-full object-cover">{slide.image}</div> :
+                {slide.image &&
+                typeof slide.image === "object" &&
+                "type" in slide.image ? (
+                  <div className="w-full h-full object-cover">
+                    {slide.image}
+                  </div>
+                ) : (
                   <div className="w-full h-full bg-gray-800"></div>
-                }
+                )}
               </div>
             )}
           </div>
@@ -107,8 +120,11 @@ const Hero = () => {
               {currentSlideData?.description}
             </p>
 
-       
-            <button className="bg-blue-600 text-white font-bold py-3 px-8 rounded-full hover:bg-blue-700 transition-colors shadow-lg">
+            {/* Button with redirect to /project */}
+            <button
+              className="bg-blue-600 text-white font-bold py-3 px-8 rounded-full hover:bg-blue-700 transition-colors shadow-lg"
+              onClick={handleButtonClick}
+            >
               {currentSlideData?.buttonText}
             </button>
           </div>
