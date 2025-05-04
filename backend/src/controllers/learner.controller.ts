@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import LearnerModel from "../models/learner.model";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import { sendRegistrationNotifications } from '../service/notification.service';
 
 // Generate JWT Token
 const generateToken = (id: string): string => {
@@ -89,6 +90,25 @@ export const registerLearner = async (
       preferences,
     });
 
+    // Send registration notifications
+    try {
+      await sendRegistrationNotifications({
+        name,
+        email,
+        phoneNumber,
+        status,
+        schoolName: status === "student" ? schoolName : undefined,
+        companyName: status === "job" ? companyName : undefined,
+        preferences,
+      });
+      console.log('Registration notifications sent successfully');
+    } catch (emailError: any) {
+      console.error("Failed to send registration emails:", emailError.message);
+      // Continue execution even if emails fail
+      // You may want to log this to a monitoring service in production
+    }
+
+    // Generate token and return successful response
     res.status(201).json({
       success: true,
       data: {
@@ -109,6 +129,7 @@ export const registerLearner = async (
     });
   }
 };
+
 
 export const loginLearner = async (
   req: Request,
