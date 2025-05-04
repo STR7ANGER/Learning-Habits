@@ -4,13 +4,6 @@ import dotenv from 'dotenv';
 // Ensure environment variables are loaded
 dotenv.config();
 
-// Log email configuration for debugging
-console.log('Email Configuration:');
-console.log(`- HOST: ${process.env.EMAIL_HOST}`);
-console.log(`- PORT: ${process.env.EMAIL_PORT}`);
-console.log(`- SECURE: ${process.env.EMAIL_SECURE}`);
-console.log(`- USER: ${process.env.EMAIL_USER}`);
-console.log(`- FROM: ${process.env.EMAIL_FROM || 'no-reply@learninghabits.world'}`);
 
 // Email configuration
 const transporter = nodemailer.createTransport({

@@ -6,6 +6,7 @@ import connectDB from "./config/mongodb.config";
 import learnerrouter from "./routes/learner.route";
 import projectrouter from "./routes/project.route";
 import purchaserouter from "./routes/purchase.route";
+import sessionRouter from "./routes/session.route";
 
 //App config
 const app = express();
@@ -31,6 +32,7 @@ app.use(
 app.use("/api/learner", learnerrouter);
 app.use("/api/project", projectrouter);
 app.use("/api/purchase", purchaserouter);
+app.use("/api/sessions",sessionRouter);
 
 app.get("/", (req, res) => {
   res.send("Hello from TypeScript backend!");
