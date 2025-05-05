@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Github, Twitter, Linkedin, Instagram } from "lucide-react";
+import {  Instagram,Facebook } from "lucide-react";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -26,10 +26,8 @@ const Footer = () => {
 
   // Social media icons data
   const socialMedia = [
-    { name: "Github", icon: Github, link: "#" },
-    { name: "Twitter", icon: Twitter, link: "#" },
-    { name: "LinkedIn", icon: Linkedin, link: "#" },
-    { name: "Instagram", icon: Instagram, link: "#" },
+    { name: "LinkedIn", icon: Facebook, link: "https://www.facebook.com/profile.php?id=61565560397177" },
+    { name: "Instagram", icon: Instagram, link: "https://www.instagram.com/learninghabits_/" },
   ];
 
   // Arrow component for links
