@@ -1,45 +1,57 @@
-import { useState, ChangeEvent, FormEvent } from "react";
+import { useState, ChangeEvent, FormEvent, useEffect } from "react";
 import { motion } from "framer-motion";
-import {
-  Users,
-  MessageSquare,
-  Briefcase,
-  Award,
-  ArrowRight,
-} from "lucide-react";
+import { Users, BookOpen, Code, Activity, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { AnimatedGridPattern } from "@/components/magicui/animated-grid-pattern";
 import SplitText from "@/blocks/TextAnimations/SplitText/SplitText";
 import BlurText from "@/blocks/TextAnimations/BlurText/BlurText";
+import axios from "axios";
 
 const JobTalks = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    jobInterest: "",
+    preference: "",
     date: "",
     time: "",
     message: "",
-    level: "",
+    experienceLevel: "",
   });
 
+  const [uid, setUid] = useState<string | null>(null);
   const [selectedTopic, setSelectedTopic] = useState<number | null>(null);
+  const [submitStatus, setSubmitStatus] = useState<{
+    success: boolean;
+    message: string;
+  } | null>(null);
 
-  const jobInterests = [
-    "Ai Chatbot",
-    "Ai Data Scientist",
-    "AR-VR",
-    "Blockchain",
-    "Cloud",
-    "Data Engineer",
-    "Data Visualization",
-    "DevOps",
-    "Fullstack",
-    "Golang",
-    "Mobile Dev",
-    "QA",
-    "Rust",
-    "Cyber Security",
+  useEffect(() => {
+    // Get user ID from localStorage if available
+    try {
+      const userDataString = localStorage.getItem("user");
+      if (userDataString) {
+        const userData = JSON.parse(userDataString);
+        if (userData._id) {
+          setUid(userData._id);
+        }
+      }
+    } catch (error) {
+      console.error("Error retrieving user data:", error);
+    }
+  }, []);
+
+  const supportPreferences = [
+    "Resume Building",
+    "Interview Preparation",
+    "Portfolio Review",
+    "Career Transition",
+    "Job Search Strategy",
+    "Salary Negotiation",
+    "Technical Assessment Prep",
+    "Networking Strategy",
+    "Professional Development",
+    "LinkedIn Profile Optimization",
+    "Cover Letter Writing",
     "Others",
   ];
 
@@ -51,36 +63,36 @@ const JobTalks = () => {
     "Executive",
   ];
 
-  const jobTalkTopics = [
+  const supportTopics = [
     {
       id: 1,
-      name: "Career Guidance",
+      name: "Technical Mentoring",
       description:
-        "Get personalized advice on career paths and growth opportunities",
-      icon: <Briefcase size={24} className="text-blue-600" />,
+        "Get personalized technical guidance from experienced professionals",
+      icon: <Code size={24} className="text-blue-600" />,
       available: 8,
     },
     {
       id: 2,
-      name: "Resume Review",
+      name: "Career Strategy",
       description:
-        "Professional feedback on your resume and application materials",
-      icon: <MessageSquare size={24} className="text-blue-600" />,
-      available: 12,
-    },
-    {
-      id: 3,
-      name: "Interview Preparation",
-      description: "Practice technical and behavioral interviews with feedback",
-      icon: <Users size={24} className="text-blue-600" />,
+        "Strategic planning for your professional growth and advancement",
+      icon: <Activity size={24} className="text-blue-600" />,
       available: 10,
     },
     {
+      id: 3,
+      name: "Job Application Review",
+      description: "Expert feedback on your applications and materials",
+      icon: <BookOpen size={24} className="text-blue-600" />,
+      available: 12,
+    },
+    {
       id: 4,
-      name: "Skill Development",
+      name: "Interview Coaching",
       description:
-        "Guidance on acquiring in-demand skills for your target role",
-      icon: <Award size={24} className="text-blue-600" />,
+        "Practice sessions and strategies for technical and behavioral interviews",
+      icon: <Users size={24} className="text-blue-600" />,
       available: 7,
     },
   ];
@@ -95,10 +107,57 @@ const JobTalks = () => {
     });
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    // Handle form submission logic here
+    setSubmitStatus(null);
+
+    const apiurl = import.meta.env.VITE_API_URL;
+
+    try {
+      const response = await axios.post(
+        `${apiurl}/api/jobsupport/book`,
+        {
+          ...formData,
+          uid: uid,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const data = response.data;
+
+      if (data.success) {
+        setSubmitStatus({
+          success: true,
+          message: "Your job support session has been scheduled successfully!",
+        });
+        setFormData({
+          name: "",
+          email: "",
+          preference: "",
+          date: "",
+          time: "",
+          message: "",
+          experienceLevel: "",
+        });
+        setSelectedTopic(null);
+      } else {
+        setSubmitStatus({
+          success: false,
+          message: data.message || "Failed to schedule job support session.",
+        });
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      setSubmitStatus({
+        success: false,
+        message:
+          "An error occurred. Please try again later.",
+      });
+    }
   };
 
   const handleTopicSelect = (topicId: number): void => {
@@ -124,7 +183,7 @@ const JobTalks = () => {
           <div className="text-center max-w-3xl mx-auto">
             <div className="mb-6">
               <BlurText
-                text="JobTalks Sessions"
+                text="Job Support Sessions"
                 delay={150}
                 animateBy="words"
                 direction="top"
@@ -132,7 +191,7 @@ const JobTalks = () => {
               />
             </div>
             <SplitText
-              text="Book personalized career consultation sessions with industry experts who can guide your professional journey."
+              text="Get personalized job support and career guidance from experienced professionals to help you achieve your career goals."
               className="text-xl text-gray-200 max-w-2xl mx-auto"
               delay={10}
               animationFrom={{ opacity: 0, transform: "translate3d(0,50px,0)" }}
@@ -147,14 +206,14 @@ const JobTalks = () => {
       {/* Topic Selection Section */}
       <div className="container mx-auto px-6 py-16">
         <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">
-          Select Your Session Type
+          Choose Your Support Focus
         </h2>
         <p className="text-gray-600 text-center max-w-2xl mx-auto mb-12">
-          Choose the type of career support you need from our expert advisors
+          Select the area where you need professional guidance and expertise
         </p>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          {jobTalkTopics.map((topic) => (
+          {supportTopics.map((topic) => (
             <div
               key={topic.id}
               onClick={() => handleTopicSelect(topic.id)}
@@ -193,7 +252,7 @@ const JobTalks = () => {
                 <p className="font-medium">
                   You've selected{" "}
                   <span className="font-bold">
-                    {jobTalkTopics.find((t) => t.id === selectedTopic)?.name}
+                    {supportTopics.find((t) => t.id === selectedTopic)?.name}
                   </span>
                 </p>
                 <p className="text-sm">
@@ -210,7 +269,7 @@ const JobTalks = () => {
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-3xl font-bold text-center text-gray-800 mb-12">
-              Book Your JobTalks Session
+              Schedule Your Job Support Session
             </h2>
 
             <div className="bg-white/90 backdrop-blur-md rounded-xl shadow-lg p-8 border border-blue-100 relative overflow-hidden">
@@ -260,26 +319,30 @@ const JobTalks = () => {
 
                 <div>
                   <label
-                    htmlFor="jobInterest"
+                    htmlFor="preference"
                     className="block text-sm font-medium text-blue-600 mb-2"
                   >
-                    Job Interest
+                    Support Preference
                   </label>
                   <div className="relative">
                     <select
-                      id="jobInterest"
-                      name="jobInterest"
-                      value={formData.jobInterest}
+                      id="preference"
+                      name="preference"
+                      value={formData.preference}
                       onChange={handleChange}
                       className="appearance-none w-full px-4 py-3 rounded-lg bg-blue-50 border border-blue-200 text-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all"
                       required
                     >
                       <option value="" disabled className="text-gray-600">
-                        Select your job interest
+                        Select your support preference
                       </option>
-                      {jobInterests.map((job) => (
-                        <option key={job} value={job} className="text-gray-800">
-                          {job}
+                      {supportPreferences.map((preference) => (
+                        <option
+                          key={preference}
+                          value={preference}
+                          className="text-gray-800"
+                        >
+                          {preference}
                         </option>
                       ))}
                     </select>
@@ -301,16 +364,16 @@ const JobTalks = () => {
 
                 <div>
                   <label
-                    htmlFor="level"
+                    htmlFor="experienceLevel"
                     className="block text-sm font-medium text-blue-600 mb-2"
                   >
                     Experience Level
                   </label>
                   <div className="relative">
                     <select
-                      id="level"
-                      name="level"
-                      value={formData.level}
+                      id="experienceLevel"
+                      name="experienceLevel"
+                      value={formData.experienceLevel}
                       onChange={handleChange}
                       className="appearance-none w-full px-4 py-3 rounded-lg bg-blue-50 border border-blue-200 text-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all"
                       required
@@ -385,14 +448,14 @@ const JobTalks = () => {
                     htmlFor="message"
                     className="block text-sm font-medium text-blue-600 mb-2"
                   >
-                    Your Career Goals & Questions
+                    Your Career Situation & Specific Needs
                   </label>
                   <textarea
                     id="message"
                     name="message"
                     value={formData.message}
                     onChange={handleChange}
-                    placeholder="Share details about your career goals, specific questions you have, or what you hope to gain from this session..."
+                    placeholder="Describe your current career situation, challenges you're facing, and specific areas where you need support..."
                     rows={4}
                     className="w-full px-4 py-3 rounded-lg bg-blue-50 border border-blue-200 text-blue-800 placeholder-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all resize-none"
                     required
@@ -404,13 +467,25 @@ const JobTalks = () => {
                     type="submit"
                     className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-all duration-300 shadow-lg hover:shadow-blue-500/30 flex items-center justify-center gap-2"
                   >
-                    <span>Book JobTalks Session</span>
+                    <span>Schedule Support Session</span>
                     <ArrowRight size={18} />
                   </button>
 
+                  {submitStatus && (
+                    <div
+                      className={`mt-4 text-center p-3 rounded-lg ${
+                        submitStatus.success
+                          ? "bg-blue-100 text-blue-700"
+                          : "bg-red-100 text-red-700"
+                      }`}
+                    >
+                      {submitStatus.message}
+                    </div>
+                  )}
+
                   <div className="mt-4 text-center text-blue-500 text-sm">
-                    Our career advisors typically respond within 24 hours to
-                    confirm your booking.
+                    Our career coaches typically respond within 24 hours to
+                    confirm your session.
                   </div>
                 </div>
               </form>
@@ -432,11 +507,11 @@ const JobTalks = () => {
                 1
               </div>
               <h3 className="text-xl font-bold text-gray-800 mb-3">
-                Personalized Guidance
+                Professional Assessment
               </h3>
               <p className="text-gray-600">
-                Receive tailored career advice specific to your industry,
-                skills, and career goals.
+                Get an expert evaluation of your current skills, experience, and
+                career trajectory.
               </p>
             </div>
 
@@ -445,11 +520,11 @@ const JobTalks = () => {
                 2
               </div>
               <h3 className="text-xl font-bold text-gray-800 mb-3">
-                Expert Insights
+                Practical Strategies
               </h3>
               <p className="text-gray-600">
-                Gain insider knowledge and perspectives from professionals with
-                real-world experience.
+                Receive actionable advice and techniques tailored to your unique
+                career challenges.
               </p>
             </div>
 
@@ -458,11 +533,11 @@ const JobTalks = () => {
                 3
               </div>
               <h3 className="text-xl font-bold text-gray-800 mb-3">
-                Action Plan
+                Ongoing Support
               </h3>
               <p className="text-gray-600">
-                Walk away with concrete next steps and resources to advance your
-                career journey.
+                Access to resources, templates, and follow-up guidance to help
+                you implement recommendations.
               </p>
             </div>
           </div>

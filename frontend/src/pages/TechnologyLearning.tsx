@@ -153,7 +153,6 @@ const TechnologyLearning = () => {
         `${apiurl}/api/sessions/tech-learning`,
         {
           ...formData,
-          // Backend doesn't expect topicName, so we'll remove it
         }
       );
 

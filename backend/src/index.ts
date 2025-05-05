@@ -7,6 +7,8 @@ import learnerrouter from "./routes/learner.route";
 import projectrouter from "./routes/project.route";
 import purchaserouter from "./routes/purchase.route";
 import sessionRouter from "./routes/session.route";
+import appointmentRoutes from './routes/appointments.route';
+import jobSupportRouter from "./routes/jobSupport.route";
 
 //App config
 const app = express();
@@ -33,6 +35,8 @@ app.use("/api/learner", learnerrouter);
 app.use("/api/project", projectrouter);
 app.use("/api/purchase", purchaserouter);
 app.use("/api/sessions",sessionRouter);
+app.use('/api/appointments', appointmentRoutes);
+app.use('/api/jobsupport',jobSupportRouter);
 
 app.get("/", (req, res) => {
   res.send("Hello from TypeScript backend!");

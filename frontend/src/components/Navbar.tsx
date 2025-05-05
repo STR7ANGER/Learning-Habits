@@ -177,7 +177,7 @@ const Navbar: FC = () => {
                       }`}
                       aria-expanded={projectsDropdownOpen}
                     >
-                      Services
+                      Learnings
                       <svg
                         className={`ml-1 h-4 w-4 transform transition-transform ${
                           projectsDropdownOpen ? "rotate-180" : ""

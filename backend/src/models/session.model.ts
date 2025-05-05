@@ -9,7 +9,8 @@ export interface ISession extends Document {
   time: string;
   message: string;
   createdAt: Date;
-  sessionType: 'expert' | 'techLearning';
+  status?: string;
+  sessionType: 'expert' | 'techLearning' | 'appointment' | 'jobSupport';
 }
 
 // Expert session specific fields
@@ -22,6 +23,17 @@ export interface IExpertSession extends ISession {
 export interface ITechLearningSession extends ISession {
   techInterest: string;
   techSpecifics?: string;
+}
+
+// Appointment specific fields
+export interface IAppointment extends ISession {
+  preference: string; // Maps to 'Area of Interest' in the form
+}
+
+// Job Support specific fields
+export interface IJobSupport extends ISession {
+  preference: string;
+  experienceLevel: string;
 }
 
 // Base schema with common fields
@@ -48,8 +60,13 @@ const sessionSchema = new Schema({
     required: true 
   },
   message: { 
-    type: String, 
-    required: true 
+    type: String,
+    default: ''
+  },
+  status: {
+    type: String,
+    enum: ['pending', 'confirmed', 'cancelled', 'completed'],
+    default: 'pending'
   },
   createdAt: { 
     type: Date, 
@@ -57,7 +74,7 @@ const sessionSchema = new Schema({
   },
   sessionType: { 
     type: String, 
-    enum: ['expert', 'techLearning'], 
+    enum: ['expert', 'techLearning', 'appointment', 'jobSupport'], 
     required: true 
   }
 });
@@ -84,6 +101,26 @@ const techLearningSessionSchema = new Schema({
   }
 });
 
+// Appointment schema
+const appointmentSchema = new Schema({
+  preference: {
+    type: String,
+    required: true
+  }
+});
+
+// Job Support schema
+const jobSupportSchema = new Schema({
+  preference: {
+    type: String,
+    required: true
+  },
+  experienceLevel: {
+    type: String,
+    required: true
+  }
+});
+
 // Create discriminator models
 const Session = mongoose.model<ISession>('Session', sessionSchema);
 export const ExpertSession = Session.discriminator<IExpertSession>(
@@ -93,6 +130,14 @@ export const ExpertSession = Session.discriminator<IExpertSession>(
 export const TechLearningSession = Session.discriminator<ITechLearningSession>(
   'TechLearningSession',
   techLearningSessionSchema
+);
+export const Appointment = Session.discriminator<IAppointment>(
+  'Appointment',
+  appointmentSchema
+);
+export const JobSupport = Session.discriminator<IJobSupport>(
+  'JobSupport',
+  jobSupportSchema
 );
 
 export default Session;
