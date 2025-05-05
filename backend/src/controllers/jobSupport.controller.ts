@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { JobSupport } from "../models/session.model";
+import { sendSessionBookingNotifications, sendCancellationNotifications } from "../service/email.service";
 
 /**
  * Book a job support session
@@ -38,6 +39,24 @@ export const bookJobSupport = async (
 
     // Save the job support session
     await jobSupport.save();
+
+    // Send email notifications
+    try {
+      await sendSessionBookingNotifications({
+        name,
+        email,
+        preference,
+        experienceLevel,
+        date,
+        time,
+        message: message || "",
+        sessionType: "jobSupport",
+        status: "pending"
+      });
+    } catch (emailError) {
+      console.error("Error sending email notifications:", emailError);
+      // Continue with response even if email fails
+    }
 
     // Return success response
     res.status(201).json({
@@ -133,9 +152,30 @@ export const cancelJobSupport = async (
       return;
     }
 
+    // Store session data for email notifications before status change
+    const jobSupportData = {
+      name: jobSupport.name,
+      email: jobSupport.email,
+      preference: jobSupport.preference,
+      experienceLevel: jobSupport.experienceLevel,
+      date: jobSupport.date,
+      time: jobSupport.time,
+      message: jobSupport.message,
+      sessionType: "jobSupport" as const,
+      status: "cancelled"
+    };
+
     // Update status to cancelled
     jobSupport.status = "cancelled";
     await jobSupport.save();
+
+    // Send cancellation emails
+    try {
+      await sendCancellationNotifications(jobSupportData);
+    } catch (emailError) {
+      console.error("Error sending cancellation emails:", emailError);
+      // Continue with response even if email fails
+    }
 
     res.status(200).json({
       success: true,

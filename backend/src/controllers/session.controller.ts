@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { ExpertSession, TechLearningSession } from "../models/session.model";
+import { sendSessionBookingNotifications } from "../service/email.service";
 
 /**
  * Book an expert session
@@ -32,12 +33,30 @@ export const bookExpertSession = async (
       time,
       message,
       sessionType: "expert",
-      status: "pending", // Adding a status field
+      status: "pending",
       createdAt: new Date(),
     });
 
     // Save the session
     await session.save();
+
+    // Send email notifications
+    try {
+      await sendSessionBookingNotifications({
+        name,
+        email,
+        techArea,
+        specificTech,
+        date,
+        time,
+        message,
+        sessionType: "expert",
+        status: "pending"
+      });
+    } catch (emailError) {
+      console.error("Error sending email notifications:", emailError);
+      // Continue with response even if email fails
+    }
 
     // Return success response
     res.status(201).json({
@@ -101,10 +120,30 @@ export const bookTechLearningSession = async (
       time,
       message,
       sessionType: "techLearning",
+      status: "pending",
+      createdAt: new Date(),
     });
 
     // Save the session
     await session.save();
+
+    // Send email notifications
+    try {
+      await sendSessionBookingNotifications({
+        name,
+        email,
+        techInterest,
+        techSpecifics,
+        date,
+        time,
+        message,
+        sessionType: "techLearning",
+        status: "pending"
+      });
+    } catch (emailError) {
+      console.error("Error sending email notifications:", emailError);
+      // Continue with response even if email fails
+    }
 
     // Return success response
     res.status(201).json({
@@ -122,7 +161,6 @@ export const bookTechLearningSession = async (
     return;
   }
 };
-
 /**
  * Get all sessions for a user
  */

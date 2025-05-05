@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { Appointment } from "../models/session.model";
+import { sendSessionBookingNotifications, sendCancellationNotifications } from "../service/email.service";
 
 /**
  * Book an appointment
@@ -37,6 +38,23 @@ export const bookAppointment = async (
 
     // Save the appointment
     await appointment.save();
+
+    // Send email notifications
+    try {
+      await sendSessionBookingNotifications({
+        name,
+        email,
+        preference,
+        date,
+        time,
+        message: message || "",
+        sessionType: "appointment",
+        status: "pending"
+      });
+    } catch (emailError) {
+      console.error("Error sending email notifications:", emailError);
+      // Continue with response even if email fails
+    }
 
     // Return success response
     res.status(201).json({
@@ -123,8 +141,28 @@ export const cancelAppointment = async (
       return;
     }
 
+    // Store appointment data for email notifications before deletion
+    const appointmentData = {
+      name: appointment.name,
+      email: appointment.email,
+      preference: appointment.preference,
+      date: appointment.date,
+      time: appointment.time,
+      message: appointment.message,
+      sessionType: "appointment" as const,
+      status: "cancelled"
+    };
+
     // Delete the appointment
     await appointment.deleteOne();
+
+    // Send cancellation emails
+    try {
+      await sendCancellationNotifications(appointmentData);
+    } catch (emailError) {
+      console.error("Error sending cancellation emails:", emailError);
+      // Continue with response even if email fails
+    }
 
     res.status(200).json({
       success: true,
