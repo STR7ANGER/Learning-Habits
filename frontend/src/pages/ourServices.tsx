@@ -72,7 +72,7 @@ const OurServices = () => {
       {/* Hero Section with white background */}
       <div className="py-20 px-4 relative">
         {/* White overlay box that sits on top of the hero section */}
-        <div className="absolute ml-10 -bottom-80 left-0 right-0">
+        <div className="absolute ml-10 -bottom-96 left-0 right-0">
           <div className="max-w-7xl mx-auto px-4">
             <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
               <h2 className="text-3xl font-bold text-center mb-12">
