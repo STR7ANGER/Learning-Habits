@@ -4,21 +4,8 @@ import ClickSpark from "./blocks/Animations/ClickSpark/ClickSpark";
 
 const App = () => {
   return (
-    <>
-      <div
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100vw",
-          height: "100vh",
-          backgroundColor: "rgba(255, 255, 255, 0.01)",
-          backdropFilter: "blur(1px)",
-          WebkitBackdropFilter: "blur(1px)",
-          zIndex: 9999,
-          pointerEvents: "none",
-        }}
-      />
+    
+      
 
       <ClickSpark
         sparkColor="#000000"
@@ -31,7 +18,7 @@ const App = () => {
           <AppRoutes />
         </AuthProvider>
       </ClickSpark>
-    </>
+    
   );
 };
 
