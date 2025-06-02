@@ -68,7 +68,7 @@ const OurServices = () => {
   const secondRowServices = services.slice(5);
 
   return (
-    <div className="relative w-full">
+    <div className="h-96 w-full">
       {/* Hero Section with white background */}
       <div className="py-20 px-4 relative">
         {/* White overlay box that sits on top of the hero section */}
