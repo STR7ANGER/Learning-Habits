@@ -58,8 +58,8 @@ const ContactUs = () => {
     {
       icon: <Phone size={24} className="text-blue-600" />,
       title: "Call Us",
-      details: "+1 (555) 123-4567",
-      action: "tel:+15551234567",
+      details: "+91 9910860253",
+      action: "tel:+919910860253",
     },
     {
       icon: <Mail size={24} className="text-blue-600" />,
@@ -71,9 +71,9 @@ const ContactUs = () => {
       icon: <MapPin size={24} className="text-blue-600" />,
       title: "Visit Us",
       details:
-        "Plot Nos 8, 11, TechZone 2, Greater Noida, Uttar Pradesh 201310, India",
+        "Migsun Ultimo tower sun 3,310 Greater Noida omicron,part-3,Uttar Pradesh,India (201310)",
       action:
-        "https://www.google.com/maps/place/Bennett+University/@28.4506512,77.5816175,17z/data=!3m1!4b1!4m6!3m5!1s0x390cbf94deb6bc39:0x7ba6bedc9a2b537f!8m2!3d28.4506465!4d77.5841978!16s%2Fg%2F11c3wvm4q_?hl=en-GB&entry=ttu&g_ep=EgoyMDI1MDQwOC4wIKXMDSoASAFQAw%3D%3D",
+        "https://www.google.com/maps/place/Migsun+Ultimo+Sun+3/@28.4700903,77.5509054,18z/data=!4m10!1m2!2m1!1sMigsun+Ultimo+tower+sun3,310+Greater+Noida+omicron%C2%A0part%C2%A03+201310!3m6!1s0x390cc19969088803:0xffd44ce2e8d9bc82!8m2!3d28.4709628!4d77.5531321!15sCkJNaWdzdW4gVWx0aW1vIHRvd2VyIHN1bjMsMzEwIEdyZWF0ZXIgTm9pZGEgb21pY3JvbsKgcGFydMKgMyAyMDEzMTBaQiJAbWlnc3VuIHVsdGltbyB0b3dlciBzdW4zIDMxMCBncmVhdGVyIG5vaWRhIG9taWNyb24gcGFydCAzIDIwMTMxMJIBEmFwYXJ0bWVudF9idWlsZGluZ5oBJENoZERTVWhOTUc5blMwVkpRMEZuU1VOQ09XOVVaalpCUlJBQqoBmwEQASowIixzdW4zIDMxMCBncmVhdGVyIG5vaWRhIG9taWNyb24gcGFydCAzIDIwMTMxMCgAMh8QASIbF4b7NdBpy4XSXD6XdUQPjP7yvvXd7_SbckIyMkQQAiJAbWlnc3VuIHVsdGltbyB0b3dlciBzdW4zIDMxMCBncmVhdGVyIG5vaWRhIG9taWNyb24gcGFydCAzIDIwMTMxMOABAPoBBAgAECc!16s%2Fg%2F11qswjfnpn?entry=ttu&g_ep=EgoyMDI1MDYwMy4wIKXMDSoASAFQAw%3D%3D",
     },
   ];
 
@@ -161,7 +161,7 @@ const ContactUs = () => {
               <div className="bg-white rounded-lg shadow-lg overflow-hidden h-80 w-full">
                 {/* Replace the src with your actual Google Maps embed URL */}
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3511.053332168928!2d77.5816175!3d28.4506512!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390cbf94deb6bc39%3A0x7ba6bedc9a2b537f!2sBennett%20University!5e0!3m2!1sen!2sin!4v1712833312345!5m2!1sen!2sin"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3518.081443585238!2d77.5509054!3d28.4700903!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390cc19969088803%3A0xffd44ce2e8d9bc82!2sMigsun%20Ultimo%20Sun%203!5e0!3m2!1sen!2sin!4v1717664451580!5m2!1sen!2sin"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}

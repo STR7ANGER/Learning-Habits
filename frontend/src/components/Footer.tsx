@@ -8,14 +8,14 @@ const Footer = () => {
   const quickLinks = [
     { name: "About Us", path: "/about" },
     { name: "Contact Us", path: "/contact" },
-    { name: "Courses", path: "/courses" },
+    { name: "Projects", path: "/project" },
   ];
 
   // Services data
   const services = [
-    { name: "News", path: "/services/news" },
-    { name: "Meeting", path: "/services/meeting" },
-    { name: "Session", path: "/services/session" },
+    { name: "News", path: "/news" },
+    { name: "Events", path: "/event" },
+    { name: "Blog", path: "/blog" },
   ];
 
   // Subscribe links data
