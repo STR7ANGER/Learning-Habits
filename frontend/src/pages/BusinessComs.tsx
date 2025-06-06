@@ -1,5 +1,15 @@
 import React, { useState, ChangeEvent, useEffect } from "react";
-import { Calendar, CheckCircle, Users, MessageSquare, FileText, Presentation, Mail, Phone, Building } from "lucide-react";
+import {
+  Calendar,
+  CheckCircle,
+  Users,
+  MessageSquare,
+  FileText,
+  Presentation,
+  Mail,
+  Phone,
+  Building,
+} from "lucide-react";
 
 interface FormData {
   uid: string;
@@ -94,11 +104,9 @@ const BusinessComs: React.FC = () => {
     setLoading(true);
     setError(null);
 
-    const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
-
     try {
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
       console.log("Business Communication session booking:", formData);
       setBookingSuccess(true);
     } catch (err) {
@@ -142,8 +150,9 @@ const BusinessComs: React.FC = () => {
               </h1>
             </div>
             <p className="text-xl text-purple-100 max-w-3xl mx-auto leading-relaxed">
-              Master the art of professional communication with expert-led training sessions. 
-              Enhance your presentation skills, business writing, and executive presence to advance your career.
+              Master the art of professional communication with expert-led
+              training sessions. Enhance your presentation skills, business
+              writing, and executive presence to advance your career.
             </p>
           </div>
         </div>
@@ -161,8 +170,9 @@ const BusinessComs: React.FC = () => {
               </h2>
             </div>
             <p className="text-gray-600 max-w-2xl mb-8 text-lg">
-              Enhance your professional communication skills with personalized training from 
-              experienced business communication experts and executive coaches.
+              Enhance your professional communication skills with personalized
+              training from experienced business communication experts and
+              executive coaches.
             </p>
 
             {error && (
@@ -259,8 +269,16 @@ const BusinessComs: React.FC = () => {
                         ))}
                       </select>
                       <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500">
-                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                        <svg
+                          className="w-5 h-5"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                            clipRule="evenodd"
+                          />
                         </svg>
                       </div>
                     </div>
@@ -288,8 +306,16 @@ const BusinessComs: React.FC = () => {
                         ))}
                       </select>
                       <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500">
-                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                        <svg
+                          className="w-5 h-5"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                            clipRule="evenodd"
+                          />
                         </svg>
                       </div>
                     </div>
@@ -363,8 +389,16 @@ const BusinessComs: React.FC = () => {
                         ))}
                       </select>
                       <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500">
-                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                        <svg
+                          className="w-5 h-5"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                            clipRule="evenodd"
+                          />
                         </svg>
                       </div>
                     </div>
@@ -393,7 +427,9 @@ const BusinessComs: React.FC = () => {
                     onClick={handleSubmit}
                     disabled={loading}
                     className={`w-full ${
-                      loading ? "bg-indigo-400" : "bg-indigo-600 hover:bg-indigo-700"
+                      loading
+                        ? "bg-indigo-400"
+                        : "bg-indigo-600 hover:bg-indigo-700"
                     } text-white font-bold py-4 px-6 rounded-lg transition-all duration-200 flex items-center justify-center text-lg shadow-lg hover:shadow-xl`}
                   >
                     {loading ? (
@@ -419,8 +455,9 @@ const BusinessComs: React.FC = () => {
                   Training Session Booked!
                 </h3>
                 <p className="text-gray-600 mb-8 text-lg max-w-md mx-auto">
-                  Thank you for booking your business communication training. 
-                  We'll send you a confirmation email with session details shortly.
+                  Thank you for booking your business communication training.
+                  We'll send you a confirmation email with session details
+                  shortly.
                 </p>
                 <button
                   onClick={resetForm}
@@ -442,19 +479,26 @@ const BusinessComs: React.FC = () => {
 
               <div className="space-y-6">
                 <div className="flex items-start">
-                  <FileText size={18} className="text-indigo-600 mr-3 mt-1 flex-shrink-0" />
+                  <FileText
+                    size={18}
+                    className="text-indigo-600 mr-3 mt-1 flex-shrink-0"
+                  />
                   <div>
                     <span className="font-semibold text-gray-800 block">
                       Executive Presentation Mastery
                     </span>
                     <p className="text-sm text-gray-600 mt-1">
-                      Command the boardroom with confident, persuasive presentations.
+                      Command the boardroom with confident, persuasive
+                      presentations.
                     </p>
                   </div>
                 </div>
 
                 <div className="flex items-start">
-                  <Mail size={18} className="text-indigo-600 mr-3 mt-1 flex-shrink-0" />
+                  <Mail
+                    size={18}
+                    className="text-indigo-600 mr-3 mt-1 flex-shrink-0"
+                  />
                   <div>
                     <span className="font-semibold text-gray-800 block">
                       Professional Writing Workshop
@@ -466,19 +510,26 @@ const BusinessComs: React.FC = () => {
                 </div>
 
                 <div className="flex items-start">
-                  <Users size={18} className="text-indigo-600 mr-3 mt-1 flex-shrink-0" />
+                  <Users
+                    size={18}
+                    className="text-indigo-600 mr-3 mt-1 flex-shrink-0"
+                  />
                   <div>
                     <span className="font-semibold text-gray-800 block">
                       Leadership Communication
                     </span>
                     <p className="text-sm text-gray-600 mt-1">
-                      Inspire and influence teams through effective communication.
+                      Inspire and influence teams through effective
+                      communication.
                     </p>
                   </div>
                 </div>
 
                 <div className="flex items-start">
-                  <Phone size={18} className="text-indigo-600 mr-3 mt-1 flex-shrink-0" />
+                  <Phone
+                    size={18}
+                    className="text-indigo-600 mr-3 mt-1 flex-shrink-0"
+                  />
                   <div>
                     <span className="font-semibold text-gray-800 block">
                       Client Relationship Building
@@ -503,9 +554,12 @@ const BusinessComs: React.FC = () => {
                     <CheckCircle size={16} className="text-purple-600" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-800">Expert Instructors</h4>
+                    <h4 className="font-semibold text-gray-800">
+                      Expert Instructors
+                    </h4>
                     <p className="text-sm text-gray-600">
-                      Learn from certified communication coaches and industry leaders.
+                      Learn from certified communication coaches and industry
+                      leaders.
                     </p>
                   </div>
                 </div>
@@ -515,7 +569,9 @@ const BusinessComs: React.FC = () => {
                     <CheckCircle size={16} className="text-purple-600" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-800">Practical Approach</h4>
+                    <h4 className="font-semibold text-gray-800">
+                      Practical Approach
+                    </h4>
                     <p className="text-sm text-gray-600">
                       Real-world scenarios and hands-on practice sessions.
                     </p>
@@ -527,7 +583,9 @@ const BusinessComs: React.FC = () => {
                     <CheckCircle size={16} className="text-purple-600" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-800">Measurable Results</h4>
+                    <h4 className="font-semibold text-gray-800">
+                      Measurable Results
+                    </h4>
                     <p className="text-sm text-gray-600">
                       Track your progress and see immediate improvement.
                     </p>
@@ -539,7 +597,9 @@ const BusinessComs: React.FC = () => {
                     <CheckCircle size={16} className="text-purple-600" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-800">Flexible Formats</h4>
+                    <h4 className="font-semibold text-gray-800">
+                      Flexible Formats
+                    </h4>
                     <p className="text-sm text-gray-600">
                       Individual coaching or group workshops to suit your needs.
                     </p>
@@ -563,9 +623,12 @@ const BusinessComs: React.FC = () => {
               <div className="w-16 h-16 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
                 1
               </div>
-              <h3 className="text-lg font-bold text-gray-800 mb-3">Assessment</h3>
+              <h3 className="text-lg font-bold text-gray-800 mb-3">
+                Assessment
+              </h3>
               <p className="text-gray-600 text-sm">
-                Evaluate your current communication strengths and areas for improvement.
+                Evaluate your current communication strengths and areas for
+                improvement.
               </p>
             </div>
 
@@ -573,9 +636,12 @@ const BusinessComs: React.FC = () => {
               <div className="w-16 h-16 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
                 2
               </div>
-              <h3 className="text-lg font-bold text-gray-800 mb-3">Customization</h3>
+              <h3 className="text-lg font-bold text-gray-800 mb-3">
+                Customization
+              </h3>
               <p className="text-gray-600 text-sm">
-                Tailor the training program to your specific role and objectives.
+                Tailor the training program to your specific role and
+                objectives.
               </p>
             </div>
 
@@ -593,7 +659,9 @@ const BusinessComs: React.FC = () => {
               <div className="w-16 h-16 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
                 4
               </div>
-              <h3 className="text-lg font-bold text-gray-800 mb-3">Integration</h3>
+              <h3 className="text-lg font-bold text-gray-800 mb-3">
+                Integration
+              </h3>
               <p className="text-gray-600 text-sm">
                 Apply learned skills immediately in your work environment.
               </p>
@@ -606,10 +674,13 @@ const BusinessComs: React.FC = () => {
       <div className="bg-gradient-to-r from-indigo-800 to-purple-800 text-white py-16 relative overflow-hidden">
         <div className="absolute inset-0 bg-black opacity-20"></div>
         <div className="container mx-auto px-6 relative z-10 text-center">
-          <h2 className="text-4xl font-bold mb-4">Transform Your Professional Communication</h2>
+          <h2 className="text-4xl font-bold mb-4">
+            Transform Your Professional Communication
+          </h2>
           <p className="text-xl text-indigo-100 mb-8 max-w-3xl mx-auto">
-            Join professionals who have elevated their careers through exceptional communication skills. 
-            Start your journey to becoming a more confident and effective communicator today.
+            Join professionals who have elevated their careers through
+            exceptional communication skills. Start your journey to becoming a
+            more confident and effective communicator today.
           </p>
           <button
             className="bg-white text-indigo-800 font-bold py-4 px-8 rounded-lg hover:bg-indigo-50 transition-colors shadow-lg text-lg"
