@@ -14,6 +14,8 @@ import MyProjects from "@/pages/MyProjects";
 import JobTalks from "@/pages/JobTalks";
 import TechnologyLearning from "@/pages/TechnologyLearning";
 import CorporateTraining from "@/pages/CorporateTraining";
+import BusinessComs from "@/pages/BusinessComs";
+
 
 const PublicRoutes = () => {
   const { isAuthenticated } = useAuth();
@@ -49,6 +51,7 @@ const PublicRoutes = () => {
       element={<TechnologyLearning />}
     />,
     <Route key="corporate" path="/corporate" element={<CorporateTraining />} />,
+    <Route key="businesscomms" path="/businesscomms" element={<BusinessComs/>}/>,
   ];
 };
 
