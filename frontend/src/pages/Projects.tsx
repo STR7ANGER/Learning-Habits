@@ -103,13 +103,13 @@ const Projects = () => {
     localStorage.setItem("preferredCurrency", newCurrency);
   };
 
-  // Function to format price according to selected currency
-  const getDisplayPrice = (project: Project) => {
-    if (currency === "USD" && project.internationalPrice) {
-      return `$${project.internationalPrice}`;
-    }
-    return project.price; // Default INR price
-  };
+  // // Function to format price according to selected currency
+  // const getDisplayPrice = (project: Project) => {
+  //   if (currency === "USD" && project.internationalPrice) {
+  //     return `$${project.internationalPrice}`;
+  //   }
+  //   return project.price; // Default INR price
+  // };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -239,7 +239,7 @@ const Projects = () => {
                         onClick={() => handleBuy(project._id)}
                       >
                         <ShoppingCart size={18} className="mr-2" />
-                        Buy {getDisplayPrice(project)}
+                        Buy {/*{getDisplayPrice(project)}*/}
                       </button>
                     </div>
                   </div>
