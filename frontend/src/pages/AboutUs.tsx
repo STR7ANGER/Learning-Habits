@@ -162,18 +162,11 @@ const AboutUs = () => {
           <div>
             <h2 className="text-3xl font-bold text-gray-800 mb-6">Our Story</h2>
             <p className="text-lg text-gray-700 leading-relaxed mb-6">
-              Learning Habits began with a simple idea: education should adapt
-              to each learner, not the other way around. Founded by a team of
-              educators and technologists, we set out to create a platform that
-              makes learning not just effective, but enjoyable and habitual.
+              We are proud to be the world’s first platform offering Project-Based Training and Internships! 
+
+For the last two years, we’ve been creating a global talent pool, receiving amazing responses from India and abroad. Our mission is clear — to help tech learners and trained professionals not just know technology, but build real projects that companies are looking for today. With us, you learn how a project is actually developed, the missing link that turns knowledge into a job offer. Once you complete your project, you become part of our exclusive talent pool and get direct exposure to top MNCs for job opportunities. And that’s not all — register now and unlock 4 internships over 4 years, designed to supercharge your career growth. Don’t just learn. Build, stand out, and get hired. Your future starts now!
             </p>
-            <p className="text-lg text-gray-700 leading-relaxed mb-6">
-              We believe that building sustainable learning habits is the key to
-              personal and professional growth. Our platform combines behavioral
-              science with cutting-edge technology to help learners establish
-              routines that stick, while making the learning experience
-              interactive and engaging.
-            </p>
+            
             <div className="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-500">
               <blockquote className="italic text-gray-600">
                 "Education is not just about filling a bucket, but lighting a

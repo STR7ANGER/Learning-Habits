@@ -102,18 +102,16 @@ const BuyProject = () => {
   // Calculate order details based on the selected currency
   const getPrice = () => {
     if (!project) return 0;
-    
+
     if (currency === "USD" && project.internationalPrice) {
       return parseFloat(project.internationalPrice);
     }
-    
+
     // For INR, remove the currency symbol and parse
     return parseFloat(project.price.replace(/[^0-9.]/g, ""));
   };
 
   const total = getPrice();
-
- 
 
   // Function to toggle currency
   const toggleCurrency = () => {
@@ -256,7 +254,8 @@ const BuyProject = () => {
               in a moment.
             </p>
             <div className="text-blue-400 font-bold">
-              {currency === "USD" ? "$" : "₹"}{total.toFixed(2)}
+              {currency === "USD" ? "$" : "₹"}
+              {total.toFixed(2)}
             </div>
           </div>
         </div>
@@ -269,7 +268,9 @@ const BuyProject = () => {
 
         {/* Simple Click-to-Switch Currency Toggle Button */}
         <div className="flex justify-end mb-6">
-          <h3 className="flex items-center mr-2 font-semibold">Click to switch: </h3>
+          <h3 className="flex items-center mr-2 font-semibold">
+            Click to switch:{" "}
+          </h3>
           <Button
             onClick={toggleCurrency}
             variant="outline"
@@ -339,11 +340,11 @@ const BuyProject = () => {
 
             {/* Terms and Conditions Card */}
             <div className="bg-black rounded-xl p-4 shadow-sm">
-              <h3 className=" font-bold text-white mb-2 pb-2 flex items-center">
+              <h3 className="font-bold text-white mb-2 pb-2 flex items-center">
                 <Info size={16} className="mr-1 text-blue-600" />
                 Terms & Policies
               </h3>
-              <ul className="text-xs text-white  space-y-2">
+              <ul className="text-xs text-white space-y-2">
                 <li className="flex items-start">
                   <Shield size={12} className="mr-1 text-blue-600 mt-0.5" />
                   <span>Full refund available within 7 days of purchase</span>
@@ -359,6 +360,28 @@ const BuyProject = () => {
                   </span>
                 </li>
               </ul>
+
+              {/* Policy Links */}
+              <div className="mt-4 pt-3 border-t border-gray-800">
+                <div className="flex flex-wrap gap-4 text-xs">
+                  <a
+                    href="https://drive.google.com/file/d/1SESjCkOk_AS4nQ8wzLDbAuEnkB6DVvWi/view?usp=sharing"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-400 hover:text-blue-300 underline transition-colors duration-200"
+                  >
+                    Privacy Policy
+                  </a>
+                  <a
+                    href="https://drive.google.com/file/d/156SEsrOXiDFDaNc10LKbSOQ2HeFtIplM/view?usp=sharing"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-400 hover:text-blue-300 underline transition-colors duration-200"
+                  >
+                    Terms & Conditions
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -472,7 +495,8 @@ const BuyProject = () => {
               <div className="flex justify-between items-center mb-4">
                 <div className="text-lg">Subtotal</div>
                 <div className="text-xl text-blue-400">
-                  {currency === "USD" ? "$" : "₹"}{total.toFixed(2)}
+                  {currency === "USD" ? "$" : "₹"}
+                  {total.toFixed(2)}
                 </div>
               </div>
 
@@ -481,7 +505,8 @@ const BuyProject = () => {
               <div className="flex justify-between items-center">
                 <div className="text-lg font-bold">Total</div>
                 <div className="text-2xl text-blue-400 font-bold">
-                  {currency === "USD" ? "$" : "₹"}{total.toFixed(2)}
+                  {currency === "USD" ? "$" : "₹"}
+                  {total.toFixed(2)}
                 </div>
               </div>
             </div>
