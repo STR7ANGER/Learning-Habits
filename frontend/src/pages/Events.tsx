@@ -9,134 +9,185 @@ import {
   Users,
   Award,
   ArrowUpRight,
-  Filter,
-  Search,
+  Trophy,
+  Calendar,
+  Code,
+  Target,
+  Github,
+  Linkedin,
+  Mail,
+  User,
+  Phone,
+  Briefcase,
+  CheckCircle,
 } from "lucide-react";
 
 const Events = () => {
-  const [view, setView] = useState("all"); // "all", "hackathons", "workshops", "conferences"
+  const [activeTab, setActiveTab] = useState("upcoming");
   const [searchQuery, setSearchQuery] = useState("");
+  const [registrationForm, setRegistrationForm] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    github: "",
+    linkedin: "",
+    experience: "",
+    skills: "",
+    teamName: "",
+    motivation: "",
+  });
+  const [selectedHackathon, setSelectedHackathon] = useState(null);
+  const [showRegistrationForm, setShowRegistrationForm] = useState(false);
 
-  // Event categories
-  const categories = [
-    "All",
-    "Hackathons",
-    "Workshops",
-    "Conferences",
-    "Webinars",
-  ];
-
-  // Sample event data
-  const events = [
+  // Weekly hackathon themes
+  const hackathons = [
     {
       id: 1,
-      title: "Annual Tech Innovation Summit",
-      description:
-        "Join industry leaders for our flagship tech conference covering AI, blockchain, and emerging technologies.",
-      date: "May 15-17, 2025",
-      time: "9:00 AM - 5:00 PM",
-      location: "Tech Center, Silicon Valley",
-      category: "Conferences",
-      attendees: 1200,
-      ranking: 1,
-      featured: true,
-      image: "/images/tech-summit.jpg",
+      title: "Learning Habits Hackathon #8",
+      theme: "Educational Technology & Learning Systems",
+      date: "Saturday, June 28, 2025",
+      time: "9:00 AM - 9:00 PM IST",
+      location: "Online & Hybrid Hub",
+      status: "upcoming",
+      registrationOpen: true,
+      registrationDeadline: "Friday, June 27, 2025 11:59 PM",
+      participants: 0,
+      maxParticipants: 200,
+      prizePool: "₹50,000",
+      difficulty: "Intermediate",
+      description: "Build innovative solutions to enhance learning experiences and educational habits.",
+      requirements: ["Web/Mobile Development", "UI/UX Design", "Educational Psychology"],
+      mentors: ["Dr. Sarah Johnson", "Alex Chen", "Priya Sharma"],
+      sponsors: ["EduTech Inc.", "Learning Labs", "TechForEd"],
     },
     {
       id: 2,
-      title: "AI Solutions Hackathon",
-      description:
-        "48-hour coding competition to build innovative AI solutions for real-world problems. $10,000 in prizes.",
-      date: "June 3-5, 2025",
-      time: "10:00 AM (start)",
-      location: "Online & Innovation Hub",
-      category: "Hackathons",
-      attendees: 500,
-      ranking: 2,
-      featured: true,
-      image: "/images/ai-hackathon.jpg",
-    },
-    {
-      id: 3,
-      title: "Frontend Development Workshop",
-      description:
-        "Hands-on workshop covering the latest frameworks and best practices in modern frontend development.",
-      date: "May 25, 2025",
-      time: "1:00 PM - 4:00 PM",
-      location: "Learning Center, Downtown",
-      category: "Workshops",
-      attendees: 75,
-      ranking: 4,
-      featured: false,
-      image: "/images/frontend-workshop.jpg",
-    },
-    {
-      id: 4,
-      title: "Cloud Computing Conference",
-      description:
-        "Explore the future of cloud infrastructure, serverless architecture, and multi-cloud strategies.",
-      date: "June 10, 2025",
-      time: "9:00 AM - 6:00 PM",
-      location: "Convention Center",
-      category: "Conferences",
-      attendees: 800,
-      ranking: 3,
-      featured: false,
-      image: "/images/cloud-conference.jpg",
-    },
-    {
-      id: 5,
-      title: "Data Science Webinar Series",
-      description:
-        "Weekly online sessions covering data analytics, machine learning, and data visualization tools.",
-      date: "Every Thursday in May",
-      time: "7:00 PM - 8:30 PM",
-      location: "Online",
-      category: "Webinars",
-      attendees: 350,
-      ranking: 6,
-      featured: false,
-      image: "/images/data-webinar.jpg",
-    },
-    {
-      id: 6,
-      title: "Blockchain Hackathon",
-      description:
-        "Build decentralized applications and smart contracts in this intensive weekend coding event.",
-      date: "May 20-22, 2025",
-      time: "9:00 AM (start)",
-      location: "Tech Incubator, East Campus",
-      category: "Hackathons",
-      attendees: 200,
-      ranking: 5,
-      featured: false,
-      image: "/images/blockchain-hackathon.jpg",
+      title: "Learning Habits Hackathon #9",
+      theme: "AI-Powered Personal Development",
+      date: "Saturday, July 5, 2025",
+      time: "9:00 AM - 9:00 PM IST",
+      location: "Online & Hybrid Hub",
+      status: "upcoming",
+      registrationOpen: false,
+      registrationDeadline: "Friday, July 4, 2025 11:59 PM",
+      participants: 0,
+      maxParticipants: 200,
+      prizePool: "₹50,000",
+      difficulty: "Advanced",
+      description: "Create AI solutions that help individuals develop better learning and productivity habits.",
+      requirements: ["Machine Learning", "Natural Language Processing", "Mobile Development"],
+      mentors: ["Dr. Raj Patel", "Maria Rodriguez", "Zhang Wei"],
+      sponsors: ["AI Solutions", "MindTech", "Future Labs"],
     },
   ];
 
-  // Filter events based on search and category
-  const filteredEvents = events.filter((event) => {
-    const matchesSearch =
-      event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      event.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory =
-      view === "all" || event.category.toLowerCase() === view.toLowerCase();
-    return matchesSearch && matchesCategory;
-  });
+  // Previous hackathons with winners
+  const previousHackathons = [
+    {
+      id: 1,
+      title: "Learning Habits Hackathon #7",
+      theme: "Gamified Learning Platforms",
+      date: "Saturday, June 21, 2025",
+      winner: {
+        team: "CodeCrafters",
+        project: "EduQuest",
+        members: ["Arjun Kumar", "Sneha Patel", "Rahul Singh"],
+        prize: "₹25,000",
+        description: "A gamified platform that turns daily learning into an RPG adventure.",
+      },
+      participants: 180,
+      projects: 45,
+    },
+    {
+      id: 2,
+      title: "Learning Habits Hackathon #6",
+      theme: "Mental Health & Wellness Apps",
+      date: "Saturday, June 14, 2025",
+      winner: {
+        team: "MindfulCoders",
+        project: "ZenStudy",
+        members: ["Anita Sharma", "Vikram Joshi", "Priya Nair"],
+        prize: "₹25,000",
+        description: "An app that combines mindfulness practices with study routines.",
+      },
+      participants: 165,
+      projects: 42,
+    },
+    {
+      id: 3,
+      title: "Learning Habits Hackathon #5",
+      theme: "Accessibility in Education",
+      date: "Saturday, June 7, 2025",
+      winner: {
+        team: "InclusiveTech",
+        project: "LearnForAll",
+        members: ["Ravi Gupta", "Meera Shah", "Arun Kumar"],
+        prize: "₹25,000",
+        description: "Educational platform with advanced accessibility features for differently-abled learners.",
+      },
+      participants: 155,
+      projects: 38,
+    },
+  ];
 
-  // Sort events by ranking
-  const sortedEvents = [...filteredEvents].sort(
-    (a, b) => a.ranking - b.ranking
-  );
+  // Leaderboard data
+  const leaderboard = [
+    { rank: 1, team: "CodeCrafters", points: 2850, wins: 3, participations: 5 },
+    { rank: 2, team: "MindfulCoders", points: 2620, wins: 2, participations: 6 },
+    { rank: 3, team: "InclusiveTech", points: 2400, wins: 2, participations: 4 },
+    { rank: 4, team: "InnovateEdu", points: 2150, wins: 1, participations: 7 },
+    { rank: 5, team: "TechLearners", points: 1980, wins: 1, participations: 5 },
+    { rank: 6, team: "FutureMakers", points: 1750, wins: 0, participations: 4 },
+    { rank: 7, team: "DevMinds", points: 1650, wins: 1, participations: 3 },
+    { rank: 8, team: "CreativeCoders", points: 1520, wins: 0, participations: 6 },
+  ];
 
-  // Get featured events
-  const featuredEvents = sortedEvents.filter((event) => event.featured);
-  // Get regular events
-  const regularEvents = sortedEvents.filter((event) => !event.featured);
+  // Skill pool data
+  const skillPool = [
+    { skill: "React/Next.js", participants: 145, demand: "High" },
+    { skill: "Python/Django", participants: 120, demand: "High" },
+    { skill: "Machine Learning", participants: 89, demand: "Very High" },
+    { skill: "UI/UX Design", participants: 110, demand: "High" },
+    { skill: "Node.js", participants: 95, demand: "Medium" },
+    { skill: "Flutter/React Native", participants: 78, demand: "High" },
+    { skill: "Data Science", participants: 65, demand: "Very High" },
+    { skill: "DevOps", participants: 45, demand: "Medium" },
+    { skill: "Blockchain", participants: 32, demand: "Low" },
+    { skill: "Cybersecurity", participants: 28, demand: "Medium" },
+  ];
+
+  // Handle form input changes
+  const handleInputChange = (e) => {
+    setRegistrationForm({
+      ...registrationForm,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  // Handle registration submission
+  const handleRegistration = (e) => {
+    e.preventDefault();
+    // Simulate registration process
+    alert(`Successfully registered for ${selectedHackathon.title}!`);
+    setShowRegistrationForm(false);
+    setRegistrationForm({
+      name: "",
+      email: "",
+      phone: "",
+      github: "",
+      linkedin: "",
+      experience: "",
+      skills: "",
+      teamName: "",
+      motivation: "",
+    });
+  };
+
+  const upcomingHackathons = hackathons.filter(h => h.status === "upcoming");
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Hero section with blue background and animated pattern */}
+      {/* Hero section */}
       <div className="bg-blue-800 text-white py-16 relative overflow-hidden">
         <AnimatedGridPattern
           numSquares={30}
@@ -150,10 +201,10 @@ const Events = () => {
         />
 
         <div className="container mx-auto px-6 relative z-10">
-          <div className="text-center max-w-3xl mx-auto">
+          <div className="text-center max-w-4xl mx-auto">
             <div className="mb-6">
               <BlurText
-                text="Events & Hackathons"
+                text="Weekly Learning Habits Hackathon"
                 delay={150}
                 animateBy="words"
                 direction="top"
@@ -161,263 +212,527 @@ const Events = () => {
               />
             </div>
             <SplitText
-              text="Stay connected with the tech community through our events. Participate, learn, and grow with us."
-              className="text-xl text-gray-200 max-w-2xl mx-auto"
+              text="Join us every Saturday for exciting hackathons focused on educational technology, learning systems, and innovative solutions that enhance how we learn and grow."
+              className="text-xl text-gray-200 max-w-3xl mx-auto mb-8"
               delay={10}
               animationFrom={{ opacity: 0, transform: "translate3d(0,50px,0)" }}
               animationTo={{ opacity: 1, transform: "translate3d(0,0,0)" }}
               threshold={0.2}
               rootMargin="-50px"
             />
+            <div className="flex flex-wrap justify-center gap-4">
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg px-4 py-2">
+                <span className="text-sm font-medium">Every Saturday</span>
+              </div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg px-4 py-2">
+                <span className="text-sm font-medium">₹50,000 Prize Pool</span>
+              </div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-lg px-4 py-2">
+                <span className="text-sm font-medium">12 Hours Challenge</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Events section */}
-      <div className="container mx-auto px-6 py-12">
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Left side: Event Rankings */}
-          <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-gray-800">Top Events</h2>
-                <Award size={20} className="text-blue-600" />
+      {/* Navigation Tabs */}
+      <div className="container mx-auto px-6 py-8">
+        <div className="bg-white rounded-lg shadow-lg mb-8">
+          <div className="flex flex-wrap border-b">
+            {[
+              { id: "upcoming", label: "Upcoming Hackathons", icon: Calendar },
+              { id: "leaderboard", label: "Leaderboard", icon: Trophy },
+              { id: "winners", label: "Previous Winners", icon: Award },
+              { id: "skills", label: "Skill Pool", icon: Code },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={cn(
+                  "flex items-center px-6 py-4 font-medium transition-colors",
+                  activeTab === tab.id
+                    ? "text-blue-600 border-b-2 border-blue-600 bg-blue-50"
+                    : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
+                )}
+              >
+                <tab.icon size={18} className="mr-2" />
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Upcoming Hackathons Tab */}
+        {activeTab === "upcoming" && (
+          <div className="grid lg:grid-cols-3 gap-8">
+            {/* Left sidebar - Quick Stats */}
+            <div className="lg:col-span-1">
+              <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
+                <h3 className="text-xl font-bold text-gray-800 mb-4">Quick Stats</h3>
+                <div className="space-y-4">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Total Hackathons</span>
+                    <span className="font-bold text-blue-600">8</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Total Participants</span>
+                    <span className="font-bold text-blue-600">1,200+</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Projects Built</span>
+                    <span className="font-bold text-blue-600">300+</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Prize Money Awarded</span>
+                    <span className="font-bold text-blue-600">₹4,00,000</span>
+                  </div>
+                </div>
               </div>
 
-              <div className="space-y-4">
-                {sortedEvents.slice(0, 5).map((event, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center border-b border-gray-100 pb-4 last:border-0"
-                  >
-                    <div className="text-2xl font-bold text-blue-600 w-8">
-                      #{event.ranking}
-                    </div>
-                    <div className="ml-3">
-                      <h3 className="font-medium text-gray-800">
-                        {event.title}
-                      </h3>
-                      <div className="flex items-center text-sm text-gray-500">
-                        <Users size={14} className="mr-1" />
-                        <span>{event.attendees} attendees</span>
+              <div className="bg-white rounded-lg shadow-lg p-6">
+                <h3 className="text-xl font-bold text-gray-800 mb-4">Upcoming Themes</h3>
+                <div className="space-y-3">
+                  <div className="p-3 border-l-4 border-blue-500 bg-blue-50">
+                    <p className="font-medium text-gray-800">Educational Technology</p>
+                    <p className="text-sm text-gray-600">June 28, 2025</p>
+                  </div>
+                  <div className="p-3 border-l-4 border-green-500 bg-green-50">
+                    <p className="font-medium text-gray-800">AI-Powered Development</p>
+                    <p className="text-sm text-gray-600">July 5, 2025</p>
+                  </div>
+                  <div className="p-3 border-l-4 border-purple-500 bg-purple-50">
+                    <p className="font-medium text-gray-800">Sustainable Tech</p>
+                    <p className="text-sm text-gray-600">July 12, 2025</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Main content - Hackathon Cards */}
+            <div className="lg:col-span-2">
+              <div className="space-y-6">
+                {upcomingHackathons.map((hackathon) => (
+                  <div key={hackathon.id} className="bg-white rounded-lg shadow-lg overflow-hidden">
+                    <div className="p-6">
+                      <div className="flex justify-between items-start mb-4">
+                        <div>
+                          <h3 className="text-2xl font-bold text-gray-800 mb-2">{hackathon.title}</h3>
+                          <p className="text-lg text-blue-600 font-medium">{hackathon.theme}</p>
+                        </div>
+                        <div className="text-right">
+                          <span className={cn(
+                            "px-3 py-1 rounded-full text-sm font-medium",
+                            hackathon.registrationOpen
+                              ? "bg-green-100 text-green-800"
+                              : "bg-yellow-100 text-yellow-800"
+                          )}>
+                            {hackathon.registrationOpen ? "Registration Open" : "Coming Soon"}
+                          </span>
+                        </div>
+                      </div>
+
+                      <p className="text-gray-600 mb-6">{hackathon.description}</p>
+
+                      <div className="grid md:grid-cols-2 gap-4 mb-6">
+                        <div className="space-y-3">
+                          <div className="flex items-center text-gray-600">
+                            <Calendar size={18} className="mr-3 text-blue-600" />
+                            <span>{hackathon.date}</span>
+                          </div>
+                          <div className="flex items-center text-gray-600">
+                            <Clock size={18} className="mr-3 text-blue-600" />
+                            <span>{hackathon.time}</span>
+                          </div>
+                          <div className="flex items-center text-gray-600">
+                            <MapPin size={18} className="mr-3 text-blue-600" />
+                            <span>{hackathon.location}</span>
+                          </div>
+                        </div>
+                        <div className="space-y-3">
+                          <div className="flex items-center text-gray-600">
+                            <Trophy size={18} className="mr-3 text-blue-600" />
+                            <span>Prize Pool: {hackathon.prizePool}</span>
+                          </div>
+                          <div className="flex items-center text-gray-600">
+                            <Users size={18} className="mr-3 text-blue-600" />
+                            <span>{hackathon.participants}/{hackathon.maxParticipants} registered</span>
+                          </div>
+                          <div className="flex items-center text-gray-600">
+                            <Target size={18} className="mr-3 text-blue-600" />
+                            <span>Level: {hackathon.difficulty}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="mb-6">
+                        <h4 className="font-semibold text-gray-800 mb-2">Required Skills:</h4>
+                        <div className="flex flex-wrap gap-2">
+                          {hackathon.requirements.map((skill, index) => (
+                            <span key={index} className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                              {skill}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="flex justify-between items-center">
+                        <div className="text-sm text-gray-600">
+                          Registration closes: {hackathon.registrationDeadline}
+                        </div>
+                        {hackathon.registrationOpen && (
+                          <button
+                            onClick={() => {
+                              setSelectedHackathon(hackathon);
+                              setShowRegistrationForm(true);
+                            }}
+                            className="bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center"
+                          >
+                            Register Now <ArrowUpRight size={16} className="ml-1" />
+                          </button>
+                        )}
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
-            
-            {/* Upcoming Highlights */}
-            <div className="bg-white rounded-lg shadow-lg p-6 mt-8">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-gray-800">Upcoming Highlights</h2>
-              </div>
+          </div>
+        )}
 
-              <div className="space-y-3">
-                {sortedEvents.slice(0, 5).map((event, index) => (
-                  <div
-                    key={index}
-                    className="flex items-start py-2 border-t border-gray-100 first:border-0"
-                  >
-                    <div className="bg-blue-100 text-blue-800 p-2 rounded-md mr-3">
-                      <Clock size={16} />
-                    </div>
+        {/* Leaderboard Tab */}
+        {activeTab === "leaderboard" && (
+          <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+            <div className="p-6 border-b">
+              <h2 className="text-2xl font-bold text-gray-800 flex items-center">
+                <Trophy size={24} className="mr-3 text-yellow-500" />
+                Team Leaderboard
+              </h2>
+              <p className="text-gray-600 mt-2">Rankings based on overall performance across all hackathons</p>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rank</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Team</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Points</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Wins</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Participations</th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {leaderboard.map((team) => (
+                    <tr key={team.rank} className={team.rank <= 3 ? "bg-yellow-50" : ""}>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center">
+                          {team.rank === 1 && <Trophy size={20} className="text-yellow-500 mr-2" />}
+                          {team.rank === 2 && <Award size={20} className="text-gray-400 mr-2" />}
+                          {team.rank === 3 && <Award size={20} className="text-orange-600 mr-2" />}
+                          <span className="text-sm font-medium text-gray-900">#{team.rank}</span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm font-medium text-gray-900">{team.team}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900 font-semibold">{team.points}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">{team.wins}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">{team.participations}</div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* Previous Winners Tab */}
+        {activeTab === "winners" && (
+          <div className="space-y-6">
+            {previousHackathons.map((hackathon) => (
+              <div key={hackathon.id} className="bg-white rounded-lg shadow-lg overflow-hidden">
+                <div className="p-6">
+                  <div className="flex justify-between items-start mb-4">
                     <div>
-                      <p className="font-medium text-gray-800">{event.title}</p>
-                      <p className="text-sm text-gray-500">{event.date}</p>
+                      <h3 className="text-xl font-bold text-gray-800">{hackathon.title}</h3>
+                      <p className="text-blue-600 font-medium">{hackathon.theme}</p>
+                      <p className="text-sm text-gray-500">{hackathon.date}</p>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-sm text-gray-600">{hackathon.participants} participants</div>
+                      <div className="text-sm text-gray-600">{hackathon.projects} projects</div>
+                    </div>
+                  </div>
+
+                  <div className="bg-gradient-to-r from-yellow-50 to-orange-50 border-l-4 border-yellow-400 p-4 rounded">
+                    <div className="flex items-start">
+                      <Trophy size={24} className="text-yellow-500 mr-3 mt-1" />
+                      <div className="flex-1">
+                        <h4 className="text-lg font-bold text-gray-800 mb-2">
+                          🏆 Winner: {hackathon.winner.team}
+                        </h4>
+                        <h5 className="font-semibold text-gray-700 mb-2">Project: {hackathon.winner.project}</h5>
+                        <p className="text-gray-600 mb-3">{hackathon.winner.description}</p>
+                        <div className="flex justify-between items-center">
+                          <div>
+                            <p className="text-sm text-gray-600 mb-1">Team Members:</p>
+                            <p className="text-sm font-medium text-gray-800">
+                              {hackathon.winner.members.join(", ")}
+                            </p>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-sm text-gray-600">Prize Won</p>
+                            <p className="text-lg font-bold text-green-600">{hackathon.winner.prize}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Skill Pool Tab */}
+        {activeTab === "skills" && (
+          <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+            <div className="p-6 border-b">
+              <h2 className="text-2xl font-bold text-gray-800 flex items-center">
+                <Code size={24} className="mr-3 text-blue-600" />
+                Skill Pool Analysis
+              </h2>
+              <p className="text-gray-600 mt-2">Overview of participant skills and market demand</p>
+            </div>
+            <div className="p-6">
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {skillPool.map((skill, index) => (
+                  <div key={index} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                    <div className="flex justify-between items-start mb-2">
+                      <h3 className="font-semibold text-gray-800">{skill.skill}</h3>
+                      <span className={cn(
+                        "px-2 py-1 rounded text-xs font-medium",
+                        skill.demand === "Very High" ? "bg-red-100 text-red-800" :
+                        skill.demand === "High" ? "bg-orange-100 text-orange-800" :
+                        skill.demand === "Medium" ? "bg-yellow-100 text-yellow-800" :
+                        "bg-gray-100 text-gray-800"
+                      )}>
+                        {skill.demand} Demand
+                      </span>
+                    </div>
+                    <div className="flex items-center text-sm text-gray-600">
+                      <Users size={16} className="mr-2" />
+                      <span>{skill.participants} participants</span>
+                    </div>
+                    <div className="mt-3 bg-gray-200 rounded-full h-2">
+                      <div 
+                        className="bg-blue-600 h-2 rounded-full" 
+                        style={{ width: `${(skill.participants / 150) * 100}%` }}
+                      ></div>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
           </div>
+        )}
+      </div>
 
-          {/* Right side: Events listing */}
-          <div className="lg:col-span-2">
-            {/* Search and filters */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-              {/* Search bar */}
-              <div className="relative w-full md:w-2/3">
-                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                  <Search size={18} className="text-gray-400" />
+      {/* Registration Form Modal */}
+      {showRegistrationForm && selectedHackathon && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6 border-b">
+              <h2 className="text-2xl font-bold text-gray-800">Register for {selectedHackathon.title}</h2>
+              <p className="text-gray-600 mt-1">{selectedHackathon.theme}</p>
+            </div>
+            
+            <form onSubmit={handleRegistration} className="p-6 space-y-4">
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <User size={16} className="inline mr-1" />
+                    Full Name *
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    required
+                    value={registrationForm.name}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Enter your full name"
+                  />
                 </div>
-                <input
-                  type="text"
-                  className="w-full pl-10 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Search events..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <Mail size={16} className="inline mr-1" />
+                    Email Address *
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    required
+                    value={registrationForm.email}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="your.email@example.com"
+                  />
+                </div>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <Phone size={16} className="inline mr-1" />
+                    Phone Number
+                  </label>
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={registrationForm.phone}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="+91 9876543210"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <Briefcase size={16} className="inline mr-1" />
+                    Experience Level
+                  </label>
+                  <select
+                    name="experience"
+                    value={registrationForm.experience}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="">Select experience level</option>
+                    <option value="beginner">Beginner (0-1 years)</option>
+                    <option value="intermediate">Intermediate (1-3 years)</option>
+                    <option value="advanced">Advanced (3+ years)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <Github size={16} className="inline mr-1" />
+                    GitHub Profile
+                  </label>
+                  <input
+                    type="url"
+                    name="github"
+                    value={registrationForm.github}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="https://github.com/username"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <Linkedin size={16} className="inline mr-1" />
+                    LinkedIn Profile
+                  </label>
+                  <input
+                    type="url"
+                    name="linkedin"
+                    value={registrationForm.linkedin}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="https://linkedin.com/in/username"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <Code size={16} className="inline mr-1" />
+                  Technical Skills *
+                </label>
+                <textarea
+                  name="skills"
+                  required
+                  value={registrationForm.skills}
+                  onChange={handleInputChange}
+                  rows={3}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="List your technical skills (e.g., React, Node.js, Python, UI/UX Design, etc.)"
                 />
               </div>
 
-              {/* Category filters */}
-              <div className="flex flex-wrap gap-2">
-                <div className="flex items-center mr-2">
-                  <Filter size={18} className="text-blue-600 mr-2" />
-                  <span className="text-gray-700 font-medium">Type:</span>
-                </div>
-                {categories.map((category) => (
-                  <button
-                    key={category}
-                    onClick={() =>
-                      setView(
-                        category === "All" ? "all" : category.toLowerCase()
-                      )
-                    }
-                    className={cn(
-                      "px-3 py-1 rounded-full text-sm font-medium transition-colors",
-                      view ===
-                        (category === "All" ? "all" : category.toLowerCase())
-                        ? "bg-blue-600 text-white"
-                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                    )}
-                  >
-                    {category}
-                  </button>
-                ))}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <Users size={16} className="inline mr-1" />
+                  Team Name (Optional)
+                </label>
+                <input
+                  type="text"
+                  name="teamName"
+                  value={registrationForm.teamName}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="If you're registering as a team, enter team name"
+                />
               </div>
-            </div>
 
-            {/* Featured events */}
-            {featuredEvents.length > 0 && (
-              <div className="mb-10">
-                <h2 className="text-2xl font-bold text-gray-800 mb-6">
-                  Featured Events
-                </h2>
-                <div className="space-y-6">
-                  {featuredEvents.map((event) => (
-                    <div
-                      key={event.id}
-                      className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
-                    >
-                      <div className="md:flex">
-                        <div className="w-full md:w-1/3 h-40 md:h-auto bg-gray-300 relative">
-                          <div className="absolute inset-0 bg-blue-900 opacity-10"></div>
-                          <div className="absolute top-2 left-2 bg-blue-600 text-white px-2 py-1 rounded text-xs font-medium">
-                            {event.category}
-                          </div>
-                        </div>
-                        <div className="p-6 md:w-2/3">
-                          <h3 className="text-xl font-bold text-gray-800 mb-2">
-                            {event.title}
-                          </h3>
-                          <p className="text-gray-600 mb-4">
-                            {event.description}
-                          </p>
-                          <div className="grid grid-cols-2 gap-y-2 text-sm">
-                            <div className="flex items-center text-gray-600">
-                              <Clock size={16} className="mr-2 text-blue-600" />
-                              {event.date}
-                            </div>
-                            <div className="flex items-center text-gray-600">
-                              <Clock size={16} className="mr-2 text-blue-600" />
-                              {event.time}
-                            </div>
-                            <div className="flex items-center text-gray-600 col-span-2">
-                              <MapPin
-                                size={16}
-                                className="mr-2 text-blue-600"
-                              />
-                              {event.location}
-                            </div>
-                          </div>
-                          <div className="mt-4 flex items-center justify-between">
-                            <div className="flex items-center text-sm text-gray-500">
-                              <Users size={16} className="mr-1" />
-                              <span>{event.attendees} attendees</span>
-                            </div>
-                            <a
-                              href={`/events/${event.id}`}
-                              className="flex items-center text-blue-600 font-medium hover:text-blue-800 transition-colors"
-                            >
-                              View Details{" "}
-                              <ArrowUpRight size={16} className="ml-1" />
-                            </a>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <Target size={16} className="inline mr-1" />
+                  Why do you want to participate? *
+                </label>
+                <textarea
+                  name="motivation"
+                  required
+                  value={registrationForm.motivation}
+                  onChange={handleInputChange}
+                  rows={4}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Tell us about your motivation and what you hope to achieve..."
+                />
               </div>
-            )}
 
-            {/* Regular events */}
-            <div>
-              <h2 className="text-2xl font-bold text-gray-800 mb-6">
-                Upcoming Events
-              </h2>
-              <div className="space-y-5">
-                {regularEvents.map((event) => (
-                  <div
-                    key={event.id}
-                    className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
-                  >
-                    <div className="p-5">
-                      <div className="flex justify-between items-start mb-3">
-                        <div>
-                          <span className="inline-block px-2 py-1 text-xs font-medium bg-blue-100 text-blue-600 rounded-full mb-2">
-                            {event.category}
-                          </span>
-                          <h3 className="text-lg font-semibold text-gray-800">
-                            {event.title}
-                          </h3>
-                        </div>
-                        <span className="text-xs font-medium bg-gray-100 text-gray-700 px-2 py-1 rounded">
-                          Rank #{event.ranking}
-                        </span>
-                      </div>
-                      <p className="text-gray-600 text-sm mb-4">
-                        {event.description}
-                      </p>
-                      <div className="grid grid-cols-2 gap-y-2 text-xs text-gray-600 mb-4">
-                        <div className="flex items-center">
-                          <Clock size={14} className="mr-2 text-blue-600" />
-                          {event.date}
-                        </div>
-                        <div className="flex items-center">
-                          <Clock size={14} className="mr-2 text-blue-600" />
-                          {event.time}
-                        </div>
-                        <div className="flex items-center col-span-2">
-                          <MapPin size={14} className="mr-2 text-blue-600" />
-                          {event.location}
-                        </div>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center text-xs text-gray-500">
-                          <Users size={14} className="mr-1" />
-                          <span>{event.attendees} attendees</span>
-                        </div>
-                        <a
-                          href={`/events/${event.id}`}
-                          className="flex items-center text-blue-600 text-sm font-medium hover:text-blue-800 transition-colors"
-                        >
-                          View Details{" "}
-                          <ArrowUpRight size={14} className="ml-1" />
-                        </a>
-                      </div>
-                    </div>
+              <div className="bg-blue-50 border-l-4 border-blue-400 p-4">
+                <div className="flex">
+                  <CheckCircle size={20} className="text-blue-600 mr-2 mt-0.5" />
+                  <div>
+                    <h4 className="text-sm font-medium text-blue-800">Registration Details</h4>
+                    <ul className="text-sm text-blue-700 mt-2 space-y-1">
+                      <li>• Registration is free and open to all skill levels</li>
+                      <li>• You can participate individually or in teams of up to 4 members</li>
+                      <li>• All necessary resources and mentorship will be provided</li>
+                      <li>• Winners receive cash prizes and certificates</li>
+                    </ul>
                   </div>
-                ))}
+                </div>
               </div>
-            </div>
 
-            {/* No results message */}
-            {filteredEvents.length === 0 && (
-              <div className="text-center py-12 bg-white rounded-lg shadow-md">
-                <Clock size={48} className="text-gray-300 mx-auto mb-4" />
-                <h3 className="text-xl font-medium text-gray-700 mb-2">
-                  No events found
-                </h3>
-                <p className="text-gray-500">
-                  Try adjusting your search or filter criteria
-                </p>
+              <div className="flex justify-end space-x-3 pt-4">
+                <button
+                  type="button"
+                  onClick={() => setShowRegistrationForm(false)}
+                  className="px-4 py-2 text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center"
+                >
+                  <CheckCircle size={16} className="mr-2" />
+                  Register Now
+                </button>
               </div>
-            )}
+            </form>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Call-to-action section */}
       <div className="bg-blue-800 text-white py-12 relative overflow-hidden">
@@ -432,14 +747,41 @@ const Events = () => {
           )}
         />
         <div className="container mx-auto px-6 relative z-10 text-center">
-          <h2 className="text-3xl font-bold mb-4">Join Our Next Hackathon!</h2>
+          <h2 className="text-3xl font-bold mb-4">Ready to Build Something Amazing?</h2>
           <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-            Challenge yourself, learn new skills, and connect with like-minded
-            tech enthusiasts.
+            Join our community of innovative developers, designers, and problem-solvers. 
+            Every Saturday brings a new challenge and opportunity to learn.
           </p>
-          <button className="bg-white text-blue-800 font-bold py-3 px-8 rounded-md hover:bg-blue-100 transition-colors">
-            Register Now
-          </button>
+          <div className="flex flex-wrap justify-center gap-4">
+            <button 
+              onClick={() => {
+                if (upcomingHackathons.length > 0 && upcomingHackathons[0].registrationOpen) {
+                  setSelectedHackathon(upcomingHackathons[0]);
+                  setShowRegistrationForm(true);
+                }
+              }}
+              className="bg-white text-blue-800 font-bold py-3 px-8 rounded-md hover:bg-blue-100 transition-colors"
+            >
+              Register for Next Hackathon
+            </button>
+            <button className="border-2 border-white text-white font-bold py-3 px-8 rounded-md hover:bg-white hover:text-blue-800 transition-colors">
+              Join Our Community
+            </button>
+          </div>
+          <div className="mt-8 flex justify-center space-x-8 text-sm">
+            <div className="text-center">
+              <div className="text-2xl font-bold">8</div>
+              <div className="text-blue-200">Hackathons Completed</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold">1200+</div>
+              <div className="text-blue-200">Participants</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold">₹4L+</div>
+              <div className="text-blue-200">Prizes Awarded</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

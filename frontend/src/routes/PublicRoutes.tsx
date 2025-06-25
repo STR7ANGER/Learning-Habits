@@ -15,6 +15,7 @@ import JobTalks from "@/pages/JobTalks";
 import TechnologyLearning from "@/pages/TechnologyLearning";
 import CorporateTraining from "@/pages/CorporateTraining";
 import BusinessComs from "@/pages/BusinessComs";
+import Internship from "@/pages/Internship";
 
 
 const PublicRoutes = () => {
@@ -52,6 +53,7 @@ const PublicRoutes = () => {
     />,
     <Route key="corporate" path="/corporate" element={<CorporateTraining />} />,
     <Route key="businesscomms" path="/businesscomms" element={<BusinessComs/>}/>,
+    <Route key="internship" path="/internship" element={<Internship/>}/>,
   ];
 };
 
