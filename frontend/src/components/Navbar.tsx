@@ -371,7 +371,7 @@ const Navbar: FC = () => {
                       }`}
                       aria-expanded={updatesDropdownOpen}
                     >
-                      Updates
+                      Activity
                       <svg
                         className={`ml-1 h-4 w-4 transform transition-transform ${
                           updatesDropdownOpen ? "rotate-180" : ""
@@ -407,7 +407,7 @@ const Navbar: FC = () => {
                                 clipRule="evenodd"
                               />
                             </svg>
-                            Events
+                            Hackathon
                           </Link>
                           <Link
                             to="/news"
