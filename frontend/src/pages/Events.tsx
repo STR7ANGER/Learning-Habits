@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, FormEvent, ChangeEvent } from "react";
 import { cn } from "@/lib/utils";
 import { AnimatedGridPattern } from "@/components/magicui/animated-grid-pattern";
 import SplitText from "@/blocks/TextAnimations/SplitText/SplitText";
@@ -20,12 +20,85 @@ import {
   Phone,
   Briefcase,
   CheckCircle,
+  LucideIcon,
 } from "lucide-react";
 
-const Events = () => {
-  const [activeTab, setActiveTab] = useState("upcoming");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [registrationForm, setRegistrationForm] = useState({
+// Type definitions
+interface Hackathon {
+  id: number;
+  title: string;
+  theme: string;
+  date: string;
+  time: string;
+  location: string;
+  status: "upcoming" | "completed";
+  registrationOpen: boolean;
+  registrationDeadline: string;
+  participants: number;
+  maxParticipants: number;
+  prizePool: string;
+  difficulty: "Beginner" | "Intermediate" | "Advanced";
+  description: string;
+  requirements: string[];
+  mentors: string[];
+  sponsors: string[];
+}
+
+interface Winner {
+  team: string;
+  project: string;
+  members: string[];
+  prize: string;
+  description: string;
+}
+
+interface PreviousHackathon {
+  id: number;
+  title: string;
+  theme: string;
+  date: string;
+  winner: Winner;
+  participants: number;
+  projects: number;
+}
+
+interface LeaderboardEntry {
+  rank: number;
+  team: string;
+  points: number;
+  wins: number;
+  participations: number;
+}
+
+interface SkillPoolEntry {
+  skill: string;
+  participants: number;
+  demand: "Very High" | "High" | "Medium" | "Low";
+}
+
+interface RegistrationForm {
+  name: string;
+  email: string;
+  phone: string;
+  github: string;
+  linkedin: string;
+  experience: string;
+  skills: string;
+  teamName: string;
+  motivation: string;
+}
+
+interface TabConfig {
+  id: string;
+  label: string;
+  icon: LucideIcon;
+}
+
+type ActiveTab = "upcoming" | "leaderboard" | "winners" | "skills";
+
+const Events: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<ActiveTab>("upcoming");
+  const [registrationForm, setRegistrationForm] = useState<RegistrationForm>({
     name: "",
     email: "",
     phone: "",
@@ -36,11 +109,14 @@ const Events = () => {
     teamName: "",
     motivation: "",
   });
-  const [selectedHackathon, setSelectedHackathon] = useState(null);
-  const [showRegistrationForm, setShowRegistrationForm] = useState(false);
+  const [selectedHackathon, setSelectedHackathon] = useState<Hackathon | null>(
+    null
+  );
+  const [showRegistrationForm, setShowRegistrationForm] =
+    useState<boolean>(false);
 
   // Weekly hackathon themes
-  const hackathons = [
+  const hackathons: Hackathon[] = [
     {
       id: 1,
       title: "Learning Habits Hackathon #8",
@@ -55,8 +131,13 @@ const Events = () => {
       maxParticipants: 200,
       prizePool: "₹50,000",
       difficulty: "Intermediate",
-      description: "Build innovative solutions to enhance learning experiences and educational habits.",
-      requirements: ["Web/Mobile Development", "UI/UX Design", "Educational Psychology"],
+      description:
+        "Build innovative solutions to enhance learning experiences and educational habits.",
+      requirements: [
+        "Web/Mobile Development",
+        "UI/UX Design",
+        "Educational Psychology",
+      ],
       mentors: ["Dr. Sarah Johnson", "Alex Chen", "Priya Sharma"],
       sponsors: ["EduTech Inc.", "Learning Labs", "TechForEd"],
     },
@@ -74,15 +155,20 @@ const Events = () => {
       maxParticipants: 200,
       prizePool: "₹50,000",
       difficulty: "Advanced",
-      description: "Create AI solutions that help individuals develop better learning and productivity habits.",
-      requirements: ["Machine Learning", "Natural Language Processing", "Mobile Development"],
+      description:
+        "Create AI solutions that help individuals develop better learning and productivity habits.",
+      requirements: [
+        "Machine Learning",
+        "Natural Language Processing",
+        "Mobile Development",
+      ],
       mentors: ["Dr. Raj Patel", "Maria Rodriguez", "Zhang Wei"],
       sponsors: ["AI Solutions", "MindTech", "Future Labs"],
     },
   ];
 
   // Previous hackathons with winners
-  const previousHackathons = [
+  const previousHackathons: PreviousHackathon[] = [
     {
       id: 1,
       title: "Learning Habits Hackathon #7",
@@ -93,7 +179,8 @@ const Events = () => {
         project: "EduQuest",
         members: ["Arjun Kumar", "Sneha Patel", "Rahul Singh"],
         prize: "₹25,000",
-        description: "A gamified platform that turns daily learning into an RPG adventure.",
+        description:
+          "A gamified platform that turns daily learning into an RPG adventure.",
       },
       participants: 180,
       projects: 45,
@@ -108,7 +195,8 @@ const Events = () => {
         project: "ZenStudy",
         members: ["Anita Sharma", "Vikram Joshi", "Priya Nair"],
         prize: "₹25,000",
-        description: "An app that combines mindfulness practices with study routines.",
+        description:
+          "An app that combines mindfulness practices with study routines.",
       },
       participants: 165,
       projects: 42,
@@ -123,7 +211,8 @@ const Events = () => {
         project: "LearnForAll",
         members: ["Ravi Gupta", "Meera Shah", "Arun Kumar"],
         prize: "₹25,000",
-        description: "Educational platform with advanced accessibility features for differently-abled learners.",
+        description:
+          "Educational platform with advanced accessibility features for differently-abled learners.",
       },
       participants: 155,
       projects: 38,
@@ -131,19 +220,37 @@ const Events = () => {
   ];
 
   // Leaderboard data
-  const leaderboard = [
+  const leaderboard: LeaderboardEntry[] = [
     { rank: 1, team: "CodeCrafters", points: 2850, wins: 3, participations: 5 },
-    { rank: 2, team: "MindfulCoders", points: 2620, wins: 2, participations: 6 },
-    { rank: 3, team: "InclusiveTech", points: 2400, wins: 2, participations: 4 },
+    {
+      rank: 2,
+      team: "MindfulCoders",
+      points: 2620,
+      wins: 2,
+      participations: 6,
+    },
+    {
+      rank: 3,
+      team: "InclusiveTech",
+      points: 2400,
+      wins: 2,
+      participations: 4,
+    },
     { rank: 4, team: "InnovateEdu", points: 2150, wins: 1, participations: 7 },
     { rank: 5, team: "TechLearners", points: 1980, wins: 1, participations: 5 },
     { rank: 6, team: "FutureMakers", points: 1750, wins: 0, participations: 4 },
     { rank: 7, team: "DevMinds", points: 1650, wins: 1, participations: 3 },
-    { rank: 8, team: "CreativeCoders", points: 1520, wins: 0, participations: 6 },
+    {
+      rank: 8,
+      team: "CreativeCoders",
+      points: 1520,
+      wins: 0,
+      participations: 6,
+    },
   ];
 
   // Skill pool data
-  const skillPool = [
+  const skillPool: SkillPoolEntry[] = [
     { skill: "React/Next.js", participants: 145, demand: "High" },
     { skill: "Python/Django", participants: 120, demand: "High" },
     { skill: "Machine Learning", participants: 89, demand: "Very High" },
@@ -156,19 +263,29 @@ const Events = () => {
     { skill: "Cybersecurity", participants: 28, demand: "Medium" },
   ];
 
+  const tabs: TabConfig[] = [
+    { id: "upcoming", label: "Upcoming Hackathons", icon: Calendar },
+    { id: "leaderboard", label: "Leaderboard", icon: Trophy },
+    { id: "winners", label: "Previous Winners", icon: Award },
+    { id: "skills", label: "Skill Pool", icon: Code },
+  ];
+
   // Handle form input changes
-  const handleInputChange = (e) => {
+  const handleInputChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ): void => {
+    const { name, value } = e.target;
     setRegistrationForm({
       ...registrationForm,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
   };
 
   // Handle registration submission
-  const handleRegistration = (e) => {
+  const handleRegistration = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     // Simulate registration process
-    alert(`Successfully registered for ${selectedHackathon.title}!`);
+    alert(`Successfully registered for ${selectedHackathon?.title}!`);
     setShowRegistrationForm(false);
     setRegistrationForm({
       name: "",
@@ -183,7 +300,35 @@ const Events = () => {
     });
   };
 
-  const upcomingHackathons = hackathons.filter(h => h.status === "upcoming");
+  const upcomingHackathons = hackathons.filter((h) => h.status === "upcoming");
+
+  const getDemandColor = (demand: SkillPoolEntry["demand"]): string => {
+    switch (demand) {
+      case "Very High":
+        return "bg-red-100 text-red-800";
+      case "High":
+        return "bg-orange-100 text-orange-800";
+      case "Medium":
+        return "bg-yellow-100 text-yellow-800";
+      case "Low":
+        return "bg-gray-100 text-gray-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
+  };
+
+  const getRankIcon = (rank: number) => {
+    switch (rank) {
+      case 1:
+        return <Trophy size={20} className="text-yellow-500 mr-2" />;
+      case 2:
+        return <Award size={20} className="text-gray-400 mr-2" />;
+      case 3:
+        return <Award size={20} className="text-orange-600 mr-2" />;
+      default:
+        return null;
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -239,15 +384,10 @@ const Events = () => {
       <div className="container mx-auto px-6 py-8">
         <div className="bg-white rounded-lg shadow-lg mb-8">
           <div className="flex flex-wrap border-b">
-            {[
-              { id: "upcoming", label: "Upcoming Hackathons", icon: Calendar },
-              { id: "leaderboard", label: "Leaderboard", icon: Trophy },
-              { id: "winners", label: "Previous Winners", icon: Award },
-              { id: "skills", label: "Skill Pool", icon: Code },
-            ].map((tab) => (
+            {tabs.map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
+                onClick={() => setActiveTab(tab.id as ActiveTab)}
                 className={cn(
                   "flex items-center px-6 py-4 font-medium transition-colors",
                   activeTab === tab.id
@@ -268,7 +408,9 @@ const Events = () => {
             {/* Left sidebar - Quick Stats */}
             <div className="lg:col-span-1">
               <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-                <h3 className="text-xl font-bold text-gray-800 mb-4">Quick Stats</h3>
+                <h3 className="text-xl font-bold text-gray-800 mb-4">
+                  Quick Stats
+                </h3>
                 <div className="space-y-4">
                   <div className="flex justify-between">
                     <span className="text-gray-600">Total Hackathons</span>
@@ -290,18 +432,26 @@ const Events = () => {
               </div>
 
               <div className="bg-white rounded-lg shadow-lg p-6">
-                <h3 className="text-xl font-bold text-gray-800 mb-4">Upcoming Themes</h3>
+                <h3 className="text-xl font-bold text-gray-800 mb-4">
+                  Upcoming Themes
+                </h3>
                 <div className="space-y-3">
                   <div className="p-3 border-l-4 border-blue-500 bg-blue-50">
-                    <p className="font-medium text-gray-800">Educational Technology</p>
+                    <p className="font-medium text-gray-800">
+                      Educational Technology
+                    </p>
                     <p className="text-sm text-gray-600">June 28, 2025</p>
                   </div>
                   <div className="p-3 border-l-4 border-green-500 bg-green-50">
-                    <p className="font-medium text-gray-800">AI-Powered Development</p>
+                    <p className="font-medium text-gray-800">
+                      AI-Powered Development
+                    </p>
                     <p className="text-sm text-gray-600">July 5, 2025</p>
                   </div>
                   <div className="p-3 border-l-4 border-purple-500 bg-purple-50">
-                    <p className="font-medium text-gray-800">Sustainable Tech</p>
+                    <p className="font-medium text-gray-800">
+                      Sustainable Tech
+                    </p>
                     <p className="text-sm text-gray-600">July 12, 2025</p>
                   </div>
                 </div>
@@ -312,31 +462,47 @@ const Events = () => {
             <div className="lg:col-span-2">
               <div className="space-y-6">
                 {upcomingHackathons.map((hackathon) => (
-                  <div key={hackathon.id} className="bg-white rounded-lg shadow-lg overflow-hidden">
+                  <div
+                    key={hackathon.id}
+                    className="bg-white rounded-lg shadow-lg overflow-hidden"
+                  >
                     <div className="p-6">
                       <div className="flex justify-between items-start mb-4">
                         <div>
-                          <h3 className="text-2xl font-bold text-gray-800 mb-2">{hackathon.title}</h3>
-                          <p className="text-lg text-blue-600 font-medium">{hackathon.theme}</p>
+                          <h3 className="text-2xl font-bold text-gray-800 mb-2">
+                            {hackathon.title}
+                          </h3>
+                          <p className="text-lg text-blue-600 font-medium">
+                            {hackathon.theme}
+                          </p>
                         </div>
                         <div className="text-right">
-                          <span className={cn(
-                            "px-3 py-1 rounded-full text-sm font-medium",
-                            hackathon.registrationOpen
-                              ? "bg-green-100 text-green-800"
-                              : "bg-yellow-100 text-yellow-800"
-                          )}>
-                            {hackathon.registrationOpen ? "Registration Open" : "Coming Soon"}
+                          <span
+                            className={cn(
+                              "px-3 py-1 rounded-full text-sm font-medium",
+                              hackathon.registrationOpen
+                                ? "bg-green-100 text-green-800"
+                                : "bg-yellow-100 text-yellow-800"
+                            )}
+                          >
+                            {hackathon.registrationOpen
+                              ? "Registration Open"
+                              : "Coming Soon"}
                           </span>
                         </div>
                       </div>
 
-                      <p className="text-gray-600 mb-6">{hackathon.description}</p>
+                      <p className="text-gray-600 mb-6">
+                        {hackathon.description}
+                      </p>
 
                       <div className="grid md:grid-cols-2 gap-4 mb-6">
                         <div className="space-y-3">
                           <div className="flex items-center text-gray-600">
-                            <Calendar size={18} className="mr-3 text-blue-600" />
+                            <Calendar
+                              size={18}
+                              className="mr-3 text-blue-600"
+                            />
                             <span>{hackathon.date}</span>
                           </div>
                           <div className="flex items-center text-gray-600">
@@ -355,7 +521,10 @@ const Events = () => {
                           </div>
                           <div className="flex items-center text-gray-600">
                             <Users size={18} className="mr-3 text-blue-600" />
-                            <span>{hackathon.participants}/{hackathon.maxParticipants} registered</span>
+                            <span>
+                              {hackathon.participants}/
+                              {hackathon.maxParticipants} registered
+                            </span>
                           </div>
                           <div className="flex items-center text-gray-600">
                             <Target size={18} className="mr-3 text-blue-600" />
@@ -365,10 +534,15 @@ const Events = () => {
                       </div>
 
                       <div className="mb-6">
-                        <h4 className="font-semibold text-gray-800 mb-2">Required Skills:</h4>
+                        <h4 className="font-semibold text-gray-800 mb-2">
+                          Required Skills:
+                        </h4>
                         <div className="flex flex-wrap gap-2">
                           {hackathon.requirements.map((skill, index) => (
-                            <span key={index} className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                            <span
+                              key={index}
+                              className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
+                            >
                               {skill}
                             </span>
                           ))}
@@ -387,7 +561,8 @@ const Events = () => {
                             }}
                             className="bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center"
                           >
-                            Register Now <ArrowUpRight size={16} className="ml-1" />
+                            Register Now{" "}
+                            <ArrowUpRight size={16} className="ml-1" />
                           </button>
                         )}
                       </div>
@@ -407,41 +582,62 @@ const Events = () => {
                 <Trophy size={24} className="mr-3 text-yellow-500" />
                 Team Leaderboard
               </h2>
-              <p className="text-gray-600 mt-2">Rankings based on overall performance across all hackathons</p>
+              <p className="text-gray-600 mt-2">
+                Rankings based on overall performance across all hackathons
+              </p>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rank</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Team</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Points</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Wins</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Participations</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Rank
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Team
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Points
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Wins
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Participations
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {leaderboard.map((team) => (
-                    <tr key={team.rank} className={team.rank <= 3 ? "bg-yellow-50" : ""}>
+                    <tr
+                      key={team.rank}
+                      className={team.rank <= 3 ? "bg-yellow-50" : ""}
+                    >
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
-                          {team.rank === 1 && <Trophy size={20} className="text-yellow-500 mr-2" />}
-                          {team.rank === 2 && <Award size={20} className="text-gray-400 mr-2" />}
-                          {team.rank === 3 && <Award size={20} className="text-orange-600 mr-2" />}
-                          <span className="text-sm font-medium text-gray-900">#{team.rank}</span>
+                          {getRankIcon(team.rank)}
+                          <span className="text-sm font-medium text-gray-900">
+                            #{team.rank}
+                          </span>
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm font-medium text-gray-900">{team.team}</div>
+                        <div className="text-sm font-medium text-gray-900">
+                          {team.team}
+                        </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900 font-semibold">{team.points}</div>
+                        <div className="text-sm text-gray-900 font-semibold">
+                          {team.points}
+                        </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-900">{team.wins}</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">{team.participations}</div>
+                        <div className="text-sm text-gray-900">
+                          {team.participations}
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -455,17 +651,28 @@ const Events = () => {
         {activeTab === "winners" && (
           <div className="space-y-6">
             {previousHackathons.map((hackathon) => (
-              <div key={hackathon.id} className="bg-white rounded-lg shadow-lg overflow-hidden">
+              <div
+                key={hackathon.id}
+                className="bg-white rounded-lg shadow-lg overflow-hidden"
+              >
                 <div className="p-6">
                   <div className="flex justify-between items-start mb-4">
                     <div>
-                      <h3 className="text-xl font-bold text-gray-800">{hackathon.title}</h3>
-                      <p className="text-blue-600 font-medium">{hackathon.theme}</p>
+                      <h3 className="text-xl font-bold text-gray-800">
+                        {hackathon.title}
+                      </h3>
+                      <p className="text-blue-600 font-medium">
+                        {hackathon.theme}
+                      </p>
                       <p className="text-sm text-gray-500">{hackathon.date}</p>
                     </div>
                     <div className="text-right">
-                      <div className="text-sm text-gray-600">{hackathon.participants} participants</div>
-                      <div className="text-sm text-gray-600">{hackathon.projects} projects</div>
+                      <div className="text-sm text-gray-600">
+                        {hackathon.participants} participants
+                      </div>
+                      <div className="text-sm text-gray-600">
+                        {hackathon.projects} projects
+                      </div>
                     </div>
                   </div>
 
@@ -476,18 +683,26 @@ const Events = () => {
                         <h4 className="text-lg font-bold text-gray-800 mb-2">
                           🏆 Winner: {hackathon.winner.team}
                         </h4>
-                        <h5 className="font-semibold text-gray-700 mb-2">Project: {hackathon.winner.project}</h5>
-                        <p className="text-gray-600 mb-3">{hackathon.winner.description}</p>
+                        <h5 className="font-semibold text-gray-700 mb-2">
+                          Project: {hackathon.winner.project}
+                        </h5>
+                        <p className="text-gray-600 mb-3">
+                          {hackathon.winner.description}
+                        </p>
                         <div className="flex justify-between items-center">
                           <div>
-                            <p className="text-sm text-gray-600 mb-1">Team Members:</p>
+                            <p className="text-sm text-gray-600 mb-1">
+                              Team Members:
+                            </p>
                             <p className="text-sm font-medium text-gray-800">
                               {hackathon.winner.members.join(", ")}
                             </p>
                           </div>
                           <div className="text-right">
                             <p className="text-sm text-gray-600">Prize Won</p>
-                            <p className="text-lg font-bold text-green-600">{hackathon.winner.prize}</p>
+                            <p className="text-lg font-bold text-green-600">
+                              {hackathon.winner.prize}
+                            </p>
                           </div>
                         </div>
                       </div>
@@ -507,21 +722,27 @@ const Events = () => {
                 <Code size={24} className="mr-3 text-blue-600" />
                 Skill Pool Analysis
               </h2>
-              <p className="text-gray-600 mt-2">Overview of participant skills and market demand</p>
+              <p className="text-gray-600 mt-2">
+                Overview of participant skills and market demand
+              </p>
             </div>
             <div className="p-6">
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {skillPool.map((skill, index) => (
-                  <div key={index} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                  <div
+                    key={index}
+                    className="border rounded-lg p-4 hover:shadow-md transition-shadow"
+                  >
                     <div className="flex justify-between items-start mb-2">
-                      <h3 className="font-semibold text-gray-800">{skill.skill}</h3>
-                      <span className={cn(
-                        "px-2 py-1 rounded text-xs font-medium",
-                        skill.demand === "Very High" ? "bg-red-100 text-red-800" :
-                        skill.demand === "High" ? "bg-orange-100 text-orange-800" :
-                        skill.demand === "Medium" ? "bg-yellow-100 text-yellow-800" :
-                        "bg-gray-100 text-gray-800"
-                      )}>
+                      <h3 className="font-semibold text-gray-800">
+                        {skill.skill}
+                      </h3>
+                      <span
+                        className={cn(
+                          "px-2 py-1 rounded text-xs font-medium",
+                          getDemandColor(skill.demand)
+                        )}
+                      >
                         {skill.demand} Demand
                       </span>
                     </div>
@@ -530,9 +751,11 @@ const Events = () => {
                       <span>{skill.participants} participants</span>
                     </div>
                     <div className="mt-3 bg-gray-200 rounded-full h-2">
-                      <div 
-                        className="bg-blue-600 h-2 rounded-full" 
-                        style={{ width: `${(skill.participants / 150) * 100}%` }}
+                      <div
+                        className="bg-blue-600 h-2 rounded-full"
+                        style={{
+                          width: `${(skill.participants / 150) * 100}%`,
+                        }}
                       ></div>
                     </div>
                   </div>
@@ -548,10 +771,12 @@ const Events = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6 border-b">
-              <h2 className="text-2xl font-bold text-gray-800">Register for {selectedHackathon.title}</h2>
+              <h2 className="text-2xl font-bold text-gray-800">
+                Register for {selectedHackathon.title}
+              </h2>
               <p className="text-gray-600 mt-1">{selectedHackathon.theme}</p>
             </div>
-            
+
             <form onSubmit={handleRegistration} className="p-6 space-y-4">
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
@@ -614,7 +839,9 @@ const Events = () => {
                   >
                     <option value="">Select experience level</option>
                     <option value="beginner">Beginner (0-1 years)</option>
-                    <option value="intermediate">Intermediate (1-3 years)</option>
+                    <option value="intermediate">
+                      Intermediate (1-3 years)
+                    </option>
                     <option value="advanced">Advanced (3+ years)</option>
                   </select>
                 </div>
@@ -700,13 +927,26 @@ const Events = () => {
 
               <div className="bg-blue-50 border-l-4 border-blue-400 p-4">
                 <div className="flex">
-                  <CheckCircle size={20} className="text-blue-600 mr-2 mt-0.5" />
+                  <CheckCircle
+                    size={20}
+                    className="text-blue-600 mr-2 mt-0.5"
+                  />
                   <div>
-                    <h4 className="text-sm font-medium text-blue-800">Registration Details</h4>
+                    <h4 className="text-sm font-medium text-blue-800">
+                      Registration Details
+                    </h4>
                     <ul className="text-sm text-blue-700 mt-2 space-y-1">
-                      <li>• Registration is free and open to all skill levels</li>
-                      <li>• You can participate individually or in teams of up to 4 members</li>
-                      <li>• All necessary resources and mentorship will be provided</li>
+                      <li>
+                        • Registration is free and open to all skill levels
+                      </li>
+                      <li>
+                        • You can participate individually or in teams of up to
+                        4 members
+                      </li>
+                      <li>
+                        • All necessary resources and mentorship will be
+                        provided
+                      </li>
                       <li>• Winners receive cash prizes and certificates</li>
                     </ul>
                   </div>
@@ -747,15 +987,21 @@ const Events = () => {
           )}
         />
         <div className="container mx-auto px-6 relative z-10 text-center">
-          <h2 className="text-3xl font-bold mb-4">Ready to Build Something Amazing?</h2>
+          <h2 className="text-3xl font-bold mb-4">
+            Ready to Build Something Amazing?
+          </h2>
           <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-            Join our community of innovative developers, designers, and problem-solvers. 
-            Every Saturday brings a new challenge and opportunity to learn.
+            Join our community of innovative developers, designers, and
+            problem-solvers. Every Saturday brings a new challenge and
+            opportunity to learn.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
-            <button 
+            <button
               onClick={() => {
-                if (upcomingHackathons.length > 0 && upcomingHackathons[0].registrationOpen) {
+                if (
+                  upcomingHackathons.length > 0 &&
+                  upcomingHackathons[0]?.registrationOpen
+                ) {
                   setSelectedHackathon(upcomingHackathons[0]);
                   setShowRegistrationForm(true);
                 }
