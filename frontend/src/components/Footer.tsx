@@ -117,7 +117,7 @@ const Footer = () => {
         {/* Copyright */}
         <div className="mt-12 pt-8 border-t border-blue-700 text-center">
           <p>
-            © {currentYear} Copyrights by Learning Habits. All Rights Reserved.
+            © {currentYear} Copyrights by Computing Mind Technology. All Rights Reserved.
           </p>
         </div>
       </div>
