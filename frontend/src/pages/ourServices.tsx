@@ -65,6 +65,13 @@ const OurServices = () => {
       description: "Join a network of passionate learners building the future",
       icon: "👥",
     },
+    {
+      id: 9,
+      title: "Talent Pool",
+      tagline: "Unlock Your Potential",
+      description: "Get access to top MNCs and job opportunities",
+      icon: "📈",
+    },
   ];
 
   // First row has 5 services, second row has the rest
@@ -122,7 +129,7 @@ const OurServices = () => {
 
           {/* Second row - 3 services centered */}
           <div className="flex justify-center mb-12">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-4xl">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-4xl">
               {secondRowServices.map((service) => (
                 <div
                   key={service.id}
