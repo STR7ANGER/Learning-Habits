@@ -23,8 +23,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://learninghabits.world",
-      "https://test.cheentapakdumdum.com",
+      "https://learning-habits-ebon.vercel.app/",
     ],
     credentials: true,
   })
